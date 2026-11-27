@@ -430,7 +430,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {/* Phones: the round is in the bar below, so the map gets the whole frame. */}
           <div className="hide-mobile" style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2 }}>
             <div style={{ marginLeft: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={Math.max(160, Math.min(290, box.w * 0.26, box.h * 0.45))} />
+              <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={Math.max(120, Math.min(218, box.w * 0.195, box.h * 0.31))} />
               <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15 }}>
                 Runda {state.round} z {state.roundLimit}
               </div>

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa świata: tor rund ze znacznikiem jest mniejszy o około jedną czwartą.
+
 ## 3.1.1 — 2026-11-27
 
 - Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote). (`6ab95bd`)

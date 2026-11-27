@@ -2,6 +2,12 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
+// In preparation
+register({
+  'Mapa świata: tor rund ze znacznikiem jest mniejszy o około jedną czwartą.':
+    'World map: the round track with its marker is about a quarter smaller.',
+});
+
 // 3.1.1
 register({
   'Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote).':
