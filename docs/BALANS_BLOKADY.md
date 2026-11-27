@@ -165,3 +165,7 @@ Każdy wiersz: cel, wielkość, kształt, gracze na stronę; dalej warstwy z wyn
 | Relikt | 3XL | wyspy | 2 | Imperium **27** |
 | Relikt | 3XL | pierścień | 2 | Imperium 34 |
 | Relikt | 3XL | trójkąt | 2 | Imperium 35 |
+
+## Decyzja autora 28.11.2026: próg 10 pkt
+
+Autor wybrał próg **10 pkt proc. poza pasmem** (zamiast 15), liczony z marginesem pomiaru (±4,9 pkt) i regułą większości warstw. Wynik: 16 reguł w `src/engine/blocks.ts` (`OPTION_BLOCKS`), 19 kombinacji cel × wielkość × kształt × gracze na stronę; `tests/blocks.test.ts` liczy je od nowa z `balans_blokady.jsonl`. Blokady według liczby graczy: dopisek na karcie celu w kreatorze, a strona miejsc wstrzymuje start z przyciskiem „Dodaj bota do każdej strony” (wybór autora z trzech makiet). Stół online: komunikat i wyłączony start (miejsc nie da się tam dodać). Własne ustawienia: tylko ostrzeżenie. Dawne `BLOCKED_SIZES` (Kryształy XXL/3XL, Przetrwanie S) usunięte. Przy 5 pkt doszłoby 14 kolejnych kombinacji (raport w rozmowie 28.11): zostawione do strojenia.

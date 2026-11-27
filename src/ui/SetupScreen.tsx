@@ -6,6 +6,7 @@ import { FACTION_HEROES, FACTION_NAMES, heroPool, MAX_PVP_PLAYERS, SECRET_HEROES
 import { MAX_TEAMS, raceOf, seatTable, SIDES_GOALS, TEAM_IDS, teamsOf } from '../engine/teams';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
+import { blockReason, optionBlock, playersPerSide } from '../engine/blocks';
 import { arenaSetup, BOT_LEVELS, DEFAULT_RULES, levelSettings, type BattleMode, type BotLevel, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { Logo, useCoverArt } from './Logo';
 import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
@@ -109,15 +110,19 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   /** How many seats the table may have: a coop game up to three (the three heroes), a rivalry up to eight; the arena has its two. */
   const minSeats = mode === 'pvp' ? 2 : 1;
   const maxSeats = mode === 'coop' ? 3 : mode === 'pvp' ? 8 : seats.length;
+  /** A new seat for `list`: a computer, of the first faction nobody plays yet (a coop seat plays Przymierze like the others), or of the faction given. */
+  const seatFor = (list: SeatDraft[], side?: 'dawn' | 'horde', given?: FactionId): SeatDraft => {
+    const used = list.map(raceAt);
+    const race: FactionId = given ?? side ?? (mode === 'pvp' ? offered.find((f) => !used.includes(f)) ?? offered[list.length % offered.length] : raceAt(list[0]));
+    const pool = heroPoolOf(race);
+    const heroId = pool.find((h) => !list.some((x) => !x.randomRace && !x.randomHero && x.heroId === h)) ?? pool[0];
+    const bots = list.filter((x) => x.controller === 'bot').length;
+    return { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? (side ?? 'dawn') : list[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && !side && !given && offered.length > 2, randomHero: true };
+  };
   const addSeat = (side?: 'dawn' | 'horde') => {
     if (seats.length >= maxSeats) return;
-    // A new seat is a computer, of the first faction nobody plays yet (a coop seat plays Przymierze like the others); the role columns name its side.
-    const used = seats.map(raceAt);
-    const race: FactionId = side ?? (mode === 'pvp' ? offered.find((f) => !used.includes(f)) ?? offered[seats.length % offered.length] : raceAt(seats[0]));
-    const pool = heroPoolOf(race);
-    const heroId = pool.find((h) => !seats.some((x) => !x.randomRace && !x.randomHero && x.heroId === h)) ?? pool[0];
-    const bots = seats.filter((x) => x.controller === 'bot').length;
-    setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? (side ?? 'dawn') : seats[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && !side && offered.length > 2, randomHero: true }]);
+    // The role columns name the side of the new seat.
+    setSeats([...seats, seatFor(seats, side)]);
   };
   /** The role columns: the seat goes over to the other side (its hero is drawn again there). */
   const swapRole = (i: number) => {
@@ -156,8 +161,29 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   /** The sides in play: the factions seated at the table (coop and the arena have two). */
   const playing = teamsOf({ setup: { mode, seats: table } });
   const drawing = seats.some((s) => s.randomRace);
+  /**
+   * The blocks of the wizard (backlog 103, src/engine/blocks.ts) that depend on the players a side: a ready level holds the start (with a button that seats
+   * a bot on every side that has one player), the custom settings only warn. Seats left to chance count as spread evenly over the factions.
+   */
+  const resolvedShape = resolveTier(tier, { objective, shape, customMapId: customId, growth }).shape;
+  const perSide = mode === 'coop' ? seats.length : drawing ? Math.floor(seats.length / Math.max(2, fixedRaces.size)) : playersPerSide({ mode, seats: table });
+  const block = digital && mode !== 'arena' && resolvedShape !== 'custom' ? optionBlock({ objective: goal, size: mapSize, shape: resolvedShape, perSide }) : null;
+  const blocked = Boolean(block) && tier !== 'custom';
+  /** One more computer on every side that has a single player (coop: a second Przymierze seat; the Horde follows). */
+  const fillSides = () => {
+    let list = seats;
+    if (mode === 'coop') list = [...list, seatFor(list)];
+    // Seats left to chance: more of them, until the even spread gives every side two.
+    else if (drawing) while (list.length < 2 * Math.max(2, fixedRaces.size) && list.length < maxSeats) list = [...list, seatFor(list)];
+    else for (const side of new Set(table.map((x) => x.faction))) {
+      const at = table.map((x, i) => (x.faction === side ? i : -1)).filter((i) => i >= 0);
+      if (at.length === 1) list = [...list, roleGoal ? seatFor(list, raceAt(seats[at[0]]) as 'dawn' | 'horde') : seatFor(list, undefined, raceAt(seats[at[0]]))];
+    }
+    setSeats(list.slice(0, maxSeats));
+  };
   const valid =
     !tooMany &&
+    !blocked &&
     seats.every((s, i) => s.randomRace || s.randomHero || !takenBy(s.heroId, i)) &&
     // A faction left to chance is drawn legal (at least two factions in a rivalry, at most three seats of one).
     (mode === 'coop' || drawing || new Set(seats.map(raceAt)).size >= 2) &&
@@ -536,6 +562,17 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 />{' '}
                 Pełny ekran przy uruchomieniu
               </label>
+            )}
+            {block && (
+              <div role="alert" className={`table-block${blocked ? '' : ' warn'}`} data-table-block={blocked ? 'hold' : 'warn'}>
+                {blockReason(block).map((line) => <span key={line}>{line}</span>)}
+                {blocked && block.players === 1 && <span>Dodaj drugiego gracza albo bota po każdej stronie.</span>}
+                {blocked && block.players === 2 && <span>Zostaw po jednym graczu na stronę albo zmień mapę.</span>}
+                {blocked && !block.players && <span>Wróć i zmień mapę albo cel.</span>}
+                {blocked && block.players === 1 && seats.length < maxSeats && (
+                  <button className="btn plate parch" data-fill-sides onClick={fillSides} style={{ padding: '4px 16px', fontSize: 16 }}>{mode === 'coop' ? 'Dodaj drugiego gracza (bota)' : 'Dodaj bota do każdej strony'}</button>
+                )}
+              </div>
             )}
             {tooMany && <div role="alert" style={{ textAlign: 'center', color: '#F3A27A', fontSize: 16 }} data-too-many>{`Przy stole może być najwyżej ${maxFactions} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.`}</div>}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>

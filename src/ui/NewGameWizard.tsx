@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
-import { defaultCustom, sizeAllowed } from '../engine/presets';
+import { defaultCustom } from '../engine/presets';
+import { optionBlock, playersNote } from '../engine/blocks';
 import { SCENARIO_BY_ID, SCENARIOS } from '../engine/scenarios';
 import { ScenarioPicker } from './ScenarioPicker';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
@@ -103,13 +104,14 @@ const TITLES: Record<Page, string> = {
 };
 
 /** A big choice: a picture, a name and a sentence. */
-function Card({ img, title, text, on, onClick, disabled, wide, badge }: { img: React.ReactNode; title: string; badge?: string; text: string; on?: boolean; onClick: () => void; disabled?: boolean; wide?: boolean }) {
+function Card({ img, title, text, on, onClick, disabled, wide, badge, note }: { img: React.ReactNode; title: string; badge?: string; text: string; on?: boolean; onClick: () => void; disabled?: boolean; wide?: boolean; /** A short warning under the text (a goal that is uneven for some tables). */ note?: string }) {
   return (
     <button className={`opt-card ${on ? 'on' : ''} ${wide ? 'wide' : ''}`} aria-pressed={on} disabled={disabled} onClick={onClick}>
       {badge && <span className="opt-card-badge" aria-hidden="true">{badge}</span>}
       <span className="opt-card-img">{img}</span>
       <span className="opt-card-title">{title}</span>
       <span className="opt-card-text">{text}</span>
+      {note && <span className="opt-card-note" data-card-note>{note}</span>}
     </button>
   );
 }
@@ -202,13 +204,21 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   const scenarioOffer = d.digital && d.mode === 'pvp' && d.tier !== 'adventure' && scenariosOf(d.tier).length > 0;
   /** The goal the game will be played for (Spacer and Przygoda: the crystals). */
   const goalNow: ObjectiveId = d.digital && d.tier !== 'adventure' && d.mode !== 'arena' ? d.objective : 'crystals';
+  /**
+   * The blocks of the wizard (backlog 103, src/engine/blocks.ts): a goal on a size and shape that is too uneven. A block for any table greys the card (the custom
+   * settings only warn); a block for some numbers of players a side leaves the card open with a note, and the seats page holds the start.
+   */
+  const shapeNow = d.digital && d.tier !== 'adventure' ? d.shape : 'triangle';
+  const blockAt = (o: ObjectiveId, size: MapSize = d.mapSize) => (d.digital && d.mode !== 'arena' ? optionBlock({ objective: o, size, shape: shapeNow }, true) : null);
+  const hardBlock = (o: ObjectiveId, size: MapSize = d.mapSize) => { const b = blockAt(o, size); return Boolean(b && !b.players && d.tier !== 'custom'); };
+  const sizeOk = (o: ObjectiveId, size: MapSize) => !hardBlock(o, size);
   /** The fuller levels pick the map before the goal, so no size is blocked on the map page: the goal page greys the goals the size cannot take. */
   const goalAfterMap = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
   // Where the goal is fixed (Spacer, Przygoda), a goal that is not offered on the chosen size moves the size to the nearest one it is offered on.
   useEffect(() => {
-    if (!d.digital || goalAfterMap || sizeAllowed(goalNow, d.mapSize)) return;
+    if (!d.digital || goalAfterMap || sizeOk(goalNow, d.mapSize)) return;
     const at = sizes.indexOf(d.mapSize);
-    const nearest = sizes.filter((m) => sizeAllowed(goalNow, m)).sort((a, b) => Math.abs(sizes.indexOf(a) - at) - Math.abs(sizes.indexOf(b) - at))[0];
+    const nearest = sizes.filter((m) => sizeOk(goalNow, m)).sort((a, b) => Math.abs(sizes.indexOf(a) - at) - Math.abs(sizes.indexOf(b) - at))[0];
     if (nearest) setD((cur) => ({ ...cur, mapSize: nearest }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goalNow, d.mapSize, d.digital]);
@@ -289,7 +299,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
         <>
           <div className="opt-grid" data-wizard-page="objective">
             {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
-              <Card key={o} disabled={d.digital && !sizeAllowed(o, d.mapSize)} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={d.digital && !sizeAllowed(o, d.mapSize) ? 'Niedostępny na wybranej wielkości mapy.' : OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
+              <Card key={o} disabled={hardBlock(o)} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={hardBlock(o) ? 'Niedostępny na tej mapie.' : OBJECTIVES[o].summary} note={!hardBlock(o) && blockAt(o) ? (d.tier === 'custom' ? 'nierówny na tej mapie' : playersNote(blockAt(o)!)) : undefined} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
             ))}
           </div>
           {d.mode === 'coop' && d.objective === 'boss' && (
@@ -342,7 +352,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             <Reveal open={!scenarioOn}>
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => {
-                const off = d.digital && !goalAfterMap && !sizeAllowed(goalNow, m);
+                const off = d.digital && !goalAfterMap && hardBlock(goalNow, m);
                 return (
                   <span key={m} className="size-slot">
                     <Tip text={mapTip(m)} rightClick>

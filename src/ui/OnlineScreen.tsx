@@ -3,7 +3,8 @@ import { heroPool, MAX_PVP_PLAYERS, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type F
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { SIDES_GOALS } from '../engine/teams';
-import { defaultCustom, TIERS } from '../engine/presets';
+import { defaultCustom, resolveTier, TIERS } from '../engine/presets';
+import { blockReason, optionBlock, playersPerSide } from '../engine/blocks';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { Logo, useCoverArt } from './Logo';
@@ -404,6 +405,10 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   };
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
+  // The blocks of the wizard (backlog 103): the online table holds the start of a ready level, the custom settings only warn. Its seats are fixed when it is made.
+  const shapeNow = resolveTier(table.tier ?? 'adventure', { objective: table.objective ?? 'crystals', shape: table.shape ?? 'triangle', customMapId: table.customMapId, growth: false }).shape;
+  const block = table.digital && room.mode !== 'arena' && shapeNow !== 'custom' ? optionBlock({ objective: (table.tier === 'adventure' ? 'crystals' : table.objective) ?? 'crystals', size: room.mapSize, shape: shapeNow, perSide: playersPerSide({ mode: room.mode, seats: room.seats }) }) : null;
+  const blocked = Boolean(block) && table.tier !== 'custom';
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
 
@@ -480,10 +485,16 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           );
         })}
         <div style={{ fontSize: 15, color: 'var(--muted)' }}>Możesz zająć kilka miejsc — zagrasz nimi na zmianę przy tym samym komputerze.</div>
+        {block && (
+          <div role="alert" className={`table-block${blocked ? '' : ' warn'}`} data-table-block={blocked ? 'hold' : 'warn'}>
+            {blockReason(block).map((line) => <span key={line}>{line}</span>)}
+            {blocked && <span>{block.players === 1 ? 'Załóż stół z co najmniej dwoma graczami (albo botami) po każdej stronie.' : block.players === 2 ? 'Załóż stół z jednym graczem na stronę albo z inną mapą.' : 'Załóż stół z inną mapą albo innym celem.'}</span>}
+          </div>
+        )}
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
           <button className="btn plate parch btn-wide" onClick={() => session.send({ type: 'leaveRoom' })}>Wyjdź z pokoju</button>
           {owner ? (
-            <button className="btn prim" disabled={!ready} title={ready ? undefined : 'Każde miejsce musi zająć gracz albo komputer.'} style={{ height: 54, padding: '0 36px', fontSize: 23 }} onClick={() => session.send({ type: 'start' })}>
+            <button className="btn prim" disabled={!ready || blocked} title={blocked ? 'Ta mapa z tym celem jest zablokowana dla tego stołu.' : ready ? undefined : 'Każde miejsce musi zająć gracz albo komputer.'} style={{ height: 54, padding: '0 36px', fontSize: 23 }} onClick={() => session.send({ type: 'start' })}>
               Rozpocznij grę
             </button>
           ) : (

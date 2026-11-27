@@ -2,7 +2,6 @@
 // adventure of the board game's goal on the triangle map with fixed heroes; level 2 "Wyprawa" adds the goals, the map shapes and hero growth.
 // "Własne" leaves every switch to the player. The presets only choose switches that already exist, so no rule lives here.
 
-import type { MapSize } from './data';
 import { levelSettings, type BattleMode, type InitiativeTieMode, type Level, type MapShape, type Mode, type ObjectiveId, type RulesConfig, type SetupOptions } from './types';
 
 export type Tier = 'adventure' | 'expedition' | 'kingdom' | 'economy' | 'realm' | 'empire' | 'custom';
@@ -49,13 +48,6 @@ export function withRuleset(setup: SetupOptions, digital: boolean, objective: Ob
   return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(kingdom && growth && setup.mode !== 'arena' ? { kingdom: true, ...(economy ? { economy: true, ...(realm ? { realm: true, ...(empire ? { empire: true } : {}) } : {}) } : {}) } : {}), ...(objective !== 'crystals' && setup.mode !== 'arena' ? { objective } : {}) } };
 }
 
-/**
- * Map sizes a goal is not offered on (the author's decision of 26.11, backlog 94): the crystals on the huge and giant maps (one Przymierza hero has
- * too far to go: the roles could not be evened out, about 20-35 percent for the Przymierze whatever the levers), and survival on the small map
- * (the Przymierze holding the middle won 77-89 percent whatever the levers; a Horde bot that waits to strike together did not change it).
- */
-export const BLOCKED_SIZES: Partial<Record<ObjectiveId, readonly MapSize[]>> = { crystals: ['huge', 'giant'], survival: ['short'] };
-export const sizeAllowed = (objective: ObjectiveId, size: MapSize): boolean => !BLOCKED_SIZES[objective]?.includes(size);
 
 // ------------------------------------------------------------------ "Własne ustawienia" at a table
 
