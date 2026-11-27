@@ -95,6 +95,8 @@ interface Props {
   onCell: (k: HexKey) => void;
   /** The attack of a unit with sprites being animated (its damage shows when the blow lands). */
   attackNow: AttackNow | null;
+  /** An action is on its way or playing: no unit is outlined. */
+  acting?: boolean;
   /** Right click on a cell: another tail cell for a large unit about to move there. */
   onCellAlt: (k: HexKey) => void;
   /** Where the tail of the active large unit would lie if it moved to the cell under the pointer. */
@@ -197,7 +199,7 @@ export function ArenaBoard(p: Props) {
     const lastJump = b.teleports?.[b.teleports.length - 1];
     const blink = lastJump?.unitId === u.id && lastJump.to === u.pos && lastJump.kind !== 'burrow';
     // The unit whose turn it is (or the one picked while deploying) has a thin outline round its whole silhouette.
-    const outline = (deploySide ? picked === u.id : active?.id === u.id) && u.alive ? ACTIVE_FIGURE_RING : null;
+    const outline = (deploySide ? picked === u.id : active?.id === u.id && !p.acting) && u.alive ? ACTIVE_FIGURE_RING : null;
     return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, blink, ring, outline, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x, towardY: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).y } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path, rebirth: u.pos ? fxs.find((e) => e.kind === 'odrodzenie' && e.cell === u.pos)?.key : undefined }];
   });
   return (

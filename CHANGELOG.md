@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bitwa: żółta obwódka aktywnej jednostki powoli pulsuje (zanika i wraca), a znika w chwili kliknięcia ruchu lub ataku; wraca dopiero, gdy plansza znieruchomieje.
 - Menu wyboru trybu: opis Potyczki nie mówi już tylko o Przymierzu i Hordzie, a opis Kampanii zapowiada historie kolejnych frakcji.
 - Zbliżający się limit rund: gdy zostają trzy rundy, tor rund i pozostałe pola pulsują na bursztynowo (w ostatniej rundzie na czerwono), pod torem pojawia się ostrzeżenie (na telefonie przy liczniku rund), a na początku twojej tury słychać dzwon, w ostatniej rundzie ponury sygnał.
 - Tor rund: w partiach dłuższych niż 24 rundy kryształ nie znika po 24. rundzie, tylko zaczyna drugie okrążenie od pierwszego pola.

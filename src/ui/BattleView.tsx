@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ABILITY, UNITS, type TeamId, type Side } from '../engine/data';
 import {
   abilityActive,
@@ -74,12 +74,28 @@ interface Props {
 /** How far the arena zooms in on a phone, as a multiple of the scale that shows all of it. */
 const MAX_ARENA_ZOOM = 2.6;
 
-export function BattleView({ state: liveState, canAct: canActNow, onAction, onShowCard, footer, attack: heldAttack }: Props) {
+export function BattleView({ state: liveState, canAct: canActNow, onAction: sendAction, onShowCard, footer, attack: heldAttack }: Props) {
   // The blow of a unit with sprites lands when its attack animation does: until then the state before it stays on screen.
   const impact = useImpactHold(liveState);
   const state = impact.view;
   const canAct = canActNow && !impact.holding;
   const attackNow = heldAttack ?? impact.attack;
+  // The outline of the active unit goes out with the click, before the answer comes (online it takes a moment), and stays out while a
+  // unit walks up to strike. A refused action changes no state: the outline comes back after a while.
+  const [sentFrom, setSentFrom] = useState<GameState | null>(null);
+  const [striking, setStriking] = useState(false);
+  const liveRef = useRef(liveState);
+  liveRef.current = liveState;
+  const onAction = useCallback((a: Action) => {
+    setSentFrom(liveRef.current);
+    sendAction(a);
+  }, [sendAction]);
+  useEffect(() => {
+    if (!sentFrom) return;
+    const t = window.setTimeout(() => setSentFrom(null), 3000);
+    return () => window.clearTimeout(t);
+  }, [sentFrom]);
+  const acting = sentFrom === liveState || striking || impact.holding;
   const b = state.battle!;
   const geo = geometryOf(b.layout);
   const { cellPos } = geo;
@@ -213,12 +229,16 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     const p = pendingAttack.current;
     if (!p || !myTurn || !act?.moved) return;
     pendingAttack.current = null;
-    if (!targets.some((t) => t.id === p.targetId)) return;
-    window.setTimeout(() => onAction({ type: 'battleAttack', targetId: p.targetId, useAbility: p.useAbility }), Math.max(0, p.at - Date.now()));
+    if (!targets.some((t) => t.id === p.targetId)) return setStriking(false);
+    window.setTimeout(() => {
+      setStriking(false);
+      onAction({ type: 'battleAttack', targetId: p.targetId, useAbility: p.useAbility });
+    }, Math.max(0, p.at - Date.now()));
     // The timer is not cleared on purpose: a second run of this effect (React's development mode) must not lose the attack.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   useEffect(() => setApproach(null), [state]);
+  useEffect(() => setStriking(false), [b.activation?.unitId]);
   /**
    * The cursor over a unit: a sword for an attack on a neighbour (ranged units fight adjacent enemies too),
    * an arrow for a shot, and a crossed-out arrow when an obstacle hides an enemy from a ranged unit
@@ -427,6 +447,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       pendingAttack.current = { targetId: u.id, useAbility: useAbility && attackAbility, at: Date.now() + scaledMs(steps * WALK_STEP_MS) };
       setUseAbility(false);
       setApproach(null);
+      setStriking(true);
       onAction({ type: 'battleMove', to: approach.cell });
       return;
     }
@@ -568,6 +589,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           aimApproach={aimApproach}
           onCell={clickCell}
           attackNow={attackNow}
+          acting={acting}
           onCellAlt={altCell}
           previewTail={previewTail}
           approachTail={approachTail}

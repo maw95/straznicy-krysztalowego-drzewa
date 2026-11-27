@@ -41,6 +41,10 @@ const BLINK_MS = 760;
 
 /** The outline of the active unit: how far (layout pixels) the tinted silhouette is drawn off, and in which directions. */
 const OUTLINE_PX = 1.6;
+/** It fades out and back once per this time (down to OUTLINE_FAINT); on a still board it is redrawn every OUTLINE_FRAME_MS. */
+const OUTLINE_PULSE_MS = 2000;
+const OUTLINE_FAINT = 0.08;
+const OUTLINE_FRAME_MS = 33;
 const OUTLINE_DIRS: ReadonlyArray<[number, number]> = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.71, 0.71], [-0.71, 0.71], [0.71, -0.71], [-0.71, -0.71]];
 
 /** Flight speed over the board (canvas pixels per second); take-off and landing add their own time. */
@@ -102,6 +106,10 @@ class Stage {
   private disposed = false;
   /** Canvas pixels per layout pixel: the board is scaled on the screen, and screens are denser than 1:1. */
   private res = 1;
+  /** The next redraw of a still board with a pulsing outline. */
+  private idle = 0;
+  /** When the outline last appeared (its pulse starts there, at full strength), or null while it is hidden. */
+  private outlineSince: number | null = null;
 
   constructor(private canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d');
@@ -221,8 +229,14 @@ class Stage {
   }
 
   private start() {
+    window.clearTimeout(this.idle);
     if (this.frame || this.disposed) return;
     this.frame = requestAnimationFrame(this.tick);
+  }
+
+  /** Something on the board is still playing: a walk, a blow, a death, the shake of a hit. */
+  private moving(now: number) {
+    return [...this.live.values()].some((l) => l.seg || l.queue.length || now - l.hitStart < hitMs(this.sets.get(l.piece.defId)));
   }
 
   private tick = (now: number) => {
@@ -230,9 +244,9 @@ class Stage {
     if (this.disposed) return;
     now = animClock(now);
     this.draw(now);
-    // Keep drawing while anything moves; a still board needs no frames.
-    const busy = [...this.live.values()].some((l) => l.seg || l.queue.length || now - l.hitStart < hitMs(this.sets.get(l.piece.defId)));
-    if (busy) this.frame = requestAnimationFrame(this.tick);
+    // Keep drawing while anything moves; a still board needs no frames, except a few for the pulse of an outline.
+    if (this.moving(now)) this.frame = requestAnimationFrame(this.tick);
+    else if (this.ctx && this.outlineSince !== null) this.idle = window.setTimeout(() => this.start(), OUTLINE_FRAME_MS);
   };
 
   private advance(l: Live, now: number) {
@@ -272,6 +286,10 @@ class Stage {
     ctx.imageSmoothingQuality = 'high';
     const lives = [...this.live.values()];
     for (const l of lives) this.advance(l, now);
+    // The outline waits until the board is still: it is never seen on a walk or during a blow.
+    const outlined = !this.moving(now) && lives.some((l) => l.piece.outline && !l.piece.dead);
+    if (!outlined) this.outlineSince = null;
+    else this.outlineSince ??= now;
     // Corpses lie under the living; the rest are drawn from the back (top of the board) to the front.
     lives.sort((a, b) => Number(isCorpse(b)) - Number(isCorpse(a)) || a.y - b.y);
     for (const l of lives) {
@@ -398,11 +416,13 @@ class Stage {
     ctx.rotate(turnLean - (l.flip ? -1 : 1) * recoil * 0.12);
     ctx.scale((l.flip ? -1 : 1) * turn * k * shrink, k * shrink * (set.spec.stretchY ?? 1));
     ctx.translate(0, (set.corpse.dy * lie) / k);
-    if (l.piece.outline && !l.piece.dead) {
-      // The silhouette tinted in the outline's colour, drawn a hair off in eight directions under the unit; it breathes a little.
+    if (l.piece.outline && !l.piece.dead && this.outlineSince !== null) {
+      // The silhouette tinted in the outline's colour, drawn a hair off in eight directions under the unit; it slowly fades out and back.
       const sil = this.silhouette(img, sx, sy, sw, sh, l.piece.outline);
       const alpha = ctx.globalAlpha;
-      ctx.globalAlpha = alpha * (0.75 + 0.25 * Math.sin(now / 260));
+      const wave = 0.5 + 0.5 * Math.cos(((now - this.outlineSince) / OUTLINE_PULSE_MS) * Math.PI * 2);
+      // Squared: the eight copies overlap, which would otherwise keep the faint phase nearly opaque.
+      ctx.globalAlpha = alpha * (OUTLINE_FAINT + (1 - OUTLINE_FAINT) * wave) ** 2;
       for (const [ox, oy] of OUTLINE_DIRS) ctx.drawImage(sil, -set.cx * dw + ox * OUTLINE_PX, -set.feet * dh + oy * OUTLINE_PX, dw, dh);
       ctx.globalAlpha = alpha;
     }
@@ -480,6 +500,7 @@ class Stage {
 
   dispose() {
     this.disposed = true;
+    window.clearTimeout(this.idle);
     for (const k of this.live.keys()) sfx.walking(k, false);
     cancelAnimationFrame(this.frame);
   }

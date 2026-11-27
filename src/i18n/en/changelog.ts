@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Bitwa: żółta obwódka aktywnej jednostki powoli pulsuje (zanika i wraca), a znika w chwili kliknięcia ruchu lub ataku; wraca dopiero, gdy plansza znieruchomieje.':
+    'Battle: the yellow outline of the active unit pulses slowly (fades out and back) and goes out the moment you click a move or an attack; it returns only once the board is still.',
   'Menu wyboru trybu: opis Potyczki nie mówi już tylko o Przymierzu i Hordzie, a opis Kampanii zapowiada historie kolejnych frakcji.':
     'Game mode menu: the Skirmish description no longer speaks only of the Covenant and the Horde, and the Campaign description announces the stories of the other factions.',
   'Zbliżający się limit rund: gdy zostają trzy rundy, tor rund i pozostałe pola pulsują na bursztynowo (w ostatniej rundzie na czerwono), pod torem pojawia się ostrzeżenie (na telefonie przy liczniku rund), a na początku twojej tury słychać dzwon, w ostatniej rundzie ponury sygnał.':
