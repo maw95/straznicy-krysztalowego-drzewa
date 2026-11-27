@@ -6,6 +6,8 @@
 import { registerCustomMap, type CustomMap } from './customMaps';
 import { FACTION_HEROES } from './data';
 import { createGame, activeHero, currentActor, legalHeroMoves } from './game';
+import { mapNeighbors } from './map';
+import { heroTileCost } from './sites';
 import { distance, parseKey, type HexKey } from './hex';
 import { resolveTier, withRuleset, type Tier } from './presets';
 import { levelSettings, type Action, type GameState, type Level, type ObjectiveId, type SetupOptions } from './types';
@@ -17,6 +19,8 @@ export interface TrainingStep {
   id: string;
   title: string;
   text: string;
+  /** An explaining step: the coach shows "Dalej" and the player goes on when ready (the step lets the game be played meanwhile); it is also done when its `done` is true. */
+  ack?: boolean;
   /** Where the ring pulses (the screen draws it); missing = nowhere. */
   target?: (s: GameState) => CoachTarget | null;
   /** The player's actions this step lets through; the rest is held (the coach shakes). */
@@ -57,6 +61,8 @@ export const RIGHT_CLICK_RULE = 'Jeśli czegoś nie rozumiesz, kliknij to prawym
 const mine = (s: GameState) => activeHero(s);
 const inBattle = (s: GameState, stages: string[]) => s.phase === 'battle' && s.battle !== null && stages.includes(s.battle.stage);
 const MAP_ACTIONS: Action['type'][] = ['moveHero', 'endTurn'];
+/** The player's actions in a fight on the arena (moving, striking, abilities, treasures, ending the move). */
+const inFight = (a: Action): boolean => a.type.startsWith('battle') || a.type === 'endActivation';
 
 /** The hex where the player's hero should go next: the Tree when it carries a crystal, else the nearest crystal on the map (with its guardian). */
 function goalHex(s: GameState): HexKey | null {
@@ -73,15 +79,34 @@ function goalHex(s: GameState): HexKey | null {
   return best?.key ?? null;
 }
 
-/** The step of the hero's move that brings it closest to `goalHex` (the pulsing hex on the map). */
+/**
+ * The step of the hero's move on the cheapest way to `goalHex` (the pulsing hex on the map): Dijkstra over the terrain costs, through hexes the hero has not seen yet
+ * as well (the way is read from the whole map, the screen shows only the next hex). Null when the step cannot be taken now (no points left).
+ */
 function nextStep(s: GameState): CoachTarget | null {
   const goal = goalHex(s);
   const hero = mine(s);
   if (!goal || !hero || s.phase !== 'adventure') return null;
-  const moves = legalHeroMoves(s).filter((m) => m.kind === 'move');
-  const g = parseKey(goal);
-  const best = [...moves].sort((a, b) => distance(parseKey(a.to), g) - distance(parseKey(b.to), g))[0];
-  return best ? { hex: best.to } : null;
+  const dist = new Map<HexKey, number>([[hero.pos, 0]]);
+  const first = new Map<HexKey, HexKey>();
+  const queue: HexKey[] = [hero.pos];
+  while (queue.length) {
+    queue.sort((a, b) => dist.get(a)! - dist.get(b)!);
+    const k = queue.shift()!;
+    if (k === goal) break;
+    for (const n of mapNeighbors(s.tiles, k)) {
+      const cost = n === goal ? 1 : heroTileCost(hero, s.tiles[n]);
+      if (cost === null) continue;
+      const d = dist.get(k)! + cost;
+      if (d < (dist.get(n) ?? Infinity)) {
+        dist.set(n, d);
+        first.set(n, k === hero.pos ? n : first.get(k)!);
+        queue.push(n);
+      }
+    }
+  }
+  const step = first.get(goal);
+  return step && legalHeroMoves(s).some((m) => m.to === step) ? { hex: step } : null;
 }
 
 /** The hero's start hex is the one in `homes`; once the hero is elsewhere (or any round passed) the first step is done. */
@@ -128,23 +153,46 @@ const PRZYGODA: Training = {
     {
       id: 'strazy',
       title: 'Strażnik kryształu',
-      text: 'Kryształu pilnuje strażnik. Idź podświetlonymi polami w jego stronę. Gdy skończą ci się punkty ruchu, kliknij „Zakończ turę”. Wejście na pole strażnika zaczyna bitwę.',
+      text: 'Kryształu pilnuje strażnik: jego pole zostało dla ciebie odsłonięte. Idź podświetlonymi polami w jego stronę. Gdy skończą ci się punkty ruchu, kliknij „Zakończ turę”. Wejście na pole strażnika zaczyna bitwę: potwierdź „Do walki!”.',
       target: nextStep,
       allow: (a) => MAP_ACTIONS.includes(a.type),
       done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
     },
     {
       id: 'pomocnicy',
-      title: 'Przed bitwą',
-      text: 'Zaczyna się bitwa. Najpierw wybierz pomocników i ustaw jednostki na swojej połowie areny, a potem zatwierdź. Przycisk potwierdzenia jest na dole ekranu.',
-      allow: (a) => ['selectSupports', 'deployUnits', 'pickMirages', 'draftPick', 'pickGear', 'pickSpells'].includes(a.type),
-      done: (s) => !inBattle(s, ['gear', 'spells', 'select', 'draft', 'deploy']),
+      title: 'Pomocnicy',
+      text: 'Zaczyna się bitwa. Wybierz dwóch pomocników: kliknij dwie karty, potem „Do bitwy!”. Każdy ma swój atak, życie i zdolność, a prawy klik na karcie pokaże więcej.',
+      allow: (a) => ['selectSupports', 'draftPick', 'pickGear', 'pickSpells'].includes(a.type),
+      done: (s) => !inBattle(s, ['gear', 'spells', 'select', 'draft']),
+    },
+    {
+      id: 'ustawienie',
+      title: 'Ustawienie wojska',
+      text: 'Teraz ustaw wojsko: kliknij jednostkę, a potem złote pole w swojej kolumnie. Gdy będziesz gotowy, kliknij „Gotowe — do bitwy”.',
+      allow: (a) => ['deployUnits', 'pickMirages'].includes(a.type),
+      done: (s) => !inBattle(s, ['deploy']),
     },
     {
       id: 'walka',
-      title: 'Walka na arenie',
-      text: 'Teraz walka: kolejne jednostki mają swoje aktywacje. Kliknij swoją jednostkę, wybierz pole, by podejść, i kliknij wroga, żeby uderzyć. „Zakończ aktywację” oddaje ruch przeciwnikowi.',
-      allow: (a) => a.type.startsWith('battle') || a.type === 'endActivation',
+      title: 'Ruch i atak',
+      text: 'Jednostki działają po kolei; kolejkę widać na dole. Gdy przychodzi twoja, podświetlone pola pokazują, dokąd może dojść: kliknij takie pole, żeby tam pójść, a potem kliknij wroga w zasięgu, żeby uderzyć. Przycisk „Koniec” kończy ruch jednostki, gdy nie ma już nic do zrobienia.',
+      ack: true,
+      allow: inFight,
+      done: (s) => s.phase !== 'battle',
+    },
+    {
+      id: 'zdolnosci',
+      title: 'Zdolności',
+      text: 'Wiele jednostek ma zdolność: jej ikona stoi obok przycisku „Koniec” (klawisz Z). Zdolność bohatera i pomocnika działa raz na bitwę, więc wybierz dobry moment. Prawy klik na ikonie opisze, co robi.',
+      ack: true,
+      allow: inFight,
+      done: (s) => s.phase !== 'battle',
+    },
+    {
+      id: 'skarby',
+      title: 'Skarby',
+      text: 'Skarby to jednorazowe karty twojej frakcji. Ikona „Skarby” w rogu areny (klawisz S) otwiera skrzynię: użyj skarbu przed akcją jednostki. Prawy klik na skarbie pokaże, co robi. Pokonaj teraz strażnika!',
+      allow: inFight,
       done: (s) => s.phase !== 'battle',
     },
     {
@@ -152,7 +200,7 @@ const PRZYGODA: Training = {
       title: 'Do Drzewa',
       text: 'Wygrałeś! Strażnik zostawił kryształ i bohater go niesie. Zanieś go na pole Drzewa pośrodku mapy: idź podświetlonymi polami.',
       target: nextStep,
-      allow: (a) => a.type === 'moveHero' || a.type === 'endTurn' || a.type === 'chooseTreasure' || a.type === 'chooseSkill',
+      allow: (a) => a.type === 'moveHero' || a.type === 'endTurn',
       done: (s) => s.phase === 'over',
     },
   ],
@@ -177,7 +225,8 @@ export function trainingSetup(t: Training, seed = 1): SetupOptions {
       { name: 'Gracz', faction: 'dawn', controller: 'human', heroId: t.hero },
       { name: 'Horda', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[seed % FACTION_HEROES.horde.length], botLevel: 'kids' },
     ],
-    rules: { ...preset.rules, crystalsNeededDelta: -1 },
+    // Two treasures from the start, so that the step about them has something to show.
+    rules: { ...preset.rules, crystalsNeededDelta: -1, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } },
     seatLevels: true,
   };
   const setup = withRuleset(base, true, sw.objective, 'custom', t.map.id, sw.growth, 'kingdom' in sw && sw.kingdom, 'economy' in sw && sw.economy, 'realm' in sw && sw.realm, 'empire' in sw && sw.empire);

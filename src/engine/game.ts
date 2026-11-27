@@ -214,6 +214,8 @@ export function createGame(setup: SetupOptions): GameState {
   for (const f of teams) revealAround(state, homeOf(state, f), 1, f);
   // The Tree is known from the start; where the goal has removed it, the middle hex lies hidden like the rest (unless the goal itself shows it).
   if (state.tiles[treeOf(state)].tree) seeHex(state, treeOf(state));
+  // A training shows where the crystals lie (its coach points the way to their guardians).
+  if (setup.training) for (const c of Object.values(state.crystals)) if (!c.decoy && state.tiles[c.at]) seeHex(state, c.at, 'dawn');
   state.rng = rng.state;
   placeSites(state);
   placeEncounters(state);

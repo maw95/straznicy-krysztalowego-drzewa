@@ -1420,7 +1420,9 @@ html.no-motion .unfold { transition: none; }
 .training-coach[data-shake="on"] { animation: coach-shake 0.35s; }
 .training-coach-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 19px; }
 .training-coach-count { font-size: 14px; color: #6B4A22; white-space: nowrap; }
-.training-coach-skip { margin-top: 6px; padding: 2px 10px; font-size: 14px; opacity: 0.75; }
+.training-coach-buttons { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
+.training-coach-next { padding: 2px 16px; font-size: 16px; }
+.training-coach-skip { margin-top: 0; padding: 2px 10px; font-size: 14px; opacity: 0.75; }
 @keyframes coach-shake { 0%, 100% { transform: translateX(-50%); } 25% { transform: translateX(calc(-50% - 7px)); } 75% { transform: translateX(calc(-50% + 7px)); } }
 @media (prefers-reduced-motion: reduce) { .training-coach[data-shake="on"] { animation: none; outline: 3px solid #C0392B; } }
 /* The bubble never blocks a click on the map under it; on a short screen (a phone held sideways) it is a few lines. */

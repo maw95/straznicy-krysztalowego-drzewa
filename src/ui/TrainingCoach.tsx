@@ -3,7 +3,7 @@
 
 import { RIGHT_CLICK_RULE, type Training } from '../engine/training';
 
-export function TrainingCoach({ training, index, shake, onSkip }: { training: Training; index: number; shake: number; onSkip: () => void }) {
+export function TrainingCoach({ training, index, shake, onSkip, onNext }: { training: Training; index: number; shake: number; onSkip: () => void; onNext: () => void }) {
   const step = training.steps[index];
   return (
     <div className="plate parch training-coach" data-coach={step?.id ?? 'free'} key={shake} data-shake={shake > 0 ? 'on' : 'off'} role="status">
@@ -13,7 +13,10 @@ export function TrainingCoach({ training, index, shake, onSkip }: { training: Tr
       </div>
       <div className="training-coach-text">{step ? step.text : training.free}</div>
       <div className="training-coach-rc" data-coach-rc>{RIGHT_CLICK_RULE}</div>
-      {step && <button className="btn training-coach-skip" data-coach-skip onClick={onSkip}>Wyłącz prowadzenie</button>}
+      <div className="training-coach-buttons">
+        {step?.ack && <button className="btn prim training-coach-next" data-coach-next onClick={onNext}>Dalej</button>}
+        {step && <button className="btn training-coach-skip" data-coach-skip onClick={onSkip}>Wyłącz prowadzenie</button>}
+      </div>
     </div>
   );
 }

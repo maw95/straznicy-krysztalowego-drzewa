@@ -7,6 +7,7 @@ import { CUSTOM_MAPS, readyMaps, validateCustomMap } from '../src/engine/customM
 import { applyAction, currentActor } from '../src/engine/game';
 import { TRAININGS, createTrainingGame, trainingAllows, trainingIndex, trainingOf, trainingSetup } from '../src/engine/training';
 import { UNITS } from '../src/engine/data';
+import { knowsHex } from '../src/engine/hidden';
 
 describe.each(TRAININGS)('training $id', (t) => {
   it('is told: title, line, intro with the right-click rule, steps with a title and a text', () => {
@@ -32,6 +33,14 @@ describe.each(TRAININGS)('training $id', (t) => {
     expect(trainingOf(setup)).toBe(t);
     expect(setup.customMapId).toBe(t.map.id);
     expect(setup.seats.filter((s) => s.controller === 'human')).toHaveLength(1);
+  });
+
+  it('shows the player where the crystals lie from the start', () => {
+    const g = createTrainingGame(t, 3);
+    const lying = Object.values(g.crystals).filter((c) => !c.decoy);
+    expect(lying.length).toBeGreaterThan(0);
+    for (const c of lying) expect(knowsHex(g, c.at, 'dawn'), c.at).toBe(true);
+    expect(g.factions.dawn.inventory.length).toBeGreaterThan(0);
   });
 
   it.each([1, 2, 3, 4, 5, 6])('is led to its end by the steps (seed %i)', (seed) => {

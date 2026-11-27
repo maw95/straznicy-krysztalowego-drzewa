@@ -418,6 +418,7 @@ export function App() {
   const trainIdx = useRef(0);
   const [coachShake, setCoachShake] = useState(0);
   const [coachOff, setCoachOff] = useState(false);
+  const [, setCoachTick] = useState(0);
   const coachOffRef = useRef(false);
   coachOffRef.current = coachOff;
   const dispatch = useCallback((a: Action) => {
@@ -1112,7 +1113,7 @@ export function App() {
           💡 <StatText text={hintNow.text} />
         </div>
       )}
-      {trainingRun && !coachOff && game.phase !== 'over' && !held && <TrainingCoach training={trainingRun} index={coachIndex} shake={coachShake} onSkip={() => setCoachOff(true)} />}
+      {trainingRun && !coachOff && game.phase !== 'over' && !held && <TrainingCoach training={trainingRun} index={coachIndex} shake={coachShake} onSkip={() => setCoachOff(true)} onNext={() => { trainIdx.current = coachIndex + 1; setCoachShake((n) => n); setCoachTick((n) => n + 1); }} />}
       <VictoryEffects game={game} show={!held && !reportPending} />
       <RotatePrompt />
       <FoundTreasure kind={found} open={Boolean(found) && !summary && !held} onClose={() => setFound(null)} />
