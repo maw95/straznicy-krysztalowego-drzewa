@@ -4,6 +4,10 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.':
+    'Wizard: map sizes are no longer greyed out before the goal is chosen (Crystals to the Tree does not fit Huge and Giant, Survival does not fit Small); the goal step greys out the goals the size cannot take, with a note. Where the goal is known beforehand, the note under a blocked size no longer pushes the buttons up.',
+  'Przejścia między ekranami menu tylko przenikają się, bez przesuwania: tło nie „skacze” razem z treścią.':
+    'The transitions between the menu screens only cross-fade, without sliding: the background no longer jumps along with the content.',
   'Płynne przejścia: ekrany menu i kroki kreatora przenikają się, sekcje (np. lista scenariuszy i wybór kształtu mapy) rozwijają się i zwijają, a kolory interfejsu przy zmianie frakcji na mapie i w bitwie płynnie przechodzą jedne w drugie. Można je wyłączyć w Opcjach menu („Płynne przejścia”); wyłącza je też systemowe „ogranicz ruch”.':
     'Smooth transitions: the menu screens and the wizard steps cross-fade, sections (such as the list of scenarios and the choice of the map shape) unfold and fold, and the interface colours melt into each other when the faction changes on the map and in battle. They can be switched off in the menu Options ("Smooth transitions"); the system\'s "reduce motion" switches them off too.',
   'Kreator nowej gry: „Gotowy scenariusz” przeniósł się z kroku poziomu złożoności na krok „Jaka mapa?”, obok „Losowa”: po „Losowa” wybierasz kształt i wielkość, po „Gotowy scenariusz” widzisz listę scenariuszy wybranego poziomu (scenariusz ma własny cel, więc krok celu jest pomijany). Krok celu następuje teraz po mapie.':

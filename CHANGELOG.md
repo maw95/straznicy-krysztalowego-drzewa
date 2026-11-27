@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.
+- Przejścia między ekranami menu tylko przenikają się, bez przesuwania: tło nie „skacze” razem z treścią.
 ## 3.2.0 — 2026-11-27
 
 - Płynne przejścia: ekrany menu i kroki kreatora przenikają się, sekcje (np. lista scenariuszy i wybór kształtu mapy) rozwijają się i zwijają, a kolory interfejsu przy zmianie frakcji na mapie i w bitwie płynnie przechodzą jedne w drugie. Można je wyłączyć w Opcjach menu („Płynne przejścia”); wyłącza je też systemowe „ogranicz ruch”.

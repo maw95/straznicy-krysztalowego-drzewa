@@ -202,9 +202,11 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   const scenarioOffer = d.digital && d.mode === 'pvp' && d.tier !== 'adventure' && scenariosOf(d.tier).length > 0;
   /** The goal the game will be played for (Spacer and Przygoda: the crystals). */
   const goalNow: ObjectiveId = d.digital && d.tier !== 'adventure' && d.mode !== 'arena' ? d.objective : 'crystals';
-  // A goal that is not offered on the chosen size moves the size to the nearest one it is offered on.
+  /** The fuller levels pick the map before the goal, so no size is blocked on the map page: the goal page greys the goals the size cannot take. */
+  const goalAfterMap = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
+  // Where the goal is fixed (Spacer, Przygoda), a goal that is not offered on the chosen size moves the size to the nearest one it is offered on.
   useEffect(() => {
-    if (!d.digital || sizeAllowed(goalNow, d.mapSize)) return;
+    if (!d.digital || goalAfterMap || sizeAllowed(goalNow, d.mapSize)) return;
     const at = sizes.indexOf(d.mapSize);
     const nearest = sizes.filter((m) => sizeAllowed(goalNow, m)).sort((a, b) => Math.abs(sizes.indexOf(a) - at) - Math.abs(sizes.indexOf(b) - at))[0];
     if (nearest) setD((cur) => ({ ...cur, mapSize: nearest }));
@@ -287,7 +289,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
         <>
           <div className="opt-grid" data-wizard-page="objective">
             {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
-              <Card key={o} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
+              <Card key={o} disabled={d.digital && !sizeAllowed(o, d.mapSize)} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={d.digital && !sizeAllowed(o, d.mapSize) ? 'Niedostępny na wybranej wielkości mapy.' : OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
             ))}
           </div>
           {d.mode === 'coop' && d.objective === 'boss' && (
@@ -340,7 +342,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             <Reveal open={!scenarioOn}>
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => {
-                const off = d.digital && !sizeAllowed(goalNow, m);
+                const off = d.digital && !goalAfterMap && !sizeAllowed(goalNow, m);
                 return (
                   <span key={m} className="size-slot">
                     <Tip text={mapTip(m)} rightClick>

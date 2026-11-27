@@ -867,4 +867,5 @@ register({
   "Bronią Drzewa": "Guard the Tree",
   "Przetrwają": "Hold out",
   "Rozmiar niedostępny dla tego celu": "Size not available for this goal",
+  "Niedostępny na wybranej wielkości mapy.": "Not available on the chosen map size.",
 });

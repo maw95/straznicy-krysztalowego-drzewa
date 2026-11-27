@@ -1388,13 +1388,13 @@ button.sb-slot:disabled { cursor: default; }
 @media (max-width: 900px) { .scenario-picker { grid-template-columns: 1fr; } }
 
 /* A map size the goal is not offered on (BLOCKED_SIZES): the greyed button with a short note under it. */
-.size-slot { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.size-slot { display: inline-flex; flex-direction: column; align-items: center; align-self: flex-start; gap: 3px; }
 .map-size-btn:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
 .size-off { font-size: 12px; line-height: 1.15; color: var(--muted); max-width: 110px; text-align: center; }
 
 /* ---- Smooth changes (motion.ts): the menu's screens cross-fade, sections unfold, a faction's colours melt into another's ---- */
-@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
 ::view-transition-group(root) { animation-duration: var(--vt-ms, 260ms); animation-timing-function: ease-in-out; }
 ::view-transition-old(root) { animation: var(--vt-ms, 260ms) ease-in both vt-out; }
 ::view-transition-new(root) { animation: var(--vt-ms, 260ms) ease-out both vt-in; }
