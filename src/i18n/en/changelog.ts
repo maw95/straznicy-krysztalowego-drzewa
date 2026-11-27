@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mapa świata: widok można przesunąć poza lewą i górną krawędź mapy, tak żeby wyciągnąć pola spod toru rund; bohater, który znalazłby się pod torem, jest odsłaniany sam.':
+    'World map: the view can be moved past the left and top edge of the map, to bring hexes out from under the round track; a hero that would end up under the track is uncovered by itself.',
   'Mapa świata: tor rund zasłania pola także dla myszy: kliknięcie w tor nie rusza już bohatera na polu pod spodem.':
     'World map: the round track now blocks the pointer too: a click on it no longer moves the hero onto the hex underneath.',
   'Mapa świata: pola mapy zajmują całą ramkę (bez wolnego pasa u góry, a na mapach innych niż trójkąt także z lewej), a tor rund leży nad nimi; pole pod torem można wskazać i kliknąć.':

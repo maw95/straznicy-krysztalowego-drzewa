@@ -111,7 +111,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
   const touch = useMedia('(hover: none)');
   const boardRef = useRef<HTMLDivElement>(null);
-  const [box, setBox] = useState({ w: 800, h: 600 });
+  /** The hexes' board inside the scrolled area. */
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState({ w: 800, h: 600, measured: false });
   const [selected, setSelected] = useState<HexKey | null>(null);
   const [hover, setHover] = useState<HexKey | null>(null);
   /** The hex last touched with a finger (a finger has no hover). */
@@ -142,9 +144,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   useLayoutEffect(() => {
     const el = boardRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, h: el.clientHeight }));
+    const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, h: el.clientHeight, measured: true }));
     ro.observe(el);
-    setBox({ w: el.clientWidth, h: el.clientHeight });
+    setBox({ w: el.clientWidth, h: el.clientHeight, measured: true });
     return () => ro.disconnect();
   }, []);
 
@@ -184,22 +186,44 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const H = W * 1.1547;
   const boardW = extent.cols * W;
   const boardH = H + (rows - 1) * 0.75 * H;
-
-  // Zooming keeps the point in the middle of the view where it was.
-  const zoomAnchor = useRef<{ fx: number; fy: number; cursor?: { x: number; y: number } } | null>(null);
-  const dragged = useRef(false);
-  const zoomTo = (w: number) => {
+  // The round track lies over the top left corner of the view. The map can be scrolled that much past its left and top edge, so whatever
+  // is under the track can be brought out. Normally the view stands at (padX, padY), where the extra room is out of sight.
+  const trackSize = Math.max(120, Math.min(218, box.w * 0.195, box.h * 0.31));
+  const padX = compact ? 0 : Math.round(trackSize + 40);
+  const padY = compact ? 0 : Math.round(trackSize * 0.95 + 44);
+  const placedPad = useRef({ x: 0, y: 0 });
+  useLayoutEffect(() => {
     const el = boardRef.current;
-    if (el) zoomAnchor.current = { fx: (el.scrollLeft + el.clientWidth / 2) / Math.max(1, el.scrollWidth), fy: (el.scrollTop + el.clientHeight / 2) / Math.max(1, el.scrollHeight) };
+    if (!el || !box.measured) return;
+    el.scrollLeft += padX - placedPad.current.x;
+    el.scrollTop += padY - placedPad.current.y;
+    placedPad.current = { x: padX, y: padY };
+  }, [box.measured, padX, padY]);
+
+  // Zooming keeps the point of the map under the cursor (or in the middle of the view) where it was.
+  const zoomAnchor = useRef<{ fx: number; fy: number; x: number; y: number; minX: number; minY: number } | null>(null);
+  const dragged = useRef(false);
+  const zoomTo = (w: number, at?: { x: number; y: number }) => {
+    const el = boardRef.current;
+    const map = mapRef.current;
+    if (el && map) {
+      const { x, y } = at ?? { x: el.clientWidth / 2, y: el.clientHeight / 2 };
+      zoomAnchor.current = { fx: (el.scrollLeft + x - map.offsetLeft) / Math.max(1, map.offsetWidth), fy: (el.scrollTop + y - map.offsetTop) / Math.max(1, map.offsetHeight), x, y,
+        // Zooming goes past the map's left or top edge only when the view already is there.
+        minX: el.scrollLeft < padX ? 0 : padX, minY: el.scrollTop < padY ? 0 : padY };
+    }
     setZoomW(Math.max(fitW, Math.min(MAX_HEX_W, w)));
   };
   useLayoutEffect(() => {
     const el = boardRef.current;
+    const map = mapRef.current;
     const a = zoomAnchor.current;
-    if (!el || !a) return;
+    if (!el || !map || !a) return;
     zoomAnchor.current = null;
-    el.scrollLeft = a.fx * el.scrollWidth - (a.cursor?.x ?? el.clientWidth / 2);
-    el.scrollTop = a.fy * el.scrollHeight - (a.cursor?.y ?? el.clientHeight / 2);
+    // Zoomed all the way out: back to the normal view of the whole map.
+    const whole = W <= fitW + 0.5;
+    el.scrollLeft = whole ? padX : Math.max(a.minX, map.offsetLeft + a.fx * map.offsetWidth - a.x);
+    el.scrollTop = whole ? padY : Math.max(a.minY, map.offsetTop + a.fy * map.offsetHeight - a.y);
   }, [W]);
   // Two fingers on the map zoom it (the page itself does not zoom there).
   const pinch = useRef<{ d: number; w: number } | null>(null);
@@ -226,9 +250,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     const wheel = (e: WheelEvent) => {
       e.preventDefault();
       const rect = el.getBoundingClientRect();
-      const before = { x: el.scrollLeft + e.clientX - rect.left, y: el.scrollTop + e.clientY - rect.top, w: el.scrollWidth, h: el.scrollHeight };
-      zoomRef.current(wRef.current * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
-      zoomAnchor.current = { fx: before.x / Math.max(1, before.w), fy: before.y / Math.max(1, before.h), cursor: { x: e.clientX - rect.left, y: e.clientY - rect.top } };
+      zoomRef.current(wRef.current * (e.deltaY < 0 ? 1.15 : 1 / 1.15), { x: e.clientX - rect.left, y: e.clientY - rect.top });
     };
     let drag: { x: number; y: number; sl: number; st: number; moved: boolean } | null = null;
     const down = (e: MouseEvent) => {
@@ -307,22 +329,34 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     return { x: p.x + W / 2 + spread, y: p.y + H * 0.66 - (stacked ? (i % 2) * H * 0.12 : 0), size, spread, i, stacked };
   };
   // When the map scrolls (phones, zoomed in), the active hero comes into view at the start of its turn
-  // and whenever it walks out of sight.
+  // and whenever it walks out of sight or under the round track.
   const heroAt = hero && !hero.entering ? hero.pos : null;
   useEffect(() => setTouched(null), [hero?.id]);
   useEffect(() => {
     const el = boardRef.current;
-    const inner = el?.firstElementChild as HTMLElement | null;
-    if (!el || !inner || !heroAt) return;
-    if (el.scrollWidth <= el.clientWidth + 2 && el.scrollHeight <= el.clientHeight + 2) return;
+    const map = mapRef.current;
+    if (!el || !map || !heroAt || !box.measured) return;
     const p = pos(state.tiles[heroAt]);
-    const cx = inner.offsetLeft + p.x + W / 2;
-    const cy = inner.offsetTop + p.y + H / 2;
+    const cx = map.offsetLeft + p.x + W / 2;
+    const cy = map.offsetTop + p.y + H / 2;
+    /** Where the hero is in the view. */
+    const x = cx - el.scrollLeft;
+    const y = cy - el.scrollTop;
     const margin = Math.min(W * 1.2, el.clientWidth / 4, el.clientHeight / 4);
-    const inView = cx > el.scrollLeft + margin && cx < el.scrollLeft + el.clientWidth - margin && cy > el.scrollTop + margin && cy < el.scrollTop + el.clientHeight - margin;
-    if (!inView) el.scrollTo({ left: cx - el.clientWidth / 2, top: cy - el.clientHeight / 2, behavior: 'smooth' });
+    // A map that fits the view keeps no distance from its edges.
+    const out = (v: number, view: number, size: number) => v < (size > view ? margin : 0) || v > view - (size > view ? margin : 0);
+    const underTrack = padX > 0 && x - W * 0.3 < padX && y - H * 0.3 < padY;
+    if (!underTrack && !out(x, el.clientWidth, boardW) && !out(y, el.clientHeight, boardH)) return;
+    let left = cx - el.clientWidth / 2;
+    let top = cy - el.clientHeight / 2;
+    // The view stops at the map's left and top edge, unless the hero would stay under the track there.
+    if (cx - Math.max(padX, left) - W * 0.3 >= padX || cy - Math.max(padY, top) - W * 0.3 >= padY) {
+      left = Math.max(padX, left);
+      top = Math.max(padY, top);
+    }
+    el.scrollTo?.({ left, top, behavior: 'smooth' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hero?.id, heroAt, fitW]);
+  }, [hero?.id, heroAt, fitW, box.measured]);
 
   const figurePieces: Piece[] = Object.values(state.heroes)
     .filter((h) => h.alive && !h.entering && figureFor(h.id))
@@ -431,14 +465,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {/* The track lies over the map (which takes the whole frame): the board and the round label block the pointer, the space around them does not. */}
           <div className="hide-mobile" style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2, pointerEvents: 'none' }}>
             <div style={{ marginLeft: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={Math.max(120, Math.min(218, box.w * 0.195, box.h * 0.31))} />
+              <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={trackSize} />
               <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15, pointerEvents: 'auto' }}>
                 Runda {state.round} z {state.roundLimit}
               </div>
             </div>
           </div>
           <div ref={boardRef} className="scroll map-scroll" style={{ position: 'absolute', inset: 6, overflow: 'auto', display: 'flex' }}>
-            <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: boardW, height: boardH }}>
+            {/* The scrolled area: the view's size at least, plus the room to move the map out from under the track. */}
+            <div style={{ display: 'flex', flex: 'none', margin: 'auto', boxSizing: 'content-box', paddingLeft: padX, paddingTop: padY, width: compact ? boardW : Math.max(boardW, box.w), height: compact ? boardH : Math.max(boardH, box.h) }}>
+            <div ref={mapRef} style={{ position: 'relative', flex: 'none', margin: 'auto', width: boardW, height: boardH }}>
               {tiles.map((t) => {
                 const p = pos(t);
                 const r = reach.get(t.key);
@@ -619,6 +655,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   </div>
                 );
               })}
+            </div>
             </div>
           </div>
           {compact && (
