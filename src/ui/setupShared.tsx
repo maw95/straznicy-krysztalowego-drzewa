@@ -66,7 +66,7 @@ export const ARENA_LEVEL_TIPS: Record<Level, string> = {
 export const TIPS = {
   arenaMode: 'Szybka bitwa bez mapy: Przymierze Świtu kontra Mroczna Horda, z komputerem albo z drugim graczem. Bohater, dwóch pomocników i 2 skarby dobierane ze wspólnej talii — na zmianę jeden z kilku pokazanych (Przymierze widzi 3, Horda 4).',
   coop: 'Wszyscy gracie razem Przymierzem Świtu, a Hordę prowadzi automat według prostych zasad. Dobry wybór na pierwsze partie i do gry z dziećmi.',
-  skirmish: 'Pełna gra na mapie, w której sam wybierasz cel, poziom, mapę, frakcje i graczy. Sam albo ze znajomymi prowadzisz Przymierze Świtu przeciw Hordzie prowadzonej przez komputer, możecie też grać przeciw sobie, a do gry mogą dojść inne frakcje.',
+  skirmish: 'Pełna gra na mapie, w której sam wybierasz poziom, mapę, cel, frakcje i graczy. Grasz przeciw komputerowi albo przeciw znajomym, możecie też grać razem w jednej frakcji.',
   pvp: 'Jedni prowadzą Przymierze Świtu, drudzy Mroczną Hordę (najwyżej 3 graczy na stronę, razem do 6). Przymierze zbiera kryształy dla Drzewa, Horda poluje na jego bohaterów albo odprawia rytuał.',
   arena: 'Bitwa przenosi się na osobną planszę areny: każda strona wystawia bohatera i dwóch pomocników, jednostki chodzą, strzelają i używają zdolności. Ok. 5–10 minut na bitwę.',
   board: 'Szybki pojedynek bez ruchu: walczą tylko dwaj bohaterowie (albo bohater ze strażnikiem, który ma wtedy mniej Życia) i na zmianę zadają ciosy. Ok. 1–2 minut.',

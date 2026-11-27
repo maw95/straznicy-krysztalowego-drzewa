@@ -3,7 +3,7 @@ import { register } from '../translate';
 
 register({
   'Kampania': 'Campaign',
-  'Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.': 'The story of the Dawn Covenant in four scenarios on hand-drawn maps.',
+  'Historie frakcji opowiedziane w scenariuszach na ręcznie rysowanych mapach. Dziś: Przymierze Świtu; kampanie kolejnych frakcji w drodze.': 'The stories of the factions told in scenarios on hand-drawn maps. Today: the Dawn Covenant; campaigns of the other factions are on the way.',
   'Powrót Światła': 'Return of the Light',
   'Czarny Smok uderzył w Kryształowe Drzewo, a Przymierze Świtu rusza po trzy Kryształy Opieki.': 'The Black Dragon has struck the Crystal Tree, and the Dawn Covenant sets out for the three Crystals of Care.',
   'Pierwsza dolina': 'The First Valley',

@@ -371,7 +371,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <button className="opt-card" data-campaign-open onClick={() => setStep('campaign')}>
                   <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
                   <span className="opt-card-title">Kampania</span>
-                  <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
+                  <span className="opt-card-text">Historie frakcji opowiedziane w scenariuszach na ręcznie rysowanych mapach. Dziś: Przymierze Świtu; kampanie kolejnych frakcji w drodze.</span>
                 </button>
                 <button className="opt-card" data-expedition-open onClick={() => setStep('expedition')}>
                   <span className="opt-card-img"><img src={asset('ikony/menu/ekspedycja.webp')} alt="" /></span>
