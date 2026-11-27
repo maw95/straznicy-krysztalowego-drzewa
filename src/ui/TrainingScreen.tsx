@@ -3,8 +3,12 @@
 import { useState } from 'react';
 import { RIGHT_CLICK_RULE, TRAININGS, trainingById, trainingOf, trainingSetup, type Training } from '../engine/training';
 import type { GameState, SetupOptions } from '../engine/types';
-import { Frame, Modal, Ribbon } from './common';
+import { asset, Frame, Modal, Ribbon } from './common';
 import { readTrained } from './trainingProgress';
+
+/** The marks of the levels as the Skirmish wizard shows them: the Roman number of the level and its picture. */
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+const LEVEL_ICON = ['krolik', 'przygoda', 'wyprawa', 'osada', 'ksiestwo', 'krolestwo', 'imperium'];
 
 const seed = () => Math.floor(Math.random() * 1e6);
 
@@ -38,13 +42,13 @@ export function TrainingScreen({ onStart, onBack }: { onStart: (setup: SetupOpti
             const before = t.needs ? trainingById(t.needs) : undefined;
             return (
               <button key={t.id} className="btn plate parch" data-training-card={t.id} data-state={won ? 'done' : 'open'} onClick={() => setTold(t)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px', textAlign: 'left' }}>
-                <b style={{ fontSize: 30, width: 36, textAlign: 'center', color: won ? '#2E7A32' : '#8A3B12' }}>{won ? '✓' : t.level}</b>
+                <b data-training-badge style={{ fontSize: 26, width: 46, textAlign: 'center', color: won ? '#2E7A32' : '#8A3B12' }}>{won ? '✓' : ROMAN[t.level]}</b>
+                <img src={asset(`ui/menu/${LEVEL_ICON[t.level]}.webp`)} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 10, flex: 'none', boxShadow: '0 0 0 2px #B88A35' }} />
                 <span style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <b style={{ fontSize: 20 }}>{t.title}</b>
                   <span style={{ fontSize: 15 }}>{t.tagline}</span>
                   <span style={{ fontSize: 14, color: '#6B4A22' }}>Nauczysz się: {t.learn.join('; ')}.{before && !done.includes(before.id) ? ` Najpierw trening „${before.title}”.` : ''}</span>
                 </span>
-                <span style={{ fontSize: 14, color: '#6B4A22', whiteSpace: 'nowrap' }}>{won ? 'Ukończony' : 'Do zagrania'}</span>
               </button>
             );
           })}

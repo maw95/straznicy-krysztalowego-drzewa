@@ -7,10 +7,11 @@ import { registerCustomMap, type CustomMap } from './customMaps';
 import { FACTION_HEROES } from './data';
 import { createGame, activeHero, currentActor, legalHeroMoves } from './game';
 import { mapNeighbors } from './map';
-import { heroTileCost } from './sites';
+import { heroTileCost, type SiteKind } from './sites';
+import { controlHolder } from './objectives';
 import { distance, parseKey, type HexKey } from './hex';
 import { resolveTier, withRuleset, type Tier } from './presets';
-import { levelSettings, type Action, type GameState, type Level, type ObjectiveId, type SetupOptions } from './types';
+import { levelSettings, type RulesConfig, type Action, type GameState, type Level, type ObjectiveId, type SetupOptions } from './types';
 
 /** What the coach points at: a hex of the map, or an element of the screen (a `data-` attribute of a button, `[data-coach="name"]`). */
 export type CoachTarget = { hex: HexKey } | { ui: string };
@@ -41,6 +42,15 @@ export interface Training {
   needs?: string;
   /** Treasures of the Przymierze from the start (the step about treasures needs some to show; the first level has none). Default 2. */
   startTreasures?: number;
+  /** Experience of the Przymierze hero from the start (a training of hero growth: the first shrine then brings a level). */
+  startXp?: number;
+  /** Rules of this training on top of its level's (e.g. a shorter goal). */
+  rules?: Partial<RulesConfig>;
+  /**
+   * Seeds whose maps suit the steps (the sites and points the steps lead to lie near the Przymierze): a training game takes one of them. Missing = any seed.
+   * Found by `npx tsx scripts/sim/treningSeeds.ts <id>`.
+   */
+  seeds?: number[];
   tier: Tier;
   objective: ObjectiveId;
   difficulty: Level;
@@ -84,13 +94,14 @@ function goalHex(s: GameState): HexKey | null {
 }
 
 /**
- * The step of the hero's move on the cheapest way to `goalHex` (the pulsing hex on the map): Dijkstra over the terrain costs, through hexes the hero has not seen yet
- * as well (the way is read from the whole map, the screen shows only the next hex). Null when the step cannot be taken now (no points left).
+ * The step of the hero's move on the cheapest way to `goal` (the pulsing hex on the map): Dijkstra over the terrain costs, through hexes the hero has not seen yet
+ * as well (the way is read from the whole map, the screen shows only the next hex), around every guardian and group of neutrals but the goal's own. Null when the
+ * step cannot be taken now (no points left).
  */
-function nextStep(s: GameState): CoachTarget | null {
-  const goal = goalHex(s);
+function stepTowards(s: GameState, goal: HexKey | null): CoachTarget | null {
   const hero = mine(s);
-  if (!goal || !hero || s.phase !== 'adventure') return null;
+  if (!goal || !hero || s.phase !== 'adventure' || hero.pos === goal) return null;
+  const guarded = new Set(Object.values(s.crystals).map((c) => c.at));
   const dist = new Map<HexKey, number>([[hero.pos, 0]]);
   const first = new Map<HexKey, HexKey>();
   const queue: HexKey[] = [hero.pos];
@@ -99,6 +110,7 @@ function nextStep(s: GameState): CoachTarget | null {
     const k = queue.shift()!;
     if (k === goal) break;
     for (const n of mapNeighbors(s.tiles, k)) {
+      if (n !== goal && guarded.has(n)) continue;
       const cost = n === goal ? 1 : heroTileCost(hero, s.tiles[n]);
       if (cost === null) continue;
       const d = dist.get(k)! + cost;
@@ -111,6 +123,20 @@ function nextStep(s: GameState): CoachTarget | null {
   }
   const step = first.get(goal);
   return step && legalHeroMoves(s).some((m) => m.to === step) ? { hex: step } : null;
+}
+
+const nextStep = (s: GameState): CoachTarget | null => stepTowards(s, goalHex(s));
+
+/** The hex of the first unused site of a kind (a shrine, a chest), or null. */
+const siteHex = (s: GameState, kind: SiteKind): HexKey | null => Object.values(s.tiles).find((t) => t.site?.kind === kind && !t.site.used)?.key ?? null;
+/** Whether the map had a site of the kind that is used now (or never had one: the step then has nothing to do). */
+const siteDone = (s: GameState, kind: SiteKind): boolean => !Object.values(s.tiles).some((t) => t.site?.kind === kind && !t.site.used);
+/** The nearest control point the Przymierze does not hold. */
+function freePoint(s: GameState): HexKey | null {
+  const hero = mine(s);
+  if (!hero || !s.control) return null;
+  const at = parseKey(hero.pos);
+  return [...s.control.points].filter((k) => controlHolder(s, k) !== 'dawn').sort((a, b) => distance(parseKey(a), at) - distance(parseKey(b), at))[0] ?? null;
 }
 
 /** The hero's start hex is the one in `homes`; once the hero is elsewhere (or any round passed) the first step is done. */
@@ -253,13 +279,100 @@ const PRZYGODA: Training = {
   free: 'Gotowe!',
 };
 
-export const TRAININGS: Training[] = [SPACER, PRZYGODA];
+const WYPRAWA: Training = {
+  id: 'wyprawa',
+  level: 2,
+  title: 'Wyprawa',
+  tagline: 'Bohater rośnie: doświadczenie, poziomy i umiejętności, artefakty ze skrzyń i nowy cel gry, punkty kontrolne.',
+  learn: ['skąd bohater bierze doświadczenie i co daje awans', 'jak działają kapliczki i skrzynie z artefaktami', 'jak wygrać cel „Punkty kontrolne”'],
+  needs: 'przygoda',
+  tier: 'expedition',
+  objective: 'control',
+  difficulty: 'kids',
+  hero: 'goldDragon',
+  startXp: 1,
+  // Two rounds in a row with more flags win the training (instead of the usual three or four).
+  rules: { controlDawnExtra: -1 },
+  seeds: [1, 16, 17, 18, 19, 24, 40, 45],
+  map: { id: 'trening-wyprawa', name: 'Trening: Wyprawa', summary: 'Dolina z kapliczką, skrzynią i trzema flagami.', campaign: true, rows: VALLEY },
+  intro: [
+    'Na poziomie Wyprawa bohater rośnie: za walki i odwiedzone miejsca dostaje punkty doświadczenia (PD), zdobywa poziomy, wybiera umiejętności i zakłada artefakty.',
+    'Od tego poziomu wybierasz też cel gry. W tym treningu grasz o punkty kontrolne.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Flagi są twoje! Tak wygląda Wyprawa: bohater rośnie z każdą walką i każdym odwiedzonym miejscem, a cel gry wybierasz sam. W Potyczce na tym poziomie czekają też inne cele: Przetrwanie, Boss i Artefakt.'],
+  lose: ['Tym razem Horda utrzymała flagi dłużej. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    {
+      id: 'cel',
+      title: 'Nowy cel: punkty kontrolne',
+      text: 'Na mapie stoją trzy flagi: punkty kontrolne. Wygrywa ten, kto przez kilka rund z rzędu utrzyma ich więcej niż przeciwnik (stan widać po prawej, w „Celach”). Zanim po nie ruszysz, poznaj rozwój bohatera.',
+      ack: true,
+      allow: () => false,
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'kapliczka',
+      title: 'Kapliczka',
+      text: 'Na mapie są miejsca, które pomagają bohaterowi. Idź podświetlonymi polami do kapliczki: pierwszy bohater, który na niej stanie, dostaje 2 punkty doświadczenia (PD).',
+      target: (s) => stepTowards(s, siteHex(s, 'shrine')),
+      allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a),
+      done: (s) => siteDone(s, 'shrine') || s.phase === 'over',
+    },
+    {
+      id: 'awans',
+      title: 'Awans',
+      text: 'Masz nowy poziom! Z każdym poziomem wybierasz jedną z trzech umiejętności: kliknij kartę tej, którą chcesz (prawy klik pokaże więcej). Poziom i PD widać pod portretem bohatera.',
+      allow: (a) => anyBattle(a),
+      done: (s) => {
+        const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn');
+        return s.phase === 'over' || Boolean(hero && !hero.offer?.length && (hero.level ?? 1) >= 2);
+      },
+    },
+    {
+      id: 'skrzynia',
+      title: 'Skrzynia',
+      text: 'Teraz skrzynia: idź do niej podświetlonymi polami. Pierwszy bohater, który na niej stanie, dostaje artefakt.',
+      target: (s) => stepTowards(s, siteHex(s, 'chest')),
+      allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a),
+      done: (s) => siteDone(s, 'chest') || s.phase === 'over',
+    },
+    {
+      id: 'artefakt',
+      title: 'Artefakty',
+      text: 'Bohater dostał artefakt: okno obok mówi, co robi i gdzie go nosi. Kliknięcie portretu bohatera (po prawej) otwiera jego kartę, gdzie artefakty zakłada się i zdejmuje.',
+      ack: true,
+      allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a) || a.type === 'equipArtifact' || a.type === 'unequipArtifact',
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'flagi',
+      title: 'Na flagi!',
+      text: 'Ruszaj po flagi: idź podświetlonymi polami do najbliższej. Flaga jest twoja, dopóki stoi na niej twój bohater.',
+      target: (s) => stepTowards(s, freePoint(s)),
+      allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a) || a.type === 'equipArtifact' || a.type === 'unequipArtifact',
+      done: (s) => Boolean(s.control?.points.some((k) => controlHolder(s, k) === 'dawn')) || s.phase === 'over',
+    },
+    {
+      id: 'utrzymaj',
+      title: 'Utrzymaj przewagę',
+      text: 'Masz flagę! Środkowa liczy się podwójnie, więc najlepiej stanąć na niej (podświetlone pola prowadzą do niej). Potem zostań na fladze i kończ turę: wygrasz, gdy przez dwie rundy z rzędu będziesz mieć przewagę nad Hordą.',
+      target: (s) => (s.control && controlHolder(s, s.control.points[0]) !== 'dawn' ? stepTowards(s, s.control.points[0]) : null),
+      allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a) || a.type === 'equipArtifact' || a.type === 'unequipArtifact',
+      done: (s) => s.phase === 'over',
+    },
+  ],
+  free: 'Gotowe!',
+};
+
+export const TRAININGS: Training[] = [SPACER, PRZYGODA, WYPRAWA];
 for (const t of TRAININGS) registerCustomMap(t.map);
 
 export const trainingById = (id: string): Training | undefined => TRAININGS.find((t) => t.id === id);
 
 /** The set-up of a training game: the rules of its level on its own map, one crystal to bring, the Horde as the easiest bot. */
-export function trainingSetup(t: Training, seed = 1): SetupOptions {
+export function trainingSetup(t: Training, pick = 1): SetupOptions {
+  const seed = t.seeds ? t.seeds[Math.abs(pick) % t.seeds.length] : pick;
   const preset = levelSettings(t.difficulty, 'pvp');
   const sw = t.tier === 'adventure' ? { objective: t.objective, growth: false } : resolveTier(t.tier, { objective: t.objective, shape: 'custom', customMapId: t.map.id, growth: true });
   const base: SetupOptions = {
@@ -272,7 +385,7 @@ export function trainingSetup(t: Training, seed = 1): SetupOptions {
       { name: 'Horda', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[seed % FACTION_HEROES.horde.length], botLevel: 'kids' },
     ],
     // Two treasures from the start, so that the step about them has something to show.
-    rules: { ...preset.rules, crystalsNeededDelta: -1, dawnStartTreasures: { resurrections: 0, others: 0, random: t.startTreasures ?? 2 } },
+    rules: { ...preset.rules, crystalsNeededDelta: -1, dawnStartTreasures: { resurrections: 0, others: 0, random: t.startTreasures ?? 2 }, ...(t.startXp ? { dawnStartXp: t.startXp } : {}), ...t.rules },
     seatLevels: true,
   };
   const setup = withRuleset(base, true, sw.objective, 'custom', t.map.id, sw.growth, 'kingdom' in sw && sw.kingdom, 'economy' in sw && sw.economy, 'realm' in sw && sw.realm, 'empire' in sw && sw.empire);

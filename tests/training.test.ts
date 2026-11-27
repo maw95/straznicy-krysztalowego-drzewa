@@ -38,7 +38,7 @@ describe.each(TRAININGS)('training $id', (t) => {
   it('shows the player where the crystals lie from the start', () => {
     const g = createTrainingGame(t, 3);
     const lying = Object.values(g.crystals).filter((c) => !c.decoy);
-    expect(lying.length).toBeGreaterThan(0);
+    if (t.objective === 'crystals') expect(lying.length).toBeGreaterThan(0);
     for (const c of lying) expect(knowsHex(g, c.at, 'dawn'), c.at).toBe(true);
     expect(g.factions.dawn.inventory.length > 0).toBe((t.startTreasures ?? 2) > 0);
   });
@@ -52,6 +52,8 @@ describe.each(TRAININGS)('training $id', (t) => {
       const a = chooseAction(g);
       if (!a) break;
       index = trainingIndex(t, g, index);
+      // An explaining step: the player reads it and clicks "Dalej".
+      while (t.steps[index]?.ack) index = trainingIndex(t, g, index + 1);
       if (!reached.includes(index)) reached.push(index);
       let play = a;
       if (currentActor(g).kind === 'human' && !trainingAllows(t, g, index, a)) {

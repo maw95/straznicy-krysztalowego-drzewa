@@ -31,35 +31,32 @@ for (const view of (process.env.VIEWS ?? 'desktop,malypoziomo').split(',') as Vi
     await p.locator('[data-coach]').waitFor();
     console.log(view, 'coach:', await p.locator('[data-coach]').getAttribute('data-coach'), '| ring:', await p.locator('[data-hint="hex"]').count());
     await p.screenshot({ path: `.tmp/trening-${view}-krok1.png` });
-    // A click on a hex that is not the ring: held (the hero does not move), the coach stays on the step.
-    const ring = await p.locator('[data-hint="hex"]').first().evaluate((el) => (el.parentElement as HTMLElement).getAttribute('data-hex'));
-    console.log(view, 'ring hex:', ring);
-    await p.locator(`[data-hex="${ring}"]`).click({ force: true });
-    await p.waitForTimeout(900);
-    console.log(view, 'after the click, coach:', await p.locator('[data-coach]').getAttribute('data-coach'));
-    await p.screenshot({ path: `.tmp/trening-${view}-krok2.png` });
     const coachId = () => p.locator('[data-coach]').getAttribute('data-coach');
     const shot = async (name: string) => { await p.waitForTimeout(900); await p.screenshot({ path: `.tmp/trening-${view}-${name}.png` }); };
-    // On to the battle: follow the ring (or end the turn), closing the found-treasure window, until the coach is past the walking steps.
-    for (let i = 0; i < 60; i++) {
-      const id = await coachId();
-      if (id !== 'ruch' && id !== 'strazy') break;
-      const found = p.getByRole('button', { name: /Do ekwipunku/ });
-      if (await found.count()) { await found.first().click(); await p.waitForTimeout(400); continue; }
-      const fight = p.getByRole('button', { name: /Do walki!/ });
-      if (await fight.count()) { await fight.click(); await p.waitForTimeout(800); continue; }
+    // Follow the coach on the map: "Dalej" on explaining steps, the windows that ask for a click (a found treasure, an artifact, a skill, the fight), the ring, else the end of the turn;
+    // a screenshot at every new step. Stops at the battle steps (played below) or at the end of the game.
+    const seen = new Set<string>();
+    for (let i = 0; i < 90; i++) {
+      const id = (await p.locator('[data-coach]').count()) ? await coachId() : 'koniec';
+      if (id === 'koniec') { console.log(view, 'game over:', await p.locator('[data-training-over]').getAttribute('data-training-over').catch(() => '?')); await shot('koniec'); }
+      if (!id || ['pomocnicy', 'pojedynek', 'koniec'].includes(id)) break;
+      if (!seen.has(id)) { seen.add(id); console.log(view, 'step:', id); await shot(`krok-${id}`); }
+      const click = async (name: RegExp) => { const b = p.getByRole('button', { name }); if (await b.count()) { await b.last().click(); await p.waitForTimeout(500); return true; } return false; };
+      if (await p.locator('[data-coach-next]').count()) { await p.locator('[data-coach-next]').click(); continue; }
+      if ((await click(/Do ekwipunku/)) || (await click(/Do walki!/)) || (await click(/^Rozumiem$/))) continue;
+      if (await p.locator('.skill-card').count()) { await p.locator('.skill-card').first().click(); await p.waitForTimeout(500); continue; }
       if (await p.locator('[data-hint="hex"]').count()) {
         const hex = await p.locator('[data-hint="hex"]').first().evaluate((el) => (el.parentElement as HTMLElement).getAttribute('data-hex'));
-        await p.locator(`[data-hex="${hex}"]`).click({ force: true });
+        // A plain DOM click: the hex may lie under the round track at the map's corner (a person scrolls the map; the check does not need to).
+        await p.locator(`[data-hex="${hex}"]`).evaluate((el) => (el as HTMLElement).click());
       } else {
         await p.getByRole('button', { name: /Zakończ turę/ }).first().click({ force: true });
         await p.waitForTimeout(300);
-        // "Masz jeszcze punkty ruchu. Zakończyć turę?": confirm.
         if (await p.getByText(/Masz jeszcze/).count()) await p.getByRole('button', { name: /Zakończ turę/ }).last().click();
       }
       await p.waitForTimeout(600);
     }
-    console.log(view, 'coach now:', await coachId());
+    if (await p.locator('[data-coach]').count()) console.log(view, 'coach now:', await coachId());
     await shot('pomocnicy');
     if (T === 'spacer' && (await coachId()) === 'pojedynek') {
       await shot('pojedynek');
