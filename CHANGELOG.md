@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 3.2.0 — 2026-11-27
+
 - Płynne przejścia: ekrany menu i kroki kreatora przenikają się, sekcje (np. lista scenariuszy i wybór kształtu mapy) rozwijają się i zwijają, a kolory interfejsu przy zmianie frakcji na mapie i w bitwie płynnie przechodzą jedne w drugie. Można je wyłączyć w Opcjach menu („Płynne przejścia”); wyłącza je też systemowe „ogranicz ruch”.
 - Kreator nowej gry: „Gotowy scenariusz” przeniósł się z kroku poziomu złożoności na krok „Jaka mapa?”, obok „Losowa”: po „Losowa” wybierasz kształt i wielkość, po „Gotowy scenariusz” widzisz listę scenariuszy wybranego poziomu (scenariusz ma własny cel, więc krok celu jest pomijany). Krok celu następuje teraz po mapie.
 - Arena: obok Przymierza i Hordy walczą też Dzikie Stado, Żelazny Klan i Bractwo Przypływu, w dowolnej parze różnych frakcji, w arenie 3 na 3 i 6 na 6 (też online); na ekranie miejsc wybierasz frakcję każdej strony, a bitwa toczy się na arenie jednej z nich. Dla wyrównania szans frakcje mają na arenie własne drobne premie do Życia i Ataku.
