@@ -6,7 +6,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote).
+## 3.1.1 — 2026-11-27
+
+- Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote). (`6ab95bd`)
 
 ## 3.1.0 — 2026-11-26
 

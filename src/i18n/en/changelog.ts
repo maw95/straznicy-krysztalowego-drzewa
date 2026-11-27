@@ -2,7 +2,7 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
-// In preparation
+// 3.1.1
 register({
   'Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote).':
     'Published game: the interface panels have their slate background in the faction colour again (a plain gold one showed instead).',
