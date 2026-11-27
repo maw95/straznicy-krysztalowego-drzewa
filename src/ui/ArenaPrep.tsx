@@ -2,7 +2,7 @@
 // choose their supports and draft treasures, and the draft dialog itself.
 
 import { RuleText } from './markers';
-import { raceOf } from '../engine/teams';
+import { raceOf, sideName } from '../engine/teams';
 import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
@@ -24,15 +24,16 @@ export function ArenaPrep({ state }: { state: GameState }) {
   const arena = b?.arena ?? 'dawn';
   const status = (() => {
     if (!b) return '';
-    if (b.stage === 'gear' && state.draft?.gear) return `${FACTION_NAMES[state.draft.gear.order[0]]} wybiera artefakt…`;
-    if (b.stage === 'spells' && state.draft?.spells) return `${FACTION_NAMES[state.draft.spells.order[0]]} wybiera czary…`;
-    if (b.stage === 'select') return `${FACTION_NAMES[b.needsSelection[0]]} wybiera pomocników…`;
-    if (b.stage === 'draft' && state.draft) return `${FACTION_NAMES[state.draft.order[0]]} wybiera skarb…`;
+    if (b.stage === 'gear' && state.draft?.gear) return `${sideName(state, state.draft.gear.order[0])} wybiera artefakt…`;
+    if (b.stage === 'spells' && state.draft?.spells) return `${sideName(state, state.draft.spells.order[0])} wybiera czary…`;
+    if (b.stage === 'select') return `${sideName(state, b.needsSelection[0])} wybiera pomocników…`;
+    if (b.stage === 'draft' && state.draft) return `${sideName(state, state.draft.order[0])} wybiera skarb…`;
     return '';
   })();
   return (
     <div className="screen arena-prep">
-      <img className="ken-burns arena-prep-art" src={asset(`arena/${arena}.jpg`)} alt="" />
+      {/* Only the first two factions have the board edition's painting; the others use their digital arena. */}
+      <img className="ken-burns arena-prep-art" src={asset(arena === 'dawn' || arena === 'horde' ? `arena/${arena}.jpg` : `arena/cyfrowa/${arena}.webp`)} alt="" />
       <div className="arena-prep-shade" aria-hidden="true" />
       <div className="arena-prep-row">
         {(['dawn', 'horde'] as TeamId[]).map((f, i) => (

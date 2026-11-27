@@ -142,9 +142,9 @@ export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
 }
 
-export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale, arena = false, share = 1): BattleUnit {
+export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale, arena: boolean | 3 | 6 = false, share = 1): BattleUnit {
   const { hp } = battleStats(defId, digital, scale, hpScale, arena, share);
-  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(arena ? { arena: true as const } : {}), ...(!arena && share !== 1 ? { bonusShare: share } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(arena ? { arena: arena === true ? (true as const) : arena } : {}), ...(!arena && share !== 1 ? { bonusShare: share } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
 }
 
 /** Asks the screen for a light effect on `cell` (see BattleState.fx). */

@@ -210,7 +210,7 @@ Od poziomu Wyprawa na mapie stoją też **grupy neutralnych**, nagradzające do�
 
 Skrzynia skarbów to malowana skrzynia, która się otwiera, z ikonami skarbów leżącymi w jej wnętrzu po 6 na stronie (gdy jest ich więcej, strzałki „← 2/3 →”). Lewy klik na ikonie używa skarbu (gdy teraz nie można, pokazuje jego kartę), prawy klik (na telefonie przytrzymanie) pokazuje szczegóły. Tak samo działa Księga czarów w bitwie: ikona, nazwa i koszt many czaru, lewy klik rzuca, prawy pokazuje opis, u góry księgi jest jeden licznik many (aktualna i największa), a pod nazwą każdego czaru jego koszt. Znacznik na przycisku „Magia” pokazuje, ile czarów możesz rzucić teraz. Okno zamykasz złotym krzyżykiem w kółku, klawiszem Esc albo Enter.
 
-Na arenie skarby ze wspólnej talii wybiera się na zmianę: strona wybiera jeden z pokazanych (Przymierze widzi 3, Horda 4), a każda ma po 2 skarby, ukryte do chwili użycia.
+Na arenie skarby ze wspólnej talii wybiera się na zmianę: strona wybiera jeden z pokazanych (Horda widzi 4 karty, pozostałe frakcje 3), a każda ma po 2 skarby, ukryte do chwili użycia.
 
 ## Osady i gospodarka
 @słowa: osada, złoto, dochód, budynki, koszary, targ, szpital, skarbiec, kuźnia, rekrutacja, pomocnicy, drużyna, garnizon, fosa, mury, katapulta, surowce, drewno, ruda, gwiezdny pył, pył, kopalnia, tartak, młyn, studnia, składnica, chatka, rada osady, drzewko budynków, wymiana
@@ -359,7 +359,7 @@ Na arenie komputer gra podobnie rozsądnie. W trybie rodzinnym przycisk **podpow
 ## Arena
 @słowa: arena, 3 na 3, 6 na 6, szybka bitwa, pojedynek, skarby, losowanie, komputer
 
-Arena to **jedna bitwa bez mapy**: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i pomocników (w bitwie 3 na 3 dwóch z trzech). Losowo wypada, kto wybiera pierwszy i na której arenie się walczy. Skarby wybiera się ze wspólnej talii (patrz [Skarby i Eliksir Odrodzenia](#skarby-i-eliksir-odrodzenia)). Wygrywa strona, która ostatnia stoi.
+Arena to **jedna bitwa bez mapy**: dwie różne frakcje do wyboru (w wersji planszowej Przymierze kontra Horda), z komputerem albo z drugim graczem. Każdy wybiera bohatera i pomocników (w bitwie 3 na 3 dwóch z trzech). Losowo wypada, kto wybiera pierwszy i na której arenie się walczy. Skarby wybiera się ze wspólnej talii (patrz [Skarby i Eliksir Odrodzenia](#skarby-i-eliksir-odrodzenia)). Wygrywa strona, która ostatnia stoi.
 
 **Arena 6 na 6** (opcja „Wielkość bitwy” w kreatorze) to większa bitwa: sześć jednostek na stronę. Ma własny ranking online. Na arenie możesz wybrać trudność komputera, także Bardzo trudną (komputer bez błędów w wyborach).
 

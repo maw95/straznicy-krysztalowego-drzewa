@@ -210,7 +210,7 @@ A **treasure** is a one-use faction card shared by all its players. You get it f
 
 The treasure chest is a painted chest that opens, with the treasure icons lying inside it, 6 to a page (arrows "← 2/3 →" when there are more). A left click on an icon uses the treasure (when it cannot be used now, it shows its card), a right click (a long press on a phone) shows the details. The spell book in battle works the same way: a spell is an icon with its name and mana cost, a left click casts it, a right click shows its text, one counter at the top of the book shows the mana (current and maximum) and the cost stands under the name of every spell. The badge on the "Magic" button shows how many spells you can cast now. You close the window with the gold cross in a ring, with Esc or with Enter.
 
-On the arena treasures are picked from the shared deck in turns: a side picks one of those shown (the Covenant sees 3, the Horde 4), and each side has 2 treasures, hidden until used.
+On the arena treasures are picked from the shared deck in turns: a side picks one of those shown (the Horde sees 4 cards, the other factions 3), and each side has 2 treasures, hidden until used.
 
 ## Settlements and economy
 @words: settlement, gold, income, buildings, barracks, market, hospital, treasury, forge, recruiting, supports, team, garrison, moat, walls, catapult, resources, wood, ore, star dust, dust, mine, sawmill, mill, well, depot, hut, settlement council, building tree, exchange
@@ -359,7 +359,7 @@ On the arena the computer plays in a similarly sensible way. In family mode the 
 ## Arena
 @words: arena, 3 vs 3, 6 vs 6, quick battle, duel, treasures, draw, computer
 
-The arena is **one battle without a map**: the Covenant against the Horde, with the computer or with another player. Each side chooses a hero and supports (in a 3 vs 3 battle two of the three). Who picks first and on which arena you fight is drawn at random. Treasures are chosen from the shared deck (see [Treasures and the Elixir of Rebirth](#treasures-and-the-elixir-of-rebirth)). The side that is last standing wins.
+The arena is **one battle without a map**: two different factions of your choice (in the board edition the Covenant against the Horde), with the computer or with another player. Each side chooses a hero and supports (in a 3 vs 3 battle two of the three). Who picks first and on which arena you fight is drawn at random. Treasures are chosen from the shared deck (see [Treasures and the Elixir of Rebirth](#treasures-and-the-elixir-of-rebirth)). The side that is last standing wins.
 
 **Arena 6 vs 6** (the option "Battle size" in the wizard) is a bigger battle: six units per side. It has its own online ranking. On the arena you can choose the computer's difficulty, also Very hard (a computer that makes no mistakes in its choices).
 

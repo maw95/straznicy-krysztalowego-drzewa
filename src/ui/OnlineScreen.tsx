@@ -395,7 +395,13 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   /** The factions a seat may take: Przymierze and Horda, and in a digital rivalry for the goals made for any number of sides all the others (the server checks the same). */
-  const offered: readonly FactionId[] = table.mode === 'pvp' && table.digital && table.tier !== 'adventure' && SIDES_GOALS.includes(table.objective ?? 'crystals') ? openFactions() : (['dawn', 'horde'] as const);
+  const offered: readonly FactionId[] = table.mode === 'pvp' && table.digital && table.tier !== 'adventure' && SIDES_GOALS.includes(table.objective ?? 'crystals') || (table.mode === 'arena' && table.digital) ? openFactions() : (['dawn', 'horde'] as const);
+  /** The digital arena lets both players pick a faction (never the same one: picking the other seat's faction swaps the two). */
+  const arenaPick = (i: number, faction: FactionId) => {
+    const pool = (f: FactionId) => heroPool(f, table.seats.length)[0];
+    const mine = table.seats[i].faction;
+    configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, faction, heroId: pool(faction) } : s.faction === faction ? { ...s, faction: mine, heroId: pool(mine) } : s)) });
+  };
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
   const [copied, setCopied] = useState(false);
@@ -432,8 +438,8 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           return (
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction] }}>
               <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none' }} />
-              {owner && !locked && room.mode === 'pvp' && (
-                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as FactionId, heroId: heroPool(e.target.value as FactionId, room.mode === 'pvp' && room.digital ? MAX_PVP_PLAYERS : room.seats.length).find((h) => !takenBy(h, i))! })}>
+              {owner && !locked && (room.mode === 'pvp' || (room.mode === 'arena' && room.digital)) && (
+                <select value={s.faction} aria-label="Frakcja" onChange={(e) => room.mode === 'arena' ? arenaPick(i, e.target.value as FactionId) : updateSeat(i, { faction: e.target.value as FactionId, heroId: heroPool(e.target.value as FactionId, room.mode === 'pvp' && room.digital ? MAX_PVP_PLAYERS : room.seats.length).find((h) => !takenBy(h, i))! })}>
                   {offered.map((f) => <option key={f} value={f}>{FACTION_NAMES[f]}</option>)}
                 </select>
               )}

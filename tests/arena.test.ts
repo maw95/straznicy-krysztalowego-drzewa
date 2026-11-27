@@ -1,6 +1,7 @@
 // Arena: one 3-on-3 battle, supports chosen and two treasures drafted per side from a shared deck.
 import { describe, expect, it } from 'vitest';
-import { ARENA_DECK, ITEMS, type TeamId } from '../src/engine/data';
+import { ARENA_DECK, FACTION_HEROES, ITEMS, type FactionId, type TeamId } from '../src/engine/data';
+import { seatTable } from '../src/engine/teams';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
@@ -255,5 +256,31 @@ describe('arena 6 on 6 points', () => {
       expect(full).toBe(Math.min(MAX_POINTS, Math.round(quick * 1.5)));
       expect(full).toBeGreaterThan(quick);
     }
+  });
+});
+
+describe('arena with the other factions', () => {
+  const pairs: Array<[FactionId, FactionId]> = [['dawn', 'herds'], ['herds', 'clans'], ['clans', 'tides'], ['tides', 'horde'], ['horde', 'dawn']];
+  for (const size of [3, 6] as const) {
+    it(`plays ${size} on ${size} matches of different factions to the end, on the arena of one of them`, () => {
+      for (const [a, b] of pairs) {
+        const table = seatTable([
+          { name: 'A', faction: a as TeamId, race: a, controller: 'bot' as const, heroId: FACTION_HEROES[a][0] },
+          { name: 'B', faction: b as TeamId, race: b, controller: 'bot' as const, heroId: FACTION_HEROES[b][0] },
+        ]);
+        const setup = arenaSetup(table, 7, 'normal', size);
+        const start = createGame({ ...setup, rules: { ...setup.rules, ruleset: 'digital' } });
+        expect([a, b]).toContain(start.battle!.arena);
+        expect(playOut(start).phase).toBe('over');
+      }
+    });
+  }
+
+  it('refuses the new factions on the board edition arena', () => {
+    const table = seatTable([
+      { name: 'A', faction: 'dawn', race: 'herds', controller: 'bot' as const, heroId: FACTION_HEROES.herds[0] },
+      { name: 'B', faction: 'horde', race: 'clans', controller: 'bot' as const, heroId: FACTION_HEROES.clans[0] },
+    ]);
+    expect(() => createGame(arenaSetup(table, 1))).toThrow();
   });
 });

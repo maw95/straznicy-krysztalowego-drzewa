@@ -85,7 +85,7 @@ export const isOver = (state: GameState): boolean => state.phase === 'over';
 
 /** Crystals on the map (and needed at the Tree): 2 for one Przymierze hero, 3 for two or three (there are three guardian lairs). */
 /** Units of this faction fight without the digital balancing bonus: always in the 6 on 6 arena, and on Easy where the tuning takes it from the bot's faction (`noFactionBonus`). */
-export const withoutBonus = (state: GameState, faction: TeamId): boolean => state.setup.mode === 'arena' || Boolean(state.rules.noFactionBonus?.includes(raceOf(state, faction)));
+export const withoutBonus = (state: GameState, faction: TeamId): boolean | 3 | 6 => (state.setup.mode === 'arena' ? (state.rules.arenaSize === 6 ? 6 : 3) : Boolean(state.rules.noFactionBonus?.includes(raceOf(state, faction))));
 /** The share of the digital balancing bonus the units of this faction keep (`factionBonusShare`; 1 = all of it). */
 export const bonusShare = (state: GameState, faction: TeamId): number => {
   const s = state.rules.factionBonusShare;
@@ -102,8 +102,8 @@ const SIZE_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'g
 
 /** What a game may have for sides: the crystals goal is the story of Przymierze against Horda only; three or four teams need a rectangle map that is big enough. */
 function checkSides(setup: SetupOptions, rules: SetupOptions['rules']) {
-  // The new factions play rivalries only: coop and the arena have a fixed pair of factions (backlog 51a).
-  if (setup.mode !== 'pvp' && setup.seats.some((s) => s.race !== undefined && s.race !== raceOf(null, s.faction))) throw new Error('Nowe frakcje grają na razie tylko w rywalizacji (nie w kooperacji ani na arenie).');
+  // The new factions play rivalries and the digital arena: coop and the board edition have a fixed pair of factions (backlog 51a).
+  if ((setup.mode === 'coop' || (setup.mode === 'arena' && !isDigital(rules))) && setup.seats.some((s) => s.race !== undefined && s.race !== raceOf(null, s.faction))) throw new Error('Nowe frakcje grają tylko w rywalizacji i na arenie wersji cyfrowej.');
   if (setup.mode === 'arena') return;
   const n = teamsOf({ setup }).length;
   if (n < 2) throw new Error('Przy stole muszą być co najmniej dwie różne frakcje.');
@@ -271,11 +271,12 @@ function startArena(state: GameState) {
   const coin: TeamId = rng.int(2) === 0 ? 'dawn' : 'horde';
   const first: TeamId = ARENA_RULES.firstPicker === 'random' ? coin : ARENA_RULES.firstPicker;
   const second = other(first);
-  const arena = rng.int(2) === 0 ? 'dawn' : 'horde';
+  // The painted arena of one of the two factions.
+  const arena = raceOf(state, rng.int(2) === 0 ? 'dawn' : 'horde');
   state.rng = rng.state;
   const heroOf = (f: TeamId) => Object.values(state.heroes).find((h) => h.faction === f);
   const [dawn, horde] = [heroOf('dawn'), heroOf('horde')];
-  if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
+  if (!dawn || !horde || raceOf(state, 'dawn') === raceOf(state, 'horde')) throw new Error('Na arenie walczą bohaterowie dwóch różnych frakcji.');
   const hero = (f: TeamId) => (f === 'dawn' ? dawn : horde);
   const extra = (['dawn', 'horde'] as TeamId[]).flatMap((f) => Array<TeamId>(ARENA_RULES.extraPicks[raceOf(state, f)] + (computerFaction(state, f) ? state.rules.computerDraft?.picks ?? 0 : 0)).fill(f));
   // ARENA_PICKS each, snaking: A, B, B, A, A, B, …

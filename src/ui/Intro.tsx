@@ -170,7 +170,7 @@ export const SLIDES: Slide[] = [
     id: '13-arena',
     title: 'Arena',
     text: [
-      'Szybka bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera, dwóch pomocników i dobiera skarby ze wspólnej talii.',
+      'Szybka bitwa 3 na 3 bez mapy: dwie dowolne frakcje (w wersji planszowej Przymierze kontra Horda), z komputerem albo z drugim graczem. Każdy wybiera bohatera, dwóch pomocników i dobiera skarby ze wspólnej talii.',
       'Na jedną partię wystarczy kilka minut: dobry sposób, żeby poznać jednostki i zdolności.',
     ],
     stand: ['arena/dawn.jpg'],

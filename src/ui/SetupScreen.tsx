@@ -119,6 +119,12 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     const race = raceAt(seats[i]) === 'dawn' ? 'horde' : 'dawn';
     update(i, { race, faction: race, randomRace: false, randomHero: true, heroId: FACTION_HEROES[race].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[race][0] });
   };
+  /** The faction a seat takes. The arena has no mirror matches: taking the opponent's faction swaps the two. */
+  const pickRace = (i: number, race: FactionId) => {
+    const mine = seats[i].randomRace || raceAt(seats[i]) === race ? offered.find((f) => f !== race)! : raceAt(seats[i]);
+    const seatOf = (s: SeatDraft, r: FactionId, j: number): SeatDraft => ({ ...s, race: r, faction: r as SeatDraft['faction'], randomRace: false, randomHero: true, heroId: FACTION_HEROES[r].find((h) => !takenBy(h, j)) ?? FACTION_HEROES[r][0] });
+    setSeats(seats.map((s, j) => (j === i ? seatOf(s, race, j) : arena && !s.randomRace && raceAt(s) === race ? seatOf(s, mine, j) : s)));
+  };
   const removeSeat = (i: number) => seats.length > minSeats && setSeats(seats.filter((_, j) => j !== i));
   /** The goal the game will be played for (a tier may force one): the crystals goal is the story of Przymierze and Horda only. */
   const goal = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) }).objective;
@@ -130,10 +136,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const raceAt = (s: SeatSetup): FactionId => s.race ?? raceOf(null, s.faction);
   /**
    * The factions a seat may take: Przymierze and Horda in every goal, the other factions only in the goals that have been made for any number of sides
-   * (control, conquest, relic; the other goals are stories of Przymierze and Horda, or have not been tested with more). Coop, the arena and the
-   * online game have the old pair. A side is a faction: players who pick the same one play one side.
+   * (control, conquest, relic; the other goals are stories of Przymierze and Horda, or have not been tested with more) and in the digital arena.
+   * Coop and the board edition have the old pair. A side is a faction: players who pick the same one play one side.
    */
-  const offered: readonly FactionId[] = SIDES_GOALS.includes(goal) && digital && !arena ? openFactions() : (TEAM_IDS as readonly FactionId[]);
+  const offered: readonly FactionId[] = digital && (arena || SIDES_GOALS.includes(goal)) ? openFactions() : (TEAM_IDS as readonly FactionId[]);
   /** The table as the engine reads it: every seat has the slot of its faction (the first two factions play the first two sides). */
   // A seat left to chance counts as the race of the first fixed seat here (the draw comes at the start), and more than four fixed factions cannot sit at one table.
   const fixedRaces = new Set(seats.filter((s) => !s.randomRace).map(raceAt));
@@ -141,7 +147,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const maxFactions = shape === 'custom' && tier !== 'adventure' ? 2 : MAX_TEAMS;
   const tooMany = mode === 'pvp' && fixedRaces.size > maxFactions;
   const anchor = raceAt(seats.find((s) => !s.randomRace) ?? seats[0]);
-  const table = mode === 'pvp' && !tooMany ? seatTable(seats.map((s) => (s.randomRace ? { ...s, race: anchor } : s))) : seats;
+  const table = mode !== 'coop' && !tooMany ? seatTable(seats.map((s) => (s.randomRace ? { ...s, race: anchor } : s))) : seats;
   /** The sides in play: the factions seated at the table (coop and the arena have two). */
   const playing = teamsOf({ setup: { mode, seats: table } });
   const drawing = seats.some((s) => s.randomRace);
@@ -154,14 +160,14 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     // The seats left to chance are drawn now.
-    const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode === 'pvp', maxFactions });
+    const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode !== 'coop', maxFactions });
     // The story of the crystals plays Przymierze first and Horda second: a draw that put the Horde first moves its seats behind.
     const ordered = mode === 'pvp' && r.objective === 'crystals' ? [...drawn].sort((a, b) => Number(raceAt(b) === 'dawn') - Number(raceAt(a) === 'dawn')) : drawn;
     // A level stays only at the bots of a digital rivalry.
     const leveled = ordered.map(({ botLevel, ...x }) => (levelsAtBots && x.controller === 'bot' ? { ...x, botLevel: botLevel ?? 'normal' } : x));
     const finalTable = mode === 'pvp' ? seatTable(leveled) : drawn;
     const sides = teamsOf({ setup: { mode, seats: finalTable } });
-    const started = withRuleset(arena ? arenaSetup(drawn.map(({ race: _r, ...x }) => x), seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats: mode === 'pvp' ? finalTable : drawn.map(({ race: _r, ...x }) => x), rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire);
+    const started = withRuleset(arena ? arenaSetup(seatTable(drawn), seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats: mode === 'pvp' ? finalTable : drawn.map(({ race: _r, ...x }) => x), rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire);
     // Three and more sides (when there are enough factions) play on a rectangle map big enough for them.
     const minSize: MapSize = sides.length >= 4 ? 'long' : 'medium';
     const sizes: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
@@ -239,14 +245,14 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
             </Tip>
           )}
         </div>
-        {mode === 'pvp' && !roleGoal && (
+        {((mode === 'pvp' && !roleGoal) || (arena && digital)) && (
           <div className="seat-picks" role="group" aria-label="Frakcja" data-seat-factions={i}>
             <Tip text="Losowa frakcja (i bohater): wylosuję ją przy starcie gry">
               <button className={`pick-btn ${s.randomRace ? 'on' : ''}`} aria-label="Losowa frakcja" aria-pressed={Boolean(s.randomRace)} data-faction="random" onClick={() => update(i, { randomRace: true, randomHero: true })}><DiceIcon size={30} /></button>
             </Tip>
             {offered.map((f) => (
               <Tip key={f} text={FACTION_NAMES[f]}>
-                <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} {...details(() => <FactionDetails race={f} />)} onClick={() => update(i, { race: f, randomRace: false, randomHero: true, heroId: FACTION_HEROES[f].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[f][0] })}>
+                <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} {...details(() => <FactionDetails race={f} />)} onClick={() => pickRace(i, f)}>
                   <img src={asset(`cards/crests/${f}.png`)} alt="" />
                 </button>
               </Tip>

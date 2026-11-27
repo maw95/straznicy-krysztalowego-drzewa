@@ -543,8 +543,8 @@ export interface BattleUnit {
   maxHp: number;
   /** Fights under the digital ruleset: its own hp, attack and speed (see `battleStats`). */
   digital?: true;
-  /** Fights in the arena: the factions' digital bonus (`FACTION_DIGITAL_BONUS`) does not apply. */
-  arena?: true;
+  /** No digital faction bonus (`FACTION_DIGITAL_BONUS`): true, or 3 / 6 in the arena of that size (it has its own, `ARENA_RULES.bonus`). */
+  arena?: true | 3 | 6;
   /** The share of its faction's digital bonus this unit keeps (digital tuning `factionBonusShare`; missing = 1, rounded per stat). */
   bonusShare?: number;
   /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */

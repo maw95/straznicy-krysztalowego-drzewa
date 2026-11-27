@@ -72,8 +72,8 @@ const RULES: Array<[string, string[]]> = [
     'Poziom I (w wersji planszowej „Łatwy”): krótkie pojedynki na planszy, bez zdolności i rytuału, poległego bohatera zastępuje rezerwowy. Na poziomach II–IV wszystkie trudności to pełna gra (arena 3 na 3, zdolności, skarby), a różnią się startem komputera: Łatwy zaczyna słabszy, Normalny jak w zasadach, Trudny (kooperacja) ma o jednego bohatera Hordy więcej i dwa skarby, ale bez posiłków.',
   ]],
   ['Arena', [
-    'Jedna bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',
-    'Skarby ze wspólnej talii: na zmianę A, B, B, A wybiera się jeden z pokazanych (Przymierze widzi 3, Horda 4), pozostałe wracają do talii. Każdy ma 2 skarby, ukryte do chwili użycia.',
+    'Jedna bitwa 3 na 3 bez mapy: dwie dowolne frakcje (w wersji planszowej Przymierze kontra Horda), z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',
+    'Skarby ze wspólnej talii: na zmianę A, B, B, A wybiera się jeden z pokazanych (Horda widzi 4 karty, pozostałe frakcje 3), pozostałe wracają do talii. Każdy ma 2 skarby, ukryte do chwili użycia.',
     'Losowo: kto wybiera pierwszy (A) i na której arenie się walczy. Wygrywa strona, która ostatnia stoi na arenie.',
   ]],
 ];

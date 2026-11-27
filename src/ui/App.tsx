@@ -1,4 +1,4 @@
-import { assignSlots, raceOf, sideName, teamsOf } from '../engine/teams';
+import { assignSlots, raceOf, seatTable, sideName, teamsOf } from '../engine/teams';
 import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
@@ -190,7 +190,7 @@ export function App() {
     const human = q.get('human') !== '0';
     const digital = q.get('ruleset') !== 'board';
     // ?mode=arena starts an arena duel (?hero= for Przymierze), e.g. ?mode=arena&ruleset=digital&steps=60&until=battle.
-    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: q.get('foe') ?? 'werewolfLord' }], Number(q.get('seed') ?? 1), (q.get('level') as Level | null) ?? 'normal', q.get('size') === '6' ? 6 : 3) : null;
+    const arena = q.get('mode') === 'arena' ? arenaSetup(seatTable([{ name: 'Gracz 1', faction: 'dawn', race: (q.get('race') ?? 'dawn') as FactionId, controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? (q.get('race') ? FACTION_HEROES[q.get('race') as FactionId][0] : 'goldDragon') }, { name: 'Gracz 2', faction: 'horde', race: (q.get('foerace') ?? 'horde') as FactionId, controller: 'bot', heroId: q.get('foe') ?? (q.get('foerace') ? FACTION_HEROES[q.get('foerace') as FactionId][0] : 'werewolfLord') }]), Number(q.get('seed') ?? 1), (q.get('level') as Level | null) ?? 'normal', q.get('size') === '6' ? 6 : 3) : null;
     let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
       mode,
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
@@ -996,7 +996,7 @@ export function App() {
   setFiguresEdition(!isDigital(game.rules));
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
-    <ArenaCardsContext.Provider value={game.setup.mode === 'arena'}>
+    <ArenaCardsContext.Provider value={game.setup.mode === 'arena' ? (game.rules.arenaSize === 6 ? 6 : 3) : false}>
     <DigitalContext.Provider value={isDigital(game.rules)}>
     <StatScaleContext.Provider value={game.rules.statScale ?? 1}>
     <HpScaleContext.Provider value={game.rules.hpScale ?? null}>

@@ -58,7 +58,7 @@ register({
   'Pomocnicy Wielkiego Tura mają +1 Ż w bitwie.': 'The supports of the Great Aurochs have +1 HP in battle.', 'Dzika Pieśń': 'Wild Song', 'Czary Satyra zadają i leczą o 1 więcej.': "The Satyr's spells deal and heal 1 more.",
   'Wędrowiec Stepu': 'Steppe Wanderer', 'Grzmot Stada': 'Thunder of the Herd', 'Zagończyk': 'Raider', 'Pomocnicy Zagończyka mają +1 Ż w bitwie.': "The Raider's supports have +1 HP in battle.",
   'Szpon z Góry': 'Talon from Above', 'Jednostki powietrzne Orła (i on sam) mają +1 A w bitwie.': "The Eagle's airborne units (and the Eagle himself) have +1 ATK in battle.", 'Pieśń Przyszłości': 'Song of the Future',
-  'Nowe frakcje grają na razie tylko w rywalizacji (nie w kooperacji ani na arenie).': 'The new factions play only in rivalry for now (not in co-op or on the arena).',
+  'Nowe frakcje grają tylko w rywalizacji i na arenie wersji cyfrowej.': 'The new factions play only in rivalry and in the digital arena.',
   'Przy stole muszą być co najmniej dwie różne frakcje.': 'There must be at least two different factions at the table.', 'Przy stole może być najwyżej {0} frakcji.': 'There can be at most {0} factions at the table.',
   // Refuge of the Wanderings (button in the settlement window)
   'Bohater musi stać w tej osadzie, żeby się przenieść.': 'The hero must stand in this settlement to move.', 'Bohater przeniósł się już w tej rundzie.': 'The hero has already moved this round.',

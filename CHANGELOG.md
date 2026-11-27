@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena: obok Przymierza i Hordy walczą też Dzikie Stado, Żelazny Klan i Bractwo Przypływu, w dowolnej parze różnych frakcji, w arenie 3 na 3 i 6 na 6 (też online); na ekranie miejsc wybierasz frakcję każdej strony, a bitwa toczy się na arenie jednej z nich. Dla wyrównania szans frakcje mają na arenie własne drobne premie do Życia i Ataku.
 - Bitwa: żółta obwódka aktywnej jednostki powoli pulsuje (zanika i wraca), a znika w chwili kliknięcia ruchu lub ataku; wraca dopiero, gdy plansza znieruchomieje.
 - Menu wyboru trybu: opis Potyczki nie mówi już tylko o Przymierzu i Hordzie, a opis Kampanii zapowiada historie kolejnych frakcji.
 - Zbliżający się limit rund: gdy zostają trzy rundy, tor rund i pozostałe pola pulsują na bursztynowo (w ostatniej rundzie na czerwono), pod torem pojawia się ostrzeżenie (na telefonie przy liczniku rund), a na początku twojej tury słychać dzwon, w ostatniej rundzie ponury sygnał.

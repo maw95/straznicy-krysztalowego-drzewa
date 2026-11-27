@@ -991,7 +991,7 @@ export const ARENA_OFFER = 3;
  * Arena-only handicaps (they do not touch the adventure game): who picks first ('random' = a coin)
  * and extra treasures a side drafts after the A, B, B, A picks.
  */
-export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
+export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number>; bonus: Record<3 | 6, Partial<Record<FactionId, Record<'hero' | 'support', { hp: number; attack: number }>>>> } = {
   firstPicker: 'random',
   extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0, tides: 0 },
   /**
@@ -999,6 +999,22 @@ export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<F
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
   extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0, tides: 0 },
+  /**
+   * Digital arena only: Życie and Atak a faction's heroes and supports have on top of their cards, so that the factions beyond the first two
+   * keep up (the adventure's numbers are in factionBonus.ts). Found with scripts/sim/arena-frakcje.ts.
+   */
+  bonus: {
+    3: {
+      herds: { hero: { hp: 1, attack: 0 }, support: { hp: 0, attack: 0 } },
+      clans: { hero: { hp: 1, attack: 0 }, support: { hp: 0, attack: -1 } },
+      tides: { hero: { hp: 1, attack: 0 }, support: { hp: 1, attack: 1 } },
+    },
+    6: {
+      herds: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 2 } },
+      clans: { hero: { hp: -2, attack: 0 }, support: { hp: 1, attack: 0 } },
+      tides: { hero: { hp: 2, attack: 1 }, support: { hp: 1, attack: 2 } },
+    },
+  },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),
@@ -1203,10 +1219,11 @@ export function scaleText(text: string, scale: number, hpScale = scale): string 
 }
 
 /** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ; Życie and Atak times `scale` (the digital Expedition plays with 3, see `scaleOf`). */
-export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale, arena = false, share = 1): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale, arena: boolean | 3 | 6 = false, share = 1): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
   const { hp, attack, speed } = { ...UNITS[defId], ...(digital ? DIGITAL_STATS[defId] : undefined) };
-  // The digital ruleset's per-faction numbers (src/engine/factionBonus.ts, found by scripts/sim/tuneFactions.ts); not in the arena, which is balanced without them.
+  // The digital ruleset's per-faction numbers: the adventure's (src/engine/factionBonus.ts, found by scripts/sim/tuneFactions.ts) or the arena's own.
   const def = UNITS[defId];
-  const bonus = (digital && !arena && def && FACTION_DIGITAL_BONUS[def.side as FactionId]?.[def.kind === 'hero' ? 'hero' : 'support']) || { hp: 0, attack: 0 };
+  const table = arena === 3 || arena === 6 ? ARENA_RULES.bonus[arena] : arena ? {} : FACTION_DIGITAL_BONUS;
+  const bonus = (digital && def && table[def.side as FactionId]?.[def.kind === 'hero' ? 'hero' : 'support']) || { hp: 0, attack: 0 };
   return { hp: (hp + Math.round(bonus.hp * share)) * hpScale, attack: (attack + Math.round(bonus.attack * share)) * scale, speed };
 }
