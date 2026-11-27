@@ -30,6 +30,8 @@ export function RoundTrack({ round, limit, ritual, ritualRounds, size = 150 }: {
       style={{ position: 'relative', width: size, height: h, flex: 'none', pointerEvents: 'none', filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.7))' }}
     >
       <img src={asset('ui/round_track.png')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      {/* The board itself takes the pointer (clicks do not reach the map under it); the corners of the picture around the hexagon let it through. */}
+      <span data-track-hit style={{ position: 'absolute', inset: 0, clipPath: 'polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%)', pointerEvents: 'auto' }} />
       {/* Rounds past this map's limit are not played. */}
       {SOCKETS.map((_, i) =>
         i + 1 > limit ? (

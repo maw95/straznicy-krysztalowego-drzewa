@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mapa świata: tor rund zasłania pola także dla myszy: kliknięcie w tor nie rusza już bohatera na polu pod spodem.':
+    'World map: the round track now blocks the pointer too: a click on it no longer moves the hero onto the hex underneath.',
   'Mapa świata: pola mapy zajmują całą ramkę (bez wolnego pasa u góry, a na mapach innych niż trójkąt także z lewej), a tor rund leży nad nimi; pole pod torem można wskazać i kliknąć.':
     'World map: the hexes use the whole frame (no empty strip at the top, nor on the left on maps other than the triangle), with the round track lying over them; a hex under the track can be pointed at and clicked.',
   'Mapa świata: tor rund ze znacznikiem jest mniejszy o około jedną czwartą.':
