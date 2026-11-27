@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote).
+
 ## 3.1.0 — 2026-11-26
 
 - Kreator: Kryształy do Drzewa nie są dostępne na mapie Ogromnej i Gigantycznej, a Przetrwanie na Małej (przy tych wielkościach jednej strony nie dało się wyrównać). Przycisk jest wyszarzony, z dopiskiem „Rozmiar niedostępny dla tego celu”.

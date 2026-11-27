@@ -2,6 +2,12 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
+// In preparation
+register({
+  'Opublikowana gra: panele interfejsu znów mają łupkowe tło w kolorze frakcji (zamiast niego widać było jednolite złote).':
+    'Published game: the interface panels have their slate background in the faction colour again (a plain gold one showed instead).',
+});
+
 // 3.1.0
 register({
   'Kreator: Kryształy do Drzewa nie są dostępne na mapie Ogromnej i Gigantycznej, a Przetrwanie na Małej (przy tych wielkościach jednej strony nie dało się wyrównać). Przycisk jest wyszarzony, z dopiskiem „Rozmiar niedostępny dla tego celu”.':

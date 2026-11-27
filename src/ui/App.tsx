@@ -345,7 +345,8 @@ export function App() {
   useEffect(() => {
     const root = document.documentElement;
     if (slateRace) {
-      root.style.setProperty('--slate-img', `url('${asset(`ui/slate_${slateRace}.jpg`)}')`);
+      // Absolute: a relative url() in a custom property is resolved against the stylesheet that uses it, which in the build lives in assets/.
+      root.style.setProperty('--slate-img', `url('${new URL(asset(`ui/slate_${slateRace}.jpg`), document.baseURI).href}')`);
       root.dataset.faction = slateRace;
     } else {
       root.style.removeProperty('--slate-img');
