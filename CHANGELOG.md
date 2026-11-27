@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa świata: pola mapy zajmują całą ramkę (bez wolnego pasa u góry, a na mapach innych niż trójkąt także z lewej), a tor rund leży nad nimi; pole pod torem można wskazać i kliknąć.
 - Mapa świata: tor rund ze znacznikiem jest mniejszy o około jedną czwartą.
 
 ## 3.1.1 — 2026-11-27

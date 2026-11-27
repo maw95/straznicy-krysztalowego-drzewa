@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mapa świata: pola mapy zajmują całą ramkę (bez wolnego pasa u góry, a na mapach innych niż trójkąt także z lewej), a tor rund leży nad nimi; pole pod torem można wskazać i kliknąć.':
+    'World map: the hexes use the whole frame (no empty strip at the top, nor on the left on maps other than the triangle), with the round track lying over them; a hex under the track can be pointed at and clicked.',
   'Mapa świata: tor rund ze znacznikiem jest mniejszy o około jedną czwartą.':
     'World map: the round track with its marker is about a quarter smaller.',
 });
