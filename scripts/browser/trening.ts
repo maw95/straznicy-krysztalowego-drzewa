@@ -43,7 +43,28 @@ for (const view of (process.env.VIEWS ?? 'desktop,malypoziomo').split(',') as Vi
       if (!seen.has(id)) { seen.add(id); console.log(view, 'step:', id); await shot(`krok-${id}`); }
       const click = async (name: RegExp) => { const b = p.getByRole('button', { name }); if (await b.count()) { await b.last().click(); await p.waitForTimeout(500); return true; } return false; };
       if (await p.locator('[data-coach-next]').count()) { await p.locator('[data-coach-next]').click(); continue; }
-      if ((await click(/Do ekwipunku/)) || (await click(/Do walki!/)) || (await click(/^Rozumiem$/))) continue;
+      // The settlement steps: in through "Wejdź do osady", the Settlement Council's tree for the barracks, the barracks for a recruit; Esc back to the map.
+      if (id === 'koszary' || id === 'rekrutacja') {
+        await p.locator('[data-enter-settlement]').click();
+        await p.waitForTimeout(900);
+        if (id === 'koszary') {
+          await p.getByRole('button', { name: /^Rada Osady/ }).first().click();
+          await p.waitForTimeout(600);
+          await p.getByRole('button', { name: /^Koszary/ }).first().click();
+          await p.waitForTimeout(500);
+          await shot('osada-drzewko');
+          await p.getByRole('button', { name: /Zbuduj/ }).first().click();
+        } else {
+          await p.getByRole('button', { name: /^Koszary/ }).first().click();
+          await p.waitForTimeout(700);
+          await shot('osada-koszary');
+          await p.locator('button:has-text("Rekrutuj"):not([disabled])').first().click();
+        }
+        await p.waitForTimeout(600);
+        for (let k = 0; k < 4 && (await p.locator('.sb-exit').count()); k++) { await p.locator('.sb-exit').first().click(); await p.waitForTimeout(500); }
+        continue;
+      }
+      if ((await click(/Do ekwipunku/)) || (await click(/Do walki!/)) || (await click(/^Rozumiem$/)) || (await click(/^Artefakt$/))) continue;
       if (await p.locator('.skill-card').count()) { await p.locator('.skill-card').first().click(); await p.waitForTimeout(500); continue; }
       if (await p.locator('[data-hint="hex"]').count()) {
         const hex = await p.locator('[data-hint="hex"]').first().evaluate((el) => (el.parentElement as HTMLElement).getAttribute('data-hex'));

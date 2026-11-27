@@ -9,6 +9,7 @@ import { createGame, activeHero, currentActor, legalHeroMoves } from './game';
 import { mapNeighbors } from './map';
 import { heroTileCost, type SiteKind } from './sites';
 import { controlHolder } from './objectives';
+import { recruitsOf } from './kingdom';
 import { distance, parseKey, type HexKey } from './hex';
 import { resolveTier, withRuleset, type Tier } from './presets';
 import { levelSettings, type RulesConfig, type Action, type GameState, type Level, type ObjectiveId, type SetupOptions } from './types';
@@ -26,6 +27,8 @@ export interface TrainingStep {
   target?: (s: GameState) => CoachTarget | null;
   /** The player's actions this step lets through; the rest is held (the coach shakes). */
   allow: (a: Action, s: GameState) => boolean;
+  /** What the step asks for when it is not a walk (a building, a recruit): the action a player following the coach takes (tests, seed search). */
+  hint?: (s: GameState) => Action | null;
   /** True when the step has been done, whatever the state was before: the steps are read in order. */
   done: (s: GameState) => boolean;
 }
@@ -74,6 +77,8 @@ const mine = (s: GameState) => activeHero(s);
 const inBattle = (s: GameState, stages: string[]) => s.phase === 'battle' && s.battle !== null && stages.includes(s.battle.stage);
 const MAP_ACTIONS: Action['type'][] = ['moveHero', 'endTurn'];
 /** The player's actions in a fight on the arena (moving, striking, abilities, treasures, ending the move). */
+/** What a player does on the map in the free steps: walking, ending the turn, the settlements and the gear. */
+const mapPlay = (a: Action): boolean => MAP_ACTIONS.includes(a.type) || a.type.startsWith('kingdom') || a.type === 'equipArtifact' || a.type === 'unequipArtifact';
 const inFight = (a: Action): boolean => a.type.startsWith('battle') || a.type === 'endActivation';
 /** Everything a battle asks of the player, from picking the helpers to the last blow (for the steps in which another battle may break out). */
 const anyBattle = (a: Action): boolean => inFight(a) || ['selectSupports', 'deployUnits', 'pickMirages', 'draftPick', 'pickGear', 'pickSpells'].includes(a.type);
@@ -161,7 +166,7 @@ const stepStrazy = (text: string): TrainingStep => ({
   title: 'Strażnik kryształu',
   text,
   target: nextStep,
-  allow: (a) => MAP_ACTIONS.includes(a.type),
+  allow: (a) => mapPlay(a) || anyBattle(a),
   done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
 });
 const STEP_DRZEWO: TrainingStep = {
@@ -170,7 +175,7 @@ const STEP_DRZEWO: TrainingStep = {
   text: 'Wygrałeś! Strażnik zostawił kryształ i bohater go niesie. Zanieś go na pole Drzewa pośrodku mapy: idź podświetlonymi polami.',
   target: nextStep,
   // Another guardian on the way may start another battle: it is played freely.
-  allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a),
+  allow: (a) => mapPlay(a) || anyBattle(a),
   done: (s) => s.phase === 'over',
 };
 
@@ -365,7 +370,91 @@ const WYPRAWA: Training = {
   free: 'Gotowe!',
 };
 
-export const TRAININGS: Training[] = [SPACER, PRZYGODA, WYPRAWA];
+/** The Przymierze's capital (its start settlement) in the levels with settlements. */
+const capital = (s: GameState) => Object.values(s.kingdom?.settlements ?? {}).find((x) => x.land === 'dawn' && x.id.startsWith('start')) ?? null;
+/** The nearest hex of a kind of place (a mine, a settlement) the Przymierze does not own yet. */
+function unowned(s: GameState, kind: 'mine' | 'settlement'): HexKey | null {
+  const hero = mine(s);
+  const k = s.kingdom;
+  if (!hero || !k) return null;
+  const at = parseKey(hero.pos);
+  const hexes = kind === 'mine' ? Object.entries(k.mines).filter(([, m]) => m.owner !== 'dawn').map(([h]) => h) : Object.values(k.settlements).filter((x) => x.owner !== 'dawn').map((x) => x.at);
+  return hexes.sort((a, b) => distance(parseKey(a), at) - distance(parseKey(b), at))[0] ?? null;
+}
+const recruited = (s: GameState) => s.factions.dawn.supportsAlive.some((id) => (recruitsOf(s, 'dawn').find((r) => r.id === id)?.tier ?? 1) >= 2);
+
+const OSADA: Training = {
+  id: 'osada',
+  level: 3,
+  title: 'Osada',
+  tagline: 'Złoto, osady i kopalnie: budowa koszar, rekrutacja pomocnika i przejmowanie osad na mapie.',
+  learn: ['skąd bierze się złoto', 'jak wejść do osady i postawić budynek', 'jak zrekrutować pomocnika', 'jak przejąć kopalnię i osadę'],
+  needs: 'wyprawa',
+  tier: 'kingdom',
+  objective: 'crystals',
+  difficulty: 'kids',
+  hero: 'goldDragon',
+  rules: { dawnStartGold: 4 },
+  seeds: [3, 24, 28, 29, 34, 35, 36, 56],
+  map: { id: 'trening-osada', name: 'Trening: Osada', summary: 'Dolina ze stolicą, wolną osadą i kopalniami.', campaign: true, rows: VALLEY },
+  intro: [
+    'Na poziomie Osada pojawia się złoto. Przynoszą je osady i kopalnie, a wydajesz je w osadach: na budynki i na nowych pomocników do drużyny.',
+    'Cel gry jest znany z Przygody: kryształ do Drzewa. Tym razem po drodze zbudujesz swoją pierwszą osadę.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Kryształ jest przy Drzewie, a twoja osada rośnie! W Potyczce na poziomie Osada budynków jest więcej: targ z artefaktami, szpital dla poległych pomocników i skarbiec, który zwiększa dochód.'],
+  lose: ['Tym razem się nie udało. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    {
+      id: 'zloto',
+      title: 'Złoto',
+      text: 'Masz złoto: jego stan i dochód na rundę widać na dolnym pasku. Co rundę każda twoja osada przynosi +2 zł, a każda kopalnia +1 zł. Na start dostajesz trochę więcej, żeby od razu coś zbudować.',
+      ack: true,
+      allow: () => false,
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'koszary',
+      title: 'Budowa koszar',
+      text: 'Twój bohater stoi w stolicy. Kliknij „Wejdź do osady” po prawej, potem Radę Osady (budynek pośrodku). W drzewku budynków wybierz Koszary i kliknij „Zbuduj” (3 zł).',
+      allow: (a) => a.type.startsWith('kingdom'),
+      hint: (s) => (capital(s) ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'barracks' } : null),
+      done: (s) => (capital(s)?.buildings.barracks ?? 1) >= 1 || s.phase === 'over',
+    },
+    {
+      id: 'rekrutacja',
+      title: 'Rekrutacja',
+      text: 'Koszary stoją! Kliknij je w osadzie: zobaczysz karty jednostek. Wybierz jednostkę poziomu 2 i kliknij „Rekrutuj” (3 zł): dołączy do drużyny bohatera. Drużyna może urosnąć do pięciu pomocników.',
+      allow: (a) => a.type.startsWith('kingdom'),
+      hint: (s) => {
+        const r = recruitsOf(s, 'dawn').find((x) => x.tier === 2 && !s.factions.dawn.supportsAlive.includes(x.id));
+        return capital(s) && r ? { type: 'kingdomRecruit', settlementId: capital(s)!.id, unitId: r.id } : null;
+      },
+      done: (s) => recruited(s) || s.phase === 'over',
+    },
+    {
+      id: 'kopalnia',
+      title: 'Kopalnia',
+      text: 'Zamknij okno osady i idź podświetlonymi polami do kopalni złota. Gdy na niej staniesz, będzie twoja i co rundę przyniesie +1 zł.',
+      target: (s) => stepTowards(s, unowned(s, 'mine')),
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => Object.values(s.kingdom?.mines ?? {}).some((m) => m.owner === 'dawn') || s.phase === 'over',
+    },
+    {
+      id: 'przejecie',
+      title: 'Wolna osada',
+      text: 'Na mapie jest też wolna osada. Pilnują jej neutralni, więc wejście zaczyna bitwę; po wygranej osada przechodzi na twoją stronę i co rundę daje +2 zł. Pilnuj swoich osad: Horda też może je zająć.',
+      target: (s) => stepTowards(s, unowned(s, 'settlement')),
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => Object.values(s.kingdom?.settlements ?? {}).filter((x) => x.owner === 'dawn').length >= 2 || s.phase === 'over',
+    },
+    stepStrazy('Teraz to, co znasz z Przygody: kryształu pilnuje strażnik (jego pole zostało odsłonięte). Idź podświetlonymi polami w jego stronę i pokonaj go, a nowy pomocnik pomoże ci w bitwie.'),
+    STEP_DRZEWO,
+  ],
+  free: 'Gotowe!',
+};
+
+export const TRAININGS: Training[] = [SPACER, PRZYGODA, WYPRAWA, OSADA];
 for (const t of TRAININGS) registerCustomMap(t.map);
 
 export const trainingById = (id: string): Training | undefined => TRAININGS.find((t) => t.id === id);
@@ -406,7 +495,7 @@ export function trainingIndex(t: Training, s: GameState, from = 0): number {
 export function trainingAllows(t: Training, s: GameState, index: number, a: Action): boolean {
   if (currentActor(s).kind !== 'human') return true;
   // The windows that cannot be closed without an answer (a found treasure, a level-up) never get stuck.
-  if (a.type === 'chooseTreasure' || a.type === 'chooseSkill') return true;
+  if (a.type === 'chooseTreasure' || a.type === 'chooseSkill' || a.type === 'chestTake') return true;
   const step = t.steps[index];
   return !step || step.allow(a, s);
 }

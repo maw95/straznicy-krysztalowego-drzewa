@@ -445,7 +445,7 @@ export function teamSlots(state: GameState, f: TeamId): number {
 /** Settlements (the starting ones and the ones to conquer, each with its neutral defenders) and gold mines; called when a game is made. */
 export function initKingdom(state: GameState): void {
   const teams = teamsOf(state);
-  const k: KingdomState = { gold: byTeam(teams, () => KINGDOM.startGold), settlements: {}, mines: {}, chest: null };
+  const k: KingdomState = { gold: byTeam(teams, (f) => KINGDOM.startGold + (f === 'dawn' ? state.rules.dawnStartGold ?? 0 : 0)), settlements: {}, mines: {}, chest: null };
   state.kingdom = k;
   if (state.rules.economy) {
     const res = byTeam(teams, () => ({ ...ECONOMY.start }));

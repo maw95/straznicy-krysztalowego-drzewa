@@ -60,7 +60,7 @@ describe.each(TRAININGS)('training $id', (t) => {
         // The bot reached for something the step does not ask for (a map item, say): the player is held, and does what the coach shows, else ends the turn.
         held++;
         const target = t.steps[index]?.target?.(g);
-        play = target && 'hex' in target ? { type: 'moveHero', to: target.hex } : { type: 'endTurn' };
+        play = t.steps[index]?.hint?.(g) ?? (target && 'hex' in target ? { type: 'moveHero', to: target.hex } : { type: 'endTurn' });
         expect(trainingAllows(t, g, index, play), `step ${t.steps[index]?.id} holds even what it asks for: ${JSON.stringify(play)}`).toBe(true);
       }
       g = applyAction(g, play);

@@ -72,6 +72,8 @@ export interface RulesConfig {
   bossHpFactor?: number;
   /** Digital tuning, hero growth only: every Przymierze hero starts with this much experience (levels up through the usual offers; see GROWTH.thresholds). Missing = 0. */
   dawnStartXp?: number;
+  /** Level 4 and up: gold of the Przymierze on top of the usual start (the training: enough for the first building). Missing = 0. */
+  dawnStartGold?: number;
   /** Digital tuning: a fallen Przymierze hero is replaced by an unused one (heroReplacement for the Przymierza side alone; the Horde's heroes stay dead). Missing = off. */
   dawnHeroReplacement?: boolean;
   /** Digital tuning, Easy: the factions (races) that fight without their digital balancing bonus (FACTION_DIGITAL_BONUS), e.g. ['horde'] for the bot of a Skirmish. Missing = every faction has it. */

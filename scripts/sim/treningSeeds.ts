@@ -23,9 +23,11 @@ for (let seed = 1; seed <= 300 && good.length < want; seed++) {
     if (currentActor(g).kind === 'human' && g.phase === 'adventure') {
       const h = activeHero(g)!;
       if (h.offer?.length) a = { type: 'chooseSkill', skill: h.offer[0] };
-      else if (!h.treasurePick) {
-        const tg = t.steps[idx]?.target?.(g);
-        a = tg && 'hex' in tg ? { type: 'moveHero', to: tg.hex } : t.steps[idx]?.target ? { type: 'endTurn' } : a;
+      else if (!h.treasurePick && !g.kingdom?.chest) {
+        const step = t.steps[idx];
+        const tg = step?.target?.(g);
+        const hint = step?.hint?.(g);
+        a = hint ?? (tg && 'hex' in tg ? { type: 'moveHero', to: tg.hex } : step?.target ? { type: 'endTurn' } : a);
       }
     }
     g = applyAction(g, a);
