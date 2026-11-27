@@ -9,7 +9,10 @@ import { createGame, activeHero, currentActor, legalHeroMoves } from './game';
 import { mapNeighbors } from './map';
 import { heroTileCost, type SiteKind } from './sites';
 import { controlHolder } from './objectives';
-import { recruitsOf } from './kingdom';
+import { dwellingOf, recruitsOf } from './kingdom';
+import { freeCommanders } from './realm';
+import { manaOf, maxMana } from './magic';
+import { shardsOf, shardTotal, sparkOwner } from './empire';
 import { distance, parseKey, type HexKey } from './hex';
 import { resolveTier, withRuleset, type Tier } from './presets';
 import { levelSettings, type RulesConfig, type Action, type GameState, type Level, type ObjectiveId, type SetupOptions } from './types';
@@ -161,13 +164,17 @@ const STEP_RUCH: TrainingStep = {
   allow: (a) => a.type === 'moveHero',
   done: leftHome,
 };
-const stepStrazy = (text: string): TrainingStep => ({
+/**
+ * The walk to the guardian. With battle steps after it (Spacer, Przygoda) it is done when the battle starts; in the later trainings, which teach no battle, it lasts
+ * until the crystal is taken (else the next step, "you won", would show during the fight).
+ */
+const stepStrazy = (text: string, untilCrystal = false): TrainingStep => ({
   id: 'strazy',
   title: 'Strażnik kryształu',
   text,
   target: nextStep,
   allow: (a) => mapPlay(a) || anyBattle(a),
-  done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
+  done: (s) => s.phase === 'over' || (untilCrystal ? Object.values(s.heroes).some((h) => h.faction === 'dawn' && h.crystals.length > 0) : s.phase !== 'adventure' || mine(s)?.crystals.length !== 0),
 });
 const STEP_DRZEWO: TrainingStep = {
   id: 'drzewo',
@@ -448,13 +455,282 @@ const OSADA: Training = {
       allow: (a) => mapPlay(a) || anyBattle(a),
       done: (s) => Object.values(s.kingdom?.settlements ?? {}).filter((x) => x.owner === 'dawn').length >= 2 || s.phase === 'over',
     },
-    stepStrazy('Teraz to, co znasz z Przygody: kryształu pilnuje strażnik (jego pole zostało odsłonięte). Idź podświetlonymi polami w jego stronę i pokonaj go, a nowy pomocnik pomoże ci w bitwie.'),
+    stepStrazy('Teraz to, co znasz z Przygody: kryształu pilnuje strażnik (jego pole zostało odsłonięte). Idź podświetlonymi polami w jego stronę i pokonaj go, a nowy pomocnik pomoże ci w bitwie.', true),
     STEP_DRZEWO,
   ],
   free: 'Gotowe!',
 };
 
-export const TRAININGS: Training[] = [SPACER, PRZYGODA, WYPRAWA, OSADA];
+/** The Przymierze's main hero (not a commander from the tavern). */
+const mainHero = (s: GameState) => Object.values(s.heroes).find((h) => h.faction === 'dawn' && !h.secondary) ?? null;
+/** The nearest mine of wood or ore the Przymierze does not hold. */
+function freeResourceMine(s: GameState): HexKey | null {
+  const hero = mine(s);
+  if (!hero || !s.kingdom) return null;
+  const at = parseKey(hero.pos);
+  return Object.entries(s.kingdom.mines).filter(([, m]) => (m.res === 'wood' || m.res === 'ore') && m.owner !== 'dawn').map(([h]) => h).sort((a, b) => distance(parseKey(a), at) - distance(parseKey(b), at))[0] ?? null;
+}
+const resOfDawn = (s: GameState, r: 'wood' | 'ore' | 'dust') => s.kingdom?.res?.dawn[r] ?? 0;
+const built = (s: GameState, b: 'treasury' | 'market' | 'tavern' | 'barracks') => (capital(s)?.buildings[b] ?? 0) >= 1;
+/** What an explaining step lets the player do in the settlement meanwhile. */
+const inSettlement = (a: Action) => a.type.startsWith('kingdom') || a.type === 'endTurn';
+
+const KSIESTWO: Training = {
+  id: 'ksiestwo',
+  level: 4,
+  title: 'Księstwo',
+  tagline: 'Drewno, ruda i Gwiezdny Pył: wymiana na targu, budynki za surowce, tartaki i kopalnie, garnizon w osadzie.',
+  learn: ['jakie są surowce i skąd się biorą', 'jak kupić surowiec za złoto', 'jak zostawić garnizon, który broni osady', 'jak przejąć tartak albo kopalnię rudy'],
+  needs: 'osada',
+  tier: 'economy',
+  objective: 'crystals',
+  difficulty: 'kids',
+  hero: 'goldDragon',
+  rules: { dawnStartGold: 11 },
+  seeds: [1, 3, 4, 5, 6, 7, 8, 9],
+  map: { id: 'trening-ksiestwo', name: 'Trening: Księstwo', summary: 'Dolina ze stolicą, tartakiem i kopalniami.', campaign: true, rows: VALLEY },
+  intro: [
+    'Na poziomie Księstwo obok złota są trzy surowce: drewno, ruda i Gwiezdny Pył. Budynki kosztują teraz także surowce, a osady broni garnizon.',
+    'Cel gry jest znany: kryształ do Drzewa. Najpierw jednak zadbasz o stolicę.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Kryształ jest przy Drzewie! W Potyczce na poziomie Księstwo czekają jeszcze kuźnia, fosa i mury, chatki z zadaniami, młyny i studnie, a także nowy cel gry: Podbój.'],
+  lose: ['Tym razem się nie udało. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    {
+      id: 'surowce',
+      title: 'Surowce',
+      text: 'Na dolnym pasku obok złota widać drewno, rudę i Gwiezdny Pył (zapas i dochód na rundę). Drewno i ruda idą na budynki, Pył na rzeczy rzadkie: czary, legendarne artefakty, drogie budynki. Masz 3 drewna i trochę złota.',
+      ack: true,
+      allow: () => false,
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'targ',
+      title: 'Targ',
+      text: 'Kliknij „Wejdź do osady”, potem Radę Osady (budynek pośrodku). W drzewku budynków wybierz Targ i kliknij „Zbuduj”: tym razem cena to złoto i drewno (3 zł i 2 drewna).',
+      allow: (a) => a.type === 'kingdomBuild' && a.building === 'market',
+      hint: (s) => (capital(s) ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'market' } : null),
+      done: (s) => built(s, 'market') || s.phase === 'over',
+    },
+    {
+      id: 'wymiana',
+      title: 'Wymiana surowców',
+      text: 'Rudy jeszcze nie masz, ale targ ją sprzeda. Wróć z drzewka do osady (strzałka w prawym dolnym rogu), kliknij Targ i w „Wymianie surowców” kup 2 rudy (po 3 zł).',
+      allow: (a) => a.type === 'kingdomTrade' && a.res === 'ore' && a.dir === 'buy',
+      hint: (s) => (capital(s) ? { type: 'kingdomTrade', settlementId: capital(s)!.id, res: 'ore', dir: 'buy' } : null),
+      done: (s) => resOfDawn(s, 'ore') >= 2 || built(s, 'treasury') || s.phase === 'over',
+    },
+    {
+      id: 'skarbiec',
+      title: 'Budynek za surowce',
+      text: 'Masz rudę! Zamknij okno targu, wejdź do Rady Osady, wybierz Skarbiec i kliknij „Zbuduj” (4 zł i 2 rudy): co rundę przyniesie +1 zł. Cenę każdego budynku widać w jego przycisku.',
+      allow: (a) => a.type === 'kingdomBuild' && a.building === 'treasury',
+      hint: (s) => (capital(s) ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'treasury' } : null),
+      done: (s) => built(s, 'treasury') || s.phase === 'over',
+    },
+    {
+      id: 'garnizon',
+      title: 'Garnizon',
+      text: 'Na tym poziomie wróg nie zajmie osady samym wejściem, jeśli zostawisz w niej garnizon: musi go pokonać w bitwie o osadę. Na dolnym pasku osady, przy „Garnizon”, kliknij jednego pomocnika z drużyny, żeby go zostawić.',
+      allow: (a) => a.type === 'kingdomGarrison' && a.dir === 'in',
+      hint: (s) => {
+        const id = s.factions.dawn.supportsAlive[0];
+        return capital(s) && id ? { type: 'kingdomGarrison', settlementId: capital(s)!.id, unitId: id, dir: 'in' } : null;
+      },
+      done: (s) => (capital(s)?.garrison?.length ?? 0) >= 1 || s.phase === 'over',
+    },
+    {
+      id: 'tartak',
+      title: 'Tartak i kopalnia rudy',
+      text: 'Surowce dają też miejsca na mapie: tartak (+1 drewna na rundę) i kopalnia rudy (+1 rudy). Zamknij okno osady i idź podświetlonymi polami do najbliższego: stanie się twoje, gdy na nim staniesz.',
+      target: (s) => stepTowards(s, freeResourceMine(s)),
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => Object.values(s.kingdom?.mines ?? {}).some((m) => (m.res === 'wood' || m.res === 'ore') && m.owner === 'dawn') || s.phase === 'over',
+    },
+    stepStrazy('Teraz kryształ: jego strażnik czeka na odsłoniętym polu. Idź podświetlonymi polami i pokonaj go. Garnizon zostaje w stolicy, więc w bitwie masz jednego pomocnika mniej.', true),
+    STEP_DRZEWO,
+  ],
+  free: 'Gotowe!',
+};
+
+const KROLESTWO: Training = {
+  id: 'krolestwo',
+  level: 5,
+  title: 'Królestwo',
+  tagline: 'Drugi bohater z karczmy, typ i specjalność bohatera, mana i czar w bitwie.',
+  learn: ['co dają typ i specjalność bohatera', 'jak zbudować karczmę i nająć dowódcę', 'jak rzucić czar w bitwie'],
+  needs: 'ksiestwo',
+  tier: 'realm',
+  objective: 'crystals',
+  difficulty: 'kids',
+  hero: 'goldDragon',
+  rules: { dawnStartGold: 14, dawnStartRes: { wood: 2 } },
+  seeds: [1, 3, 4, 5, 6, 7, 8, 9],
+  map: { id: 'trening-krolestwo', name: 'Trening: Królestwo', summary: 'Dolina ze stolicą i jednym strażnikiem.', campaign: true, rows: VALLEY },
+  intro: [
+    'Na poziomie Królestwo możesz mieć drugiego bohatera, dowódcę z karczmy, a bohaterowie mają manę i czary.',
+    'Cel gry jest znany: kryształ do Drzewa. Tym razem w bitwie ze strażnikiem użyjesz magii.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Kryształ jest przy Drzewie! W Potyczce na poziomie Królestwo w wieży maga nauczysz się kolejnych czarów, także na mapie: Wizja odkrywa pola, Przyspieszenie daje punkty ruchu, a Wrota przenoszą do osady.'],
+  lose: ['Tym razem się nie udało. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    {
+      id: 'typ',
+      title: 'Typ i specjalność',
+      text: 'Każdy bohater ma typ (wojownik, łowca albo mędrzec), który wzmacnia go przy każdym awansie, i specjalność, czyli własną premię. Kliknij portret bohatera po prawej: zobaczysz je na jego karcie, razem z maną i czarami.',
+      ack: true,
+      allow: () => false,
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'targ',
+      title: 'Targ',
+      text: 'Dowódcę najmuje się w karczmie, a karczmę stawia się po targu. Kliknij „Wejdź do osady”, potem Radę Osady, wybierz Targ i kliknij „Zbuduj” (3 zł i 2 drewna).',
+      allow: (a) => a.type === 'kingdomBuild' && a.building === 'market',
+      hint: (s) => (capital(s) ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'market' } : null),
+      done: (s) => built(s, 'market') || built(s, 'tavern') || s.phase === 'over',
+    },
+    {
+      id: 'karczma',
+      title: 'Karczma',
+      text: 'Targ stoi! W drzewku budynków wybierz teraz Karczmę i kliknij „Zbuduj” (5 zł i 3 drewna).',
+      allow: (a) => a.type === 'kingdomBuild' && a.building === 'tavern',
+      hint: (s) => (capital(s) ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'tavern' } : null),
+      done: (s) => built(s, 'tavern') || s.phase === 'over',
+    },
+    {
+      id: 'dowodca',
+      title: 'Dowódca',
+      text: 'Kliknij karczmę w osadzie. Do wyboru są trzy typy dowódców: wojownik, łucznik i mędrzec. Wybierz jednego i kliknij „Najmij” (8 zł).',
+      allow: (a) => a.type === 'kingdomHire',
+      hint: (s) => {
+        const id = freeCommanders(s, 'dawn')[0];
+        return capital(s) && id ? { type: 'kingdomHire', settlementId: capital(s)!.id, unitId: id } : null;
+      },
+      done: (s) => Object.values(s.heroes).some((h) => h.faction === 'dawn' && h.secondary) || s.phase === 'over',
+    },
+    {
+      id: 'dwoch',
+      title: 'Dwóch bohaterów',
+      text: 'Dowódca to pełny bohater: ma własny pionek i własną turę, zaraz po bohaterze głównym (od następnej rundy). Zdobywa doświadczenie i nosi artefakty, a do bitwy bierze pomocników ze wspólnej drużyny. Śmierć bohatera głównego jest ostateczna, ale z żywym dowódcą grasz dalej.',
+      ack: true,
+      allow: (a) => inSettlement(a),
+      done: (s) => s.phase === 'over',
+    },
+    {
+      id: 'strazy',
+      title: 'Strażnik kryształu',
+      text: 'Ruszaj głównym bohaterem po kryształ: jego strażnik czeka na odsłoniętym polu. Idź podświetlonymi polami i zacznij bitwę. Turę dowódcy możesz po prostu zakończyć albo poprowadzić go za sobą.',
+      target: nextStep,
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
+    },
+    {
+      id: 'czar',
+      title: 'Czar w bitwie',
+      text: 'Bohater zna Magiczny Pocisk. W jego aktywacji kliknij ikonę Magia w rogu areny (obok Skarbów), wybierz Magiczny Pocisk i wskaż wroga. Jeden czar na aktywację, obok ruchu i ataku; mana (pod portretem na mapie) wraca co rundę po 1.',
+      allow: (a) => anyBattle(a) || mapPlay(a),
+      done: (s) => {
+        const h = mainHero(s);
+        return s.phase === 'over' || Boolean(h && manaOf(h) < maxMana(h)) || Boolean(h && h.crystals.length > 0);
+      },
+    },
+    STEP_DRZEWO,
+  ],
+  free: 'Gotowe!',
+};
+
+const IMPERIUM: Training = {
+  id: 'imperium',
+  level: 6,
+  title: 'Imperium',
+  tagline: 'Siedliska i wybór jednostek, Odłamki Pierwotnej Iskry i budynek, który z nich powstaje.',
+  learn: ['jak działa siedlisko i wybór jednej z dwóch jednostek', 'jak zebrać Odłamki Pierwotnej Iskry', 'co daje Sanktuarium'],
+  needs: 'krolestwo',
+  tier: 'empire',
+  objective: 'crystals',
+  difficulty: 'kids',
+  hero: 'goldDragon',
+  rules: { dawnStartGold: 3 },
+  seeds: [21, 37, 167, 176],
+  map: { id: 'trening-imperium', name: 'Trening: Imperium', summary: 'Dolina ze stolicą i dwoma Odłamkami.', campaign: true, rows: VALLEY },
+  intro: [
+    'Na poziomie Imperium każdy stopień jednostek ma dwie jednostki do wyboru, a na mapie leżą Odłamki Pierwotnej Iskry. Każda frakcja ma też własne budynki i mechanikę.',
+    'Cel gry jest znany: kryształ do Drzewa. Najpierw wybierzesz jednostkę i zbierzesz Odłamki.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Kryształ jest przy Drzewie! W Potyczce na poziomie Imperium czekają jeszcze budynki frakcji (Kapliczka Świtu leczy w bitwie), legendarny Feniks Świtu i nowy cel gry: Relikt. Grając innymi frakcjami poznasz ich własne mechaniki.'],
+  lose: ['Tym razem się nie udało. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    {
+      id: 'siedlisko',
+      title: 'Siedlisko: wybór jednostki',
+      text: 'Na tym poziomie koszary stoją w stolicy od początku. Kliknij „Wejdź do osady”, potem koszary. Na poziomie 2 są dwie jednostki do wyboru, ale zbudujesz siedlisko tylko jednej: druga będzie wykluczona do końca gry. Porównaj je (prawy klik na karcie) i przy wybranej kliknij przycisk z nazwą jej siedliska (2 zł i 1 drewno).',
+      allow: (a) => a.type === 'kingdomDwelling',
+      hint: (s) => {
+        const r = recruitsOf(s, 'dawn').find((x) => x.tier === 2);
+        return capital(s) && r ? { type: 'kingdomDwelling', settlementId: capital(s)!.id, unitId: r.id } : null;
+      },
+      done: (s) => Boolean(dwellingOf(s, 'dawn', 2)) || s.phase === 'over',
+    },
+    {
+      id: 'rekrutacja',
+      title: 'Rekrutacja',
+      text: 'Siedlisko stoi! Teraz zrekrutuj tę jednostkę: kliknij „Rekrutuj” na jej karcie. Dołączy do drużyny bohatera.',
+      allow: (a) => a.type === 'kingdomRecruit',
+      hint: (s) => {
+        const id = dwellingOf(s, 'dawn', 2);
+        return capital(s) && id ? { type: 'kingdomRecruit', settlementId: capital(s)!.id, unitId: id } : null;
+      },
+      done: (s) => {
+        const id = dwellingOf(s, 'dawn', 2);
+        return Boolean(id && s.factions.dawn.supportsAlive.includes(id)) || s.phase === 'over';
+      },
+    },
+    {
+      id: 'odlamki',
+      title: 'Odłamki Pierwotnej Iskry',
+      text: 'Na mapie leżą świecące Odłamki. Zamknij okno osady i idź podświetlonymi polami do najbliższego: bohater zabiera Odłamek, wchodząc na jego pole. Licznik pod imieniem bohatera pokazuje, ile już ma. Kto pokona bohatera, zabiera mu wszystkie Odłamki.',
+      target: (s) => stepTowards(s, nearestShard(s)),
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => !nearestShard(s) || s.phase === 'over',
+    },
+    {
+      id: 'odlamek-hordy',
+      title: 'Odłamek u Hordy',
+      text: 'Horda była szybsza i zabrała jeden Odłamek. Odbierzesz go, jeśli pokonasz jej bohatera: zwycięzca zabiera wszystkie Odłamki pokonanego. Pierwotną Iskrę wznosi tylko bohater, który niesie wszystkie Odłamki gry.',
+      ack: true,
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      done: (s) => shardsOf(s, 'horde') === 0 || s.phase === 'over',
+    },
+    {
+      id: 'iskra',
+      title: 'Pierwotna Iskra',
+      text: 'Masz wszystkie Odłamki! Wróć podświetlonymi polami do stolicy, wejdź do osady i w Radzie Osady wznieś Sanktuarium: ceną są wszystkie Odłamki, a odtąd każda jednostka Przymierza ma więcej Życia w każdej bitwie.',
+      target: (s) => (capital(s) ? stepTowards(s, capital(s)!.at) : null),
+      allow: (a) => mapPlay(a) || anyBattle(a),
+      hint: (s) => (capital(s) && mine(s)?.pos === capital(s)!.at ? { type: 'kingdomBuild', settlementId: capital(s)!.id, building: 'spark' } : null),
+      // Done when the Iskra stands, or when the Horde took a shard (then nobody of the Przymierze carries them all and the step has nothing to do).
+      done: (s) => Boolean(sparkOwner(s)) || (mainHero(s)?.shards ?? 0) < shardTotal(s) || s.phase === 'over',
+    },
+    stepStrazy('Teraz kryształ: jego strażnik czeka na odsłoniętym polu. Idź podświetlonymi polami i pokonaj go. Nowa jednostka pomoże ci w bitwie.', true),
+    STEP_DRZEWO,
+  ],
+  free: 'Gotowe!',
+};
+
+/** The nearest shard on the map. */
+function nearestShard(s: GameState): HexKey | null {
+  const hero = mine(s);
+  const shards = s.kingdom?.shards;
+  if (!hero || !shards) return null;
+  const at = parseKey(hero.pos);
+  return Object.keys(shards).sort((a, b) => distance(parseKey(a), at) - distance(parseKey(b), at))[0] ?? null;
+}
+
+export const TRAININGS: Training[] = [SPACER, PRZYGODA, WYPRAWA, OSADA, KSIESTWO, KROLESTWO, IMPERIUM];
 for (const t of TRAININGS) registerCustomMap(t.map);
 
 export const trainingById = (id: string): Training | undefined => TRAININGS.find((t) => t.id === id);

@@ -74,6 +74,8 @@ export interface RulesConfig {
   dawnStartXp?: number;
   /** Level 4 and up: gold of the Przymierze on top of the usual start (the training: enough for the first building). Missing = 0. */
   dawnStartGold?: number;
+  /** Level 5 and up: wood, ore and Pył of the Przymierze on top of the usual start (the trainings: enough for their buildings). Missing = none. */
+  dawnStartRes?: Partial<Record<'wood' | 'ore' | 'dust', number>>;
   /** Digital tuning: a fallen Przymierze hero is replaced by an unused one (heroReplacement for the Przymierza side alone; the Horde's heroes stay dead). Missing = off. */
   dawnHeroReplacement?: boolean;
   /** Digital tuning, Easy: the factions (races) that fight without their digital balancing bonus (FACTION_DIGITAL_BONUS), e.g. ['horde'] for the bot of a Skirmish. Missing = every faction has it. */

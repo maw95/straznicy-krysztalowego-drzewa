@@ -452,6 +452,7 @@ export function initKingdom(state: GameState): void {
     k.res = res;
     // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): some resources more.
     for (const f of teams) if (advantagedFaction(state, f)) for (const r of RESOURCE_IDS) res[f][r] += state.rules.computerResources?.[r] ?? 0;
+    if (res.dawn) for (const r of RESOURCE_IDS) res.dawn[r] += state.rules.dawnStartRes?.[r] ?? 0;
   }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
