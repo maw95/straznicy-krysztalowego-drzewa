@@ -268,3 +268,32 @@ export function Pips({ total, left }: { total: number; left: number }) {
     </div>
   );
 }
+
+/**
+ * A section that unfolds when `open` turns on and folds when it turns off. Its content is built only while it is shown (or still folding),
+ * and stays unclipped once unfolded, so tooltips may reach out of it. Without motion (the option, "reduce motion") it just appears.
+ */
+export function Reveal({ open, children, className }: { open: boolean; children: ReactNode; className?: string }) {
+  const [mounted, setMounted] = useState(open);
+  const [shown, setShown] = useState(open);
+  const [settled, setSettled] = useState(open);
+  useEffect(() => {
+    if (open) {
+      setMounted(true);
+      // One frame later, so that the closed state has been drawn and the unfolding has something to run from.
+      const f = requestAnimationFrame(() => setShown(true));
+      const t = window.setTimeout(() => setSettled(true), 320);
+      return () => (cancelAnimationFrame(f), window.clearTimeout(t));
+    }
+    setSettled(false);
+    setShown(false);
+    const t = window.setTimeout(() => setMounted(false), 300);
+    return () => window.clearTimeout(t);
+  }, [open]);
+  if (!mounted && !open) return null;
+  return (
+    <div className={`unfold${shown && open ? ' open' : ''}${settled && open ? ' settled' : ''}${className ? ` ${className}` : ''}`} aria-hidden={!open || undefined}>
+      <div className="unfold-in">{children}</div>
+    </div>
+  );
+}

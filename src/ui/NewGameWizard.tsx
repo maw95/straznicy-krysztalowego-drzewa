@@ -13,7 +13,8 @@ import { SCENARIO_BY_ID, SCENARIOS } from '../engine/scenarios';
 import { ScenarioPicker } from './ScenarioPicker';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
-import { asset, Frame, Ribbon } from './common';
+import { asset, Frame, Reveal, Ribbon } from './common';
+import { withTransition } from './motion';
 import { CoopSwitchRows, CustomSwitchRows } from './CustomSwitchRows';
 import { DIGITAL_LEVEL_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, BOARD_LEVELS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
@@ -156,7 +157,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   }, fixedMode ?? ((fixedDigital ?? true) ? 'pvp' : 'coop'), online)));
   /** The level and the goal start with nothing lit (there is no "Dalej" on those pages: a lit default would look like a choice already made); editing a table has both. */
   const [picked, setPicked] = useState({ tier: initial !== undefined, objective: initial !== undefined });
-  const [page, setPage] = useState<Page>(() => { const list = pagesOf(d, askMode, online); return initial ? list[list.length - 1] : list[0]; });
+  const [page, setPageNow] = useState<Page>(() => { const list = pagesOf(d, askMode, online); return initial ? list[list.length - 1] : list[0]; });
+  /** A page change cross-fades. */
+  const setPage = (p: Page) => withTransition(() => setPageNow(p));
   const pages = pagesOf(d, askMode, online);
   const at = pages.indexOf(page);
   // On a phone the next page must start at its top, not where the last one was scrolled to.
@@ -306,9 +309,12 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
                 {/* A table made before the scenarios existed keeps its ready map. */}
                 {ready && !scenarioOn && <Card on title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => undefined} />}
               </div>
-              {scenarioOn ? (
-                <ScenarioPicker selected={d.scenario} tier={d.tier as Exclude<Tier, 'adventure' | 'custom'>} onSelect={(id) => patch({ scenario: id })} />
-              ) : !ready ? (
+              {scenarioOn || !ready ? (
+                <>
+                  <Reveal open={scenarioOn}>
+                    <ScenarioPicker selected={d.scenario} tier={d.tier as Exclude<Tier, 'adventure' | 'custom'>} onSelect={(id) => patch({ scenario: id })} />
+                  </Reveal>
+                  <Reveal open={!scenarioOn}>
                 <CentredChoice label="Wybierz kształt">
                   {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
                     <Tip key={sh} text={SHAPE_TIPS[sh]} rightClick>
@@ -319,6 +325,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
                     </Tip>
                   ))}
                 </CentredChoice>
+                  </Reveal>
+                </>
               ) : (
                 <CentredChoice label="Wybierz mapę">
                   {READY_MAPS().map((m) => (
@@ -328,7 +336,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
               )}
             </>
           )}
-          {!(fullMap && ready) && !scenarioOn && (
+          {!(fullMap && ready) && (
+            <Reveal open={!scenarioOn}>
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => {
                 const off = d.digital && !sizeAllowed(goalNow, m);
@@ -345,6 +354,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
                 );
               })}
             </CentredChoice>
+            </Reveal>
           )}
         </div>
       )}

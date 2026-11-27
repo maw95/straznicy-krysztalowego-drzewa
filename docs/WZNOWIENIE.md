@@ -3,12 +3,10 @@ Pełny plan zatwierdzony przez autora: `~/.claude/plans/kilka-uwag-my-l-modular-
 
 - [x] Opisy Potyczki i Kampanii (`2e4a9bc`).
 - [x] Pulsująca obwódka aktywnej jednostki, znika przy akcji (`282ae9e`; prośba dosłana w trakcie).
-- [ ] **Arena — w toku, niescommitowane** (`data.ts`, `game.ts`, `ArenaPrep.tsx`, `SetupScreen.tsx`, `setupShared.tsx`, słowniki `ui.ts` i `herds.ts`, nowe `scripts/sim/arena-frakcje.ts` i `tuneArena.ts`).
-  - Zrobione: silnik przyjmuje nowe frakcje na cyfrowej arenie (malowana arena wg rasy, bez lustra), wybór frakcji na ekranie miejsc (wybór frakcji przeciwnika zamienia strony), nazwy ras w przygotowaniu areny, opis Areny, tabela premii `ARENA_RULES.bonus` (dziś pusta).
-  - Balans: bez premii Przypływy wygrywają 18% (3 na 3) i 8% (6 na 6). `tuneArena.ts 3` znalazł dobrą tabelę (frakcje 46–53%): `.tmp/sim/arena-bonus-3.json`. 6 na 6 niedostrojone (`.tmp/sim/arena-bonus-6.json`, jeszcze 38–64%): uruchom ponownie `npx tsx scripts/sim/tuneArena.ts 6` (startuje z pliku, ok. 3 min; też po usunięciu `.tmp`, tylko od zera).
-  - Zostało: osobne tabele dla 3 i 6 (np. `BattleUnit.arena: true | 6`, bo `battleStats` nie zna wielkości; karty jednostek mają pokazywać te same liczby), tabela wyników w `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`; teksty „Przymierze widzi 3, Horda 4” i „Przymierze kontra Horda” w `RulesDialog.tsx`, `Intro.tsx`, instrukcji PL (l. 213, 362) i EN; filtr jasności przeszkód areny w `ArenaBoard.tsx` (tylko horde); online: `OnlineScreen.tsx` (`offered` w arenie) i backend `src/rooms/table.ts` (walidacja areny, `!classic`), commit backendu **bez wdrożenia** do wydania silnika; parametry `race`/`foerace` w haku `?mode=arena` w `App.tsx`; testy `tests/arena.test.ts` (każda para), zrzuty, `i18n_extract --missing`, CHANGELOG PL + `src/i18n/en/changelog.ts`.
-- [ ] Gotowy scenariusz na stronie mapy w kreatorze (plan, punkt 3).
-- [ ] Płynne przejścia (plan, punkt 4).
+- [x] Arena dla 5 frakcji (`73efb48`; backend lokalny commit `e22a488`, **bez wdrożenia** do wydania silnika). Premie areny w `ARENA_RULES.bonus` (3 i 6 osobno), strojenie `scripts/sim/tuneArena.ts`, kontrola `scripts/sim/arena-frakcje.ts`, tabela w NOTATKACH sekcja 24.
+- [x] Gotowy scenariusz na stronie mapy, krok celu po mapie (`a1ce64e`).
+- [x] Płynne przejścia (`src/ui/motion.ts`, `Reveal` w `common.tsx`, CSS na końcu `styles.css`, przełącznik „Płynne przejścia” w Opcjach menu).
+- Do rozważenia: przełącznik płynnych przejść także w oknie Opcje w grze (`gameDialogs.tsx`); zrzuty kreatora na telefonie.
 
 Zmiany w `CLAUDE.md`, `scripts/sim/matrix.ts`, instrukcji planszowej i `.idea/` były przed tą sesją: nie commitować przy okazji.
 

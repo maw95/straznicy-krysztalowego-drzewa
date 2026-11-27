@@ -578,6 +578,8 @@ register({
   "Gdy polegną wszyscy, w bazie Hordy pojawia się kolejny.": "When they all fall, another appears in the Horde's base.",
   "Gra przechodzi na pełny ekran przy pierwszym kliknięciu albo klawiszu — jak F11 w przeglądarce. Esc wraca do okna.": "The game goes full screen on the first click or key press — like F11 in the browser. Esc returns to a window.",
   "Pełny ekran przy uruchomieniu": "Full screen on start",
+  "Płynne przejścia": "Smooth transitions",
+  "Ekrany menu przenikają się, sekcje rozwijają, a kolory interfejsu frakcji płynnie się zmieniają. Wyłączone systemowym „ogranicz ruch”.": "Menu screens cross-fade, sections unfold and the colours of a faction's interface melt into each other. Switched off by the system's \"reduce motion\".",
   "Magia: mana {0}": "Magic: mana {0}",
   "Księga czarów": "Spell book",
   "Strażnicy Kryształowego Drzewa: elfy, leśne zwierzęta i smok światła. Biegają i leczą, a z jasnych zamków ruszają po kryształy.": "Guardians of the Crystal Tree: elves, forest animals and a dragon of light. They run and heal, and set out from bright castles after the crystals.",

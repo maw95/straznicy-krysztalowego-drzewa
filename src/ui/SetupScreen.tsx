@@ -14,6 +14,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
+import { motionOption, setMotionOption, withTransition } from './motion';
 import { details } from './details';
 import { BOT_LEVEL_NAMES, BOT_LEVEL_TIPS, CrossIcon, defaultHeroes, DiceIcon, FactionDetails, openFactions, resolveRandomSeats, ROLE_NAMES, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
@@ -53,6 +54,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tutorial, setTutorial] = useState(tutorialEnabled());
   const [fullscreen, setFullscreen] = useState(autoFullscreen);
+  const [smooth, setSmooth] = useState(motionOption);
   const [mode, setMode] = useState<Mode>('coop');
   const [, setCount] = useState(1);
   const [seats, setSeats] = useState<SeatDraft[]>(defaultSeats('coop', 1));
@@ -60,7 +62,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [battleMode, setBattleMode] = useState<BattleMode>('arena');
   // The shuffle seed is no longer a menu choice: every game gets a fresh random one.
   const [seed] = useState(() => Math.floor(Math.random() * 1e6));
-  const [step, setStep] = useState<Step>('home');
+  const [step, setStepNow] = useState<Step>('home');
+  /** A change of the menu's page cross-fades. */
+  const setStep = (s: Step) => withTransition(() => setStepNow(s));
   /** What the first page was clicked for: a new game or a saved one (both then ask where to play). */
   const [intent, setIntent] = useState<'new' | 'load'>('new');
   const [lastTable, setLastTable] = useState<TableConfig | null>(null);
@@ -508,6 +512,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 }}
               />{' '}
               Samouczek (podpowiedzi w pierwszej partii)
+            </label>
+            <label style={{ fontSize: 16 }} title="Ekrany menu przenikają się, sekcje rozwijają, a kolory interfejsu frakcji płynnie się zmieniają. Wyłączone systemowym „ogranicz ruch”.">
+              <input type="checkbox" checked={smooth} data-smooth-control onChange={(e) => { setSmooth(e.target.checked); setMotionOption(e.target.checked); }} />{' '}
+              Płynne przejścia
             </label>
             {fullscreenSupported() && (
               <label style={{ fontSize: 16 }} data-fullscreen-control title="Gra przechodzi na pełny ekran przy pierwszym kliknięciu albo klawiszu — jak F11 w przeglądarce. Esc wraca do okna.">

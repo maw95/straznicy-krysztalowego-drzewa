@@ -1391,3 +1391,27 @@ button.sb-slot:disabled { cursor: default; }
 .size-slot { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
 .map-size-btn:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
 .size-off { font-size: 12px; line-height: 1.15; color: var(--muted); max-width: 110px; text-align: center; }
+
+/* ---- Smooth changes (motion.ts): the menu's screens cross-fade, sections unfold, a faction's colours melt into another's ---- */
+@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+::view-transition-group(root) { animation-duration: var(--vt-ms, 260ms); animation-timing-function: ease-in-out; }
+::view-transition-old(root) { animation: var(--vt-ms, 260ms) ease-in both vt-out; }
+::view-transition-new(root) { animation: var(--vt-ms, 260ms) ease-out both vt-in; }
+/* A colour change keeps the screen where it is and only melts. */
+html[data-vt='theme']::view-transition-old(root), html[data-vt='theme']::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html[data-vt='theme']::view-transition-old(root) { animation: var(--vt-ms, 400ms) ease-in-out both vt-fade-out; }
+html[data-vt='theme']::view-transition-new(root) { animation: var(--vt-ms, 400ms) ease-in-out both vt-fade-in; }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+html.no-motion ::view-transition-group(*), html.no-motion ::view-transition-old(*), html.no-motion ::view-transition-new(*) { animation-duration: 0.001s !important; }
+/* Without View Transitions the pages of the wizard fade in on their own. */
+@keyframes page-in { from { opacity: 0; transform: translateY(10px); } }
+html.no-vt:not(.no-motion) [data-wizard-page] { animation: page-in 0.26s ease-out both; }
+/* A section that unfolds (Reveal in common.tsx): its height runs from 0 to its content. */
+.unfold { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.28s ease, opacity 0.24s ease; }
+.unfold.open { grid-template-rows: 1fr; opacity: 1; }
+.unfold > .unfold-in { overflow: hidden; min-height: 0; }
+.unfold.settled > .unfold-in { overflow: visible; }
+html.no-motion .unfold { transition: none; }
+@media (prefers-reduced-motion: reduce) { .unfold { transition: none; } }

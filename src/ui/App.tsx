@@ -25,6 +25,7 @@ import { ArtifactFound, xpNote, XpIcon } from './growthUi';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
+import { withTransition } from './motion';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
@@ -344,21 +345,33 @@ export function App() {
   // Hidden information (the Free Companies' traps and veiled units): the screen shows what its viewers may see: online the seats of this browser, at one computer whoever acts now.
   // The slate panels take the colour of the faction at the screen (backlog 62a); outside a game (menu, setup) they stay the old green and blue.
   const slateRace = game && viewer ? raceOf(game, viewer) : null;
+  /** False until the first colours are set: the first look needs no melting. */
+  const themeApplied = useRef(false);
   useEffect(() => {
     const root = document.documentElement;
-    if (slateRace) {
-      // Absolute: a relative url() in a custom property is resolved against the stylesheet that uses it, which in the build lives in assets/.
-      root.style.setProperty('--slate-img', `url('${new URL(asset(`ui/slate_${slateRace}.jpg`), document.baseURI).href}')`);
-      root.dataset.faction = slateRace;
-    } else {
-      root.style.removeProperty('--slate-img');
-      delete root.dataset.faction;
-    }
-    return () => {
-      root.style.removeProperty('--slate-img');
-      delete root.dataset.faction;
+    // The colours of the interface melt into the next faction's (or the menu's) instead of jumping.
+    const apply = () => {
+      if (slateRace) {
+        // Absolute: a relative url() in a custom property is resolved against the stylesheet that uses it, which in the build lives in assets/.
+        root.style.setProperty('--slate-img', `url('${new URL(asset(`ui/slate_${slateRace}.jpg`), document.baseURI).href}')`);
+        root.dataset.faction = slateRace;
+      } else {
+        root.style.removeProperty('--slate-img');
+        delete root.dataset.faction;
+      }
     };
+    if (themeApplied.current) {
+      root.dataset.vt = 'theme';
+      withTransition(apply, 420);
+      window.setTimeout(() => { if (root.dataset.vt === 'theme') delete root.dataset.vt; }, 600);
+    } else apply();
+    themeApplied.current = true;
   }, [slateRace]);
+  // Only leaving the game for good clears the colours (between two factions they stay, so the old look can melt into the new one).
+  useEffect(() => () => {
+    document.documentElement.style.removeProperty('--slate-img');
+    delete document.documentElement.dataset.faction;
+  }, []);
   const viewers = useMemo<TeamId[] | null>(() => (isOnline ? humans.map((p) => p.faction) : viewer ? [viewer] : null), [isOnline, viewer, humans.map((p) => p.faction).join()]);
   const battleSource = held ? held.view : game;
   // Two people at one screen and one of them plays the Free Companies: even their own traps stay out of sight until "Podejrzyj" (the other player may be looking).
