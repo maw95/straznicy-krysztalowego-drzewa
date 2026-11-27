@@ -2,7 +2,7 @@ import { assignSlots, raceOf, seatTable, sideName, teamsOf } from '../engine/tea
 import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
-import { TRAININGS, trainingAllows, trainingIndex, trainingOf, trainingSetup } from '../engine/training';
+import { trainingAllows, trainingById, trainingIndex, trainingOf, trainingSetup } from '../engine/training';
 import { TrainingOver, WelcomeDialog } from './TrainingScreen';
 import { TrainingCoach } from './TrainingCoach';
 import { markTrained, markWelcomeSeen, welcomeSeen } from './trainingProgress';
@@ -941,7 +941,7 @@ export function App() {
           )}
         </Modal>
         <Modal open={showWelcome && !showTitle && !showIntro && !news} onClose={closeWelcome}>
-          {showWelcome && <WelcomeDialog onTraining={() => { closeWelcome(); start(trainingSetup(TRAININGS[0], Math.floor(Math.random() * 1e6))); }} onClose={closeWelcome} />}
+          {showWelcome && <WelcomeDialog onTraining={() => { closeWelcome(); start(trainingSetup(trainingById('przygoda')!, Math.floor(Math.random() * 1e6))); }} onClose={closeWelcome} />}
         </Modal>
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}

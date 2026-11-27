@@ -39,6 +39,8 @@ export interface Training {
   learn: string[];
   /** The training to take first (advice only, nothing is locked). */
   needs?: string;
+  /** Treasures of the Przymierze from the start (the step about treasures needs some to show; the first level has none). Default 2. */
+  startTreasures?: number;
   tier: Tier;
   objective: ObjectiveId;
   difficulty: Level;
@@ -63,6 +65,8 @@ const inBattle = (s: GameState, stages: string[]) => s.phase === 'battle' && s.b
 const MAP_ACTIONS: Action['type'][] = ['moveHero', 'endTurn'];
 /** The player's actions in a fight on the arena (moving, striking, abilities, treasures, ending the move). */
 const inFight = (a: Action): boolean => a.type.startsWith('battle') || a.type === 'endActivation';
+/** Everything a battle asks of the player, from picking the helpers to the last blow (for the steps in which another battle may break out). */
+const anyBattle = (a: Action): boolean => inFight(a) || ['selectSupports', 'deployUnits', 'pickMirages', 'draftPick', 'pickGear', 'pickSpells'].includes(a.type);
 
 /** The hex where the player's hero should go next: the Tree when it carries a crystal, else the nearest crystal on the map (with its guardian). */
 function goalHex(s: GameState): HexKey | null {
@@ -117,6 +121,69 @@ const leftHome = (s: GameState): boolean => {
 
 // ------------------------------------------------------------------ the trainings
 
+/** The steps every training of the first levels shares: the walk to the guardian and the walk to the Tree with the crystal. */
+const STEP_RUCH: TrainingStep = {
+  id: 'ruch',
+  title: 'Ruch po mapie',
+  text: 'To jest twój bohater. Kliknij podświetlone pole, żeby tam pójść. Każdy krok kosztuje punkty ruchu (po prawej), a nowe pola odkrywają się, gdy staniesz obok.',
+  target: nextStep,
+  allow: (a) => a.type === 'moveHero',
+  done: leftHome,
+};
+const stepStrazy = (text: string): TrainingStep => ({
+  id: 'strazy',
+  title: 'Strażnik kryształu',
+  text,
+  target: nextStep,
+  allow: (a) => MAP_ACTIONS.includes(a.type),
+  done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
+});
+const STEP_DRZEWO: TrainingStep = {
+  id: 'drzewo',
+  title: 'Do Drzewa',
+  text: 'Wygrałeś! Strażnik zostawił kryształ i bohater go niesie. Zanieś go na pole Drzewa pośrodku mapy: idź podświetlonymi polami.',
+  target: nextStep,
+  // Another guardian on the way may start another battle: it is played freely.
+  allow: (a) => MAP_ACTIONS.includes(a.type) || anyBattle(a),
+  done: (s) => s.phase === 'over',
+};
+
+const VALLEY = ['.........', '.#.....#.', '....#....', 'D...T...H', '....#....', '.#.....#.', '.........'];
+
+const SPACER: Training = {
+  id: 'spacer',
+  level: 0,
+  title: 'Spacer',
+  tagline: 'Najprostsza gra, od 5 lat: spacer po krainie, pojedynek ze strażnikiem i kryształ dla Drzewa.',
+  learn: ['jak chodzi bohater po mapie', 'jak wygląda pojedynek: „Atakuj” i „Pas”', 'jak zanieść kryształ do Drzewa'],
+  startTreasures: 0,
+  tier: 'adventure',
+  objective: 'crystals',
+  difficulty: 'zero',
+  hero: 'goldDragon',
+  map: { id: 'trening-spacer', name: 'Trening: Spacer', summary: 'Mała dolina na pierwszy spacer.', campaign: true, rows: VALLEY },
+  intro: [
+    'Witaj w Krainie Kryształowego Drzewa! To najprostsza wersja gry: chodzisz bohaterem po mapie, a gdy spotkasz strażnika, walczycie na zmianę, jeden na jednego.',
+    'Gra poprowadzi cię krok po kroku: podświetlone pola i dymki pokażą, co kliknąć.',
+    RIGHT_CLICK_RULE,
+  ],
+  win: ['Kryształ jest przy Drzewie! Tak wygląda cała gra na poziomie Spacer. Gotowy na więcej? Spróbuj treningu „Przygoda”: tam walczy się już całymi drużynami na arenie.'],
+  lose: ['Tym razem się nie udało: strażnik albo Horda okazali się szybsi. To tylko trening: spróbuj jeszcze raz!'],
+  steps: [
+    STEP_RUCH,
+    stepStrazy('Kryształu pilnuje strażnik: jego pole zostało dla ciebie odsłonięte. Idź podświetlonymi polami w jego stronę. Gdy skończą ci się punkty ruchu, kliknij „Zakończ turę”. Wejście na pole strażnika zaczyna pojedynek: potwierdź „Do walki!”.'),
+    {
+      id: 'pojedynek',
+      title: 'Pojedynek',
+      text: 'Teraz pojedynek: ty i strażnik stajecie naprzeciw siebie i uderzacie na zmianę. Gdy jest twoja kolej, kliknij „Atakuj”. „Pas” oddaje ruch bez ataku. Wygra ten, kto pierwszy pokona przeciwnika.',
+      allow: (a) => a.type === 'battleAttack' || a.type === 'endActivation',
+      done: (s) => s.phase !== 'battle',
+    },
+    STEP_DRZEWO,
+  ],
+  free: 'Gotowe!',
+};
+
 const PRZYGODA: Training = {
   id: 'przygoda',
   level: 1,
@@ -132,7 +199,7 @@ const PRZYGODA: Training = {
     name: 'Trening: Przygoda',
     summary: 'Mała dolina z kilkoma skałami: dobre miejsce na pierwsze kroki.',
     campaign: true,
-    rows: ['.........', '.#.....#.', '....#....', 'D...T...H', '....#....', '.#.....#.', '.........'],
+    rows: VALLEY,
   },
   intro: [
     'Witaj w Krainie Kryształowego Drzewa! W tej krótkiej grze poznasz podstawy: jak chodzić po mapie, jak walczyć i jak zanieść kryształ do Drzewa.',
@@ -140,24 +207,10 @@ const PRZYGODA: Training = {
     RIGHT_CLICK_RULE,
   ],
   win: ['Kryształ jest przy Drzewie! Tak wygląda cała gra: odkrywasz krainę, pokonujesz strażników i wracasz z łupem. Poznane zasady wystarczą, by zagrać Potyczkę na poziomie Przygoda.'],
-  lose: ['Tym razem Horda była szybsza. To tylko trening: spróbuj jeszcze raz, a bitwy pójdą ci lepiej.'],
+  lose: ['Tym razem się nie udało: strażnik albo Horda okazali się szybsi. To tylko trening: spróbuj jeszcze raz, a bitwy pójdą ci lepiej.'],
   steps: [
-    {
-      id: 'ruch',
-      title: 'Ruch po mapie',
-      text: 'To jest twój bohater. Kliknij podświetlone pole, żeby tam pójść. Każdy krok kosztuje punkty ruchu (u góry), a nowe pola odkrywają się, gdy staniesz obok.',
-      target: nextStep,
-      allow: (a) => a.type === 'moveHero',
-      done: leftHome,
-    },
-    {
-      id: 'strazy',
-      title: 'Strażnik kryształu',
-      text: 'Kryształu pilnuje strażnik: jego pole zostało dla ciebie odsłonięte. Idź podświetlonymi polami w jego stronę. Gdy skończą ci się punkty ruchu, kliknij „Zakończ turę”. Wejście na pole strażnika zaczyna bitwę: potwierdź „Do walki!”.',
-      target: nextStep,
-      allow: (a) => MAP_ACTIONS.includes(a.type),
-      done: (s) => s.phase !== 'adventure' || mine(s)?.crystals.length !== 0,
-    },
+    STEP_RUCH,
+    stepStrazy('Kryształu pilnuje strażnik: jego pole zostało dla ciebie odsłonięte. Idź podświetlonymi polami w jego stronę. Gdy skończą ci się punkty ruchu, kliknij „Zakończ turę”. Wejście na pole strażnika zaczyna bitwę: potwierdź „Do walki!”.'),
     {
       id: 'pomocnicy',
       title: 'Pomocnicy',
@@ -195,19 +248,12 @@ const PRZYGODA: Training = {
       allow: inFight,
       done: (s) => s.phase !== 'battle',
     },
-    {
-      id: 'drzewo',
-      title: 'Do Drzewa',
-      text: 'Wygrałeś! Strażnik zostawił kryształ i bohater go niesie. Zanieś go na pole Drzewa pośrodku mapy: idź podświetlonymi polami.',
-      target: nextStep,
-      allow: (a) => a.type === 'moveHero' || a.type === 'endTurn',
-      done: (s) => s.phase === 'over',
-    },
+    STEP_DRZEWO,
   ],
   free: 'Gotowe!',
 };
 
-export const TRAININGS: Training[] = [PRZYGODA];
+export const TRAININGS: Training[] = [SPACER, PRZYGODA];
 for (const t of TRAININGS) registerCustomMap(t.map);
 
 export const trainingById = (id: string): Training | undefined => TRAININGS.find((t) => t.id === id);
@@ -226,7 +272,7 @@ export function trainingSetup(t: Training, seed = 1): SetupOptions {
       { name: 'Horda', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[seed % FACTION_HEROES.horde.length], botLevel: 'kids' },
     ],
     // Two treasures from the start, so that the step about them has something to show.
-    rules: { ...preset.rules, crystalsNeededDelta: -1, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } },
+    rules: { ...preset.rules, crystalsNeededDelta: -1, dawnStartTreasures: { resurrections: 0, others: 0, random: t.startTreasures ?? 2 } },
     seatLevels: true,
   };
   const setup = withRuleset(base, true, sw.objective, 'custom', t.map.id, sw.growth, 'kingdom' in sw && sw.kingdom, 'economy' in sw && sw.economy, 'realm' in sw && sw.realm, 'empire' in sw && sw.empire);

@@ -2,6 +2,9 @@
 // Screenshots -> .tmp/trening-<view>-<step>.png. Usage: npx tsx scripts/browser/trening.ts
 import { openGame, type View } from './game';
 
+/** Which training to play through: TRAINING=spacer (default przygoda). */
+const T = process.env.TRAINING ?? 'przygoda';
+
 for (const view of (process.env.VIEWS ?? 'desktop,malypoziomo').split(',') as View[]) {
   const game = await openGame('', { view, scale: view === 'desktop' ? 0.6 : 1 });
   const p = game.page;
@@ -20,7 +23,7 @@ for (const view of (process.env.VIEWS ?? 'desktop,malypoziomo').split(',') as Vi
     await p.locator('[data-training]').waitFor();
     console.log(view, 'cards:', await p.locator('[data-training-card]').count());
     await p.screenshot({ path: `.tmp/trening-${view}-lista.png` });
-    await p.locator('[data-training-card="przygoda"]').click();
+    await p.locator(`[data-training-card="${T}"]`).click();
     const intro = await p.locator('[data-training-intro]').innerText();
     console.log(view, 'intro has the rule:', intro.includes('prawym przyciskiem'));
     await p.screenshot({ path: `.tmp/trening-${view}-wstep.png` });
@@ -58,7 +61,17 @@ for (const view of (process.env.VIEWS ?? 'desktop,malypoziomo').split(',') as Vi
     }
     console.log(view, 'coach now:', await coachId());
     await shot('pomocnicy');
-    if ((await coachId()) === 'pomocnicy') {
+    if (T === 'spacer' && (await coachId()) === 'pojedynek') {
+      await shot('pojedynek');
+      for (let i = 0; i < 40 && (await p.getByRole('button', { name: /Atakuj/ }).count()); i++) {
+        const atk = p.getByRole('button', { name: /Atakuj/ });
+        if (await atk.isEnabled()) await atk.click();
+        await p.waitForTimeout(900);
+      }
+      console.log(view, 'after the duel, coach:', await coachId());
+      await shot('po-pojedynku');
+    }
+    if (T === 'przygoda' && (await coachId()) === 'pomocnicy') {
       const cards = p.locator('button.btn', { has: p.locator('text=/Elf Druid|Nimfa|Pegaz|Pomocnik/') }).filter({ hasNot: p.locator('text=Do bitwy') });
       await cards.nth(0).click({ force: true });
       await cards.nth(1).click({ force: true });

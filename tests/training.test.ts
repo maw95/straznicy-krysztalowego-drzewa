@@ -40,7 +40,7 @@ describe.each(TRAININGS)('training $id', (t) => {
     const lying = Object.values(g.crystals).filter((c) => !c.decoy);
     expect(lying.length).toBeGreaterThan(0);
     for (const c of lying) expect(knowsHex(g, c.at, 'dawn'), c.at).toBe(true);
-    expect(g.factions.dawn.inventory.length).toBeGreaterThan(0);
+    expect(g.factions.dawn.inventory.length > 0).toBe((t.startTreasures ?? 2) > 0);
   });
 
   it.each([1, 2, 3, 4, 5, 6])('is led to its end by the steps (seed %i)', (seed) => {
