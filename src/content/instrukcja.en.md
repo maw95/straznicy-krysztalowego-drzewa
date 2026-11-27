@@ -144,7 +144,7 @@ Each faction has three heroes (the Covenant: Golden Dragon, Unicorn King, Ancien
 
 At every new level you choose one of three skills; the same one chosen again rises by a rank (up to the third). The skills: **Power** (Attack), **Mettle** (Health), **Lightness** (Speed), **Commander** (supports' Health), **Pathfinder** (movement on the map), **Shooter** (Attack of shooters), **Tactician** (placing further forward), **Scout** (reveals tiles around), **Treasure hunter** (more treasures to choose from after a fight with a guardian), **Scholar** (more XP) and **Luck** (random treasures at once). Each faction names them in its own way.
 
-On levels 3, 6 and 9 the hero's **special ability is upgraded** (the digit II, III, IV on its icon).
+On levels 3, 6 and 9 the **special ability is upgraded** for the heroes of the Covenant and the Horde (the digit II, III, IV on its icon), the Silver She-Wolf (She-Wolf's Family gives more Attack) and the Dusk Manticore (the poison bites longer) included.
 
 ### Artifacts
 An artifact is permanent equipment of one hero, one per slot: **helmet, weapon, armour, shield, boots**, in three rarities (common, rare, legendary). A rarer one replaces a more common one by itself, and the rest goes to the backpack, which has no limit of places. Artifacts lie in chests, drop from guardians and neutrals, and whoever defeats a hero takes them from them. You can give them to **an ally standing on a neighbouring tile** (Hero card, backpack window). The full list is in the "Artifacts" tab.

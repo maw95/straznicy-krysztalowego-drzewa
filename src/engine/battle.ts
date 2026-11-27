@@ -464,7 +464,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'dive' && movedDistance >= ABILITY.diveMinMove) dmg += ABILITY.diveBonus * scaleOf(state);
     if (ab === 'backstab' && fromBehind(state, att, target)) dmg += ABILITY.backstabBonus * scaleOf(state);
     if (ab === 'headlong' && fromFront(state, att, target)) dmg += ABILITY.headlongBonus * scaleOf(state);
-    if (ab === 'packHunt' && packNearby(state, att, target)) dmg += ABILITY.packHuntBonus * scaleOf(state);
+    if (ab === 'packHunt' && packNearby(state, att, target)) dmg += abilityNum(att, 'packHuntBonus') * scaleOf(state);
     if (ab === 'momentum' && movedDistance >= ABILITY.momentumMinMove) dmg += ABILITY.momentumBonus * scaleOf(state);
     if (ab === 'hippoStrike' && pushedThisRound(state, target)) dmg += ABILITY.hippoBonus * scaleOf(state);
     // Rój Puszczy: Ostatnie Cięcie at a wounded target, Mrowisko and Chitynowa Ściana in a group, Polowanie w Locie at flyers and shooters.
@@ -1629,8 +1629,9 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       if (ab === 'poisonClaw') {
         if (resistsPoison(state, t)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
         else {
-          t.status.poisoned = ABILITY.poisonTicks;
-          log(state, 'ability', `${unitName(t)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
+          const ticks = abilityNum(u, 'poisonClawTicks');
+          t.status.poisoned = ticks;
+          log(state, 'ability', `${unitName(t)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ticks} następnych aktywacji.`);
         }
       }
       if (ab === 'curse' || ab === 'dimLight') {

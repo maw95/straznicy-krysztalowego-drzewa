@@ -14,7 +14,7 @@ register({
   'Piekielny Ogar': 'Hellhound', 'Srebrny Lis': 'Silver Fox', 'Lisi Uskok': 'Fox Dart', 'Cichy Nalot': 'Silent Raid', 'Goblin Procarz': 'Goblin Slinger', 'Gargulec': 'Gargoyle',
   'Kamienne Kolce': 'Stone Spikes', 'Troll Jaskiniowy': 'Cave Troll', 'Zrastanie Ran': 'Wound Mending', 'Wiwerna Cienia': 'Shadow Wyvern', 'Jadowity Ogon': 'Venomous Tail',
   'Dar Gaju': 'Gift of the Grove', 'Szaman Cieni': 'Shadow Shaman', 'Hydra z Zatopionych Ruin': 'Hydra of the Sunken Ruins', 'Mroczna Horda': 'Dark Horde',
-  'Przymierze': 'Covenant', 'Horda': 'Horde', 'Ognisty Oddech: +{0} A{1}.': 'Fire Breath: +{0} ATK{1}.', 'Zew Krwi: +{0} A na rannego wroga.': 'Call of Blood: +{0} ATK against a wounded enemy.',
+  'Przymierze': 'Covenant', 'Horda': 'Horde', 'Ognisty Oddech: +{0} A{1}.': 'Fire Breath: +{0} ATK{1}.', 'Zew Krwi: +{0} A na rannego wroga.': 'Call of Blood: +{0} ATK against a wounded enemy.', 'Wilcza Rodzina: +{0} A, gdy cel sąsiaduje z innym sojusznikiem Wilczycy.': "She-Wolf's Family: +{0} ATK when the target stands next to another ally of the She-Wolf.", 'Zatruty Pazur: trucizna działa przez {0} aktywacje.': 'Poisoned Claw: the poison bites for {0} activations.',
   // treasures, terrain, sites
   'Eliksir Odrodzenia': 'Elixir of Rebirth', 'Wielki Eliksir Uzdrowienia': 'Great Elixir of Healing', 'Nasiono Drzewa': 'Tree Seed', 'Miecz Bohatera': "Hero's Sword",
   'Buty Wiatru': 'Boots of the Wind', 'Klepsydra Czasu': 'Hourglass of Time', 'Eliksir Mocy': 'Elixir of Might', 'Runa Ochrony': 'Rune of Protection', 'Polana Przymierza': 'Covenant Glade',

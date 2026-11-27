@@ -76,6 +76,7 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 **Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
 
 **Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- **27.11 (backlog 63g, wyrównanie bohaterów):** Wielki Tur Ż 10 (z premią frakcji 11), Pędziwiatr A 5, Baran Gromowładny A 5 (`DIGITAL_STATS`); zob. sekcja 25 notatek.
 - Wszyscy bohaterowie i pomocnicy Stada (także dowódcy, wersje B i legenda) mają **+1 Ż** (Wielki Tur 12, Satyr Rogogłos 6, Pędziwiatr 8, Baran 9, Dudziarz 5, Młody Tur 6, Kulan 6, Indrik 21 itd.). Powód: pierwszy pomiar dawał 30–36% z Przymierzem; +1 Ż było najtańszym pokrętłem (+1 A wszystkim dawało już 47/40 z Przymierzem, ale 68/60 z Hordą, czyli za dużo).
 - **Młody Tur: A 2→3** (Byczy Łeb, odpychający pomocnik startowy). Najlepszy pojedynczy ruch w skanie: +3–4 pkt z Przymierzem i tożsamość frakcji (rozpęd i odpychanie) bez zmiany mechaniki. Test `tests/herds.test.ts` (obrażenia Byczego Łba) czyta teraz 3 A.
 

@@ -144,7 +144,7 @@ Każda frakcja ma trzech bohaterów (Przymierze: Złoty Smok, Król Jednorożcó
 
 Na każdym nowym poziomie wybierasz jedną z trzech umiejętności; ta sama wybrana ponownie rośnie o stopień (do trzeciego). Umiejętności: **Moc** (Atak), **Hart** (Życie), **Lekkość** (Szybkość), **Dowódca** (Życie pomocników), **Tropiciel** (ruch na mapie), **Strzelec** (Atak strzelców), **Taktyk** (dalsze rozstawienie), **Zwiadowca** (odkrywa pola wokół), **Łowca skarbów** (więcej skarbów do wyboru po walce ze strażnikiem), **Uczony** (więcej PD) i **Szczęście** (losowe skarby od razu). Każda frakcja nazywa je po swojemu.
 
-Na poziomach 3, 6 i 9 **ulepsza się zdolność specjalna** bohatera (cyfra II, III, IV na jej ikonie).
+Na poziomach 3, 6 i 9 **ulepsza się zdolność specjalna** bohaterów Przymierza i Hordy (cyfra II, III, IV na jej ikonie), także Srebrnej Wilczycy (Wilcza Rodzina daje więcej Ataku) i Mantykory Zmierzchu (trucizna działa dłużej).
 
 ### Artefakty
 Artefakt to stałe wyposażenie jednego bohatera, po jednym na miejsce: **hełm, broń, zbroja, tarcza, buty**, w trzech rzadkościach (pospolity, rzadki, legendarny). Rzadszy sam zastępuje pospolitszy, a reszta trafia do plecaka bez limitu miejsc. Artefakty leżą w skrzyniach, wypadają ze strażników i neutralnych, a kto pokona bohatera, zabiera mu je. Można je dawać **sojusznikowi stojącemu na sąsiednim polu** (Karta bohatera, okno plecaka). Pełna lista jest w zakładce „Artefakty”.

@@ -67,6 +67,7 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 **Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
 
 **Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- **27.11 (backlog 63g, wyrównanie bohaterów):** Tan Żelaznobrody A 3 (z premią frakcji 4), Matka Run Ż 6 (`DIGITAL_STATS`); zob. sekcja 25 notatek.
 - **Tan Żelaznobrody: Ż 11→10, Matka Run: Ż 5→4.** Klany były na starcie najsilniejsze (49% z Przymierzem, 62% z Hordą) i dominowały nad Stadami i Umarłymi. Najmocniej reaguje Mosiężny Pająk (Ż 4→3 zbijało wynik o 14 pkt, więc go nie ruszałem: to on niesie Ogień z Miejsca), dlatego nerf poszedł w bohaterów.
 
 **Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.

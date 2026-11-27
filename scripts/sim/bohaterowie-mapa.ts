@@ -1,17 +1,19 @@
 // Hero balance on the adventure map (digital rules, hero growth on): every hero (3 + the fourth one of each playable faction) against every hero of the other factions,
 // 1 on 1, two Normal bots, each hero half of the games in either slot. Faction strength is part of the result, so compare heroes WITHIN a faction.
 // Usage: npx tsx scripts/sim/bohaterowie-mapa.ts [games per pair = 40] [goal = control] [map = medium] [tier = zero|economy|realm|empire]
-// PAIRS=n runs only the first n pairs (timing). Prints each hero's average score, its faction's average and the deviation, with hp/attack/speed.
+// PAIRS=n runs only the first n pairs (timing). HERO_STATS='{"goldDragon":{"attack":6}}' tries other digital stats (DIGITAL_STATS) without editing the engine. Prints each hero's average score, its faction's average and the deviation, with hp/attack/speed.
 
 import { execFile } from 'node:child_process';
 import { cpus } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { EXTRA_HEROES, FACTION_HEROES, UNITS, type FactionId, type MapSize } from '../../src/engine/data';
+import { battleStats, DIGITAL_STATS, EXTRA_HEROES, FACTION_HEROES, UNITS, type FactionId, type MapSize } from '../../src/engine/data';
 import { PLAYABLE_IDS } from '../../src/engine/factions';
 import { chooseAction } from '../../src/engine/ai';
 import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { seatTable } from '../../src/engine/teams';
 import { levelSettings, type ObjectiveId } from '../../src/engine/types';
+
+if (process.env.HERO_STATS) for (const [id, st] of Object.entries(JSON.parse(process.env.HERO_STATS))) DIGITAL_STATS[id] = { ...DIGITAL_STATS[id], ...(st as object) };
 
 interface H { faction: FactionId; id: string }
 const heroesOf = (f: FactionId): string[] => [...FACTION_HEROES[f], EXTRA_HEROES[f]];
@@ -96,9 +98,21 @@ if (process.argv[2] === '--job') {
     const mean = rows.reduce((m, r) => m + r.rate, 0) / rows.length;
     for (const r of rows) {
       const u = UNITS[r.h.id];
-      console.log([f, `${r.h.id} (${u.name})`, u.hp, u.attack, u.speed, pct(r.rate), `${r.rate - mean >= 0 ? '+' : ''}${(100 * (r.rate - mean)).toFixed(0)}`].join('\t'));
+      const st = battleStats(r.h.id, true);
+      console.log([f, `${r.h.id} (${u.name})`, st.hp, st.attack, st.speed, pct(r.rate), `${r.rate - mean >= 0 ? '+' : ''}${(100 * (r.rate - mean)).toFixed(0)}`].join('\t'));
     }
     console.log(`${f}\tśrednia frakcji\t\t\t\t${pct(mean)}\t`);
+  }
+  // Faction against faction (all their heroes' pairs together): the sides' balance must not move when only heroes are evened out.
+  const factionOf = (id: string) => all.find((h) => h.id === id)!.faction;
+  console.log(['frakcje', ...ids].join('\t'));
+  for (const f of ids) {
+    const cells = ids.map((g) => {
+      if (f === g) return '—';
+      const rs = results.flatMap((r) => (factionOf(r.a) === f && factionOf(r.b) === g ? [r.rate] : factionOf(r.a) === g && factionOf(r.b) === f ? [1 - r.rate] : []));
+      return rs.length ? pct(rs.reduce((m, x) => m + x, 0) / rs.length) : '';
+    });
+    console.log([f, ...cells].join('\t'));
   }
   const stuck = results.reduce((m, r) => m + r.stuck, 0);
   if (stuck) console.log(`Niedokończone partie: ${stuck}`);

@@ -37,6 +37,8 @@ export function milestoneText(heroId: string, tier: number, k: number): string |
     case 'blackDragon': return `Ognisty Oddech: +${n('breathBonus')} A${tier >= 3 ? ', a użyć go można dwa razy w bitwie' : ''}.`;
     case 'werewolfLord': return `Zew Krwi: +${n('bloodCallBonus')} A na rannego wroga.`;
     case 'ironFistOgre': return `Twardogłowy ignoruje ${n('hardHeadIgnore')} obrażeń.`;
+    case 'moonWolf': return `Wilcza Rodzina: +${n('packHuntBonus')} A, gdy cel sąsiaduje z innym sojusznikiem Wilczycy.`;
+    case 'duskManticore': return `Zatruty Pazur: trucizna działa przez ${ABILITY_TIERS.poisonClawTicks[tier]} aktywacje.`;
     case 'braveDuck': return `Kacza Furia: po zabiciu wroga Kaczka leczy się o ${n('duckKillHeal')} Ż${tier >= 3 ? ', a jej dodatkowa aktywacja daje +1 S' : ''}.`;
     default: return null;
   }

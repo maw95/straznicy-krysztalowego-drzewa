@@ -458,7 +458,11 @@ export const ABILITY_TIERS = {
   lightChargeBonus: [ABILITY.lightChargeBonus, 3, 4, 5],
   guardianIgnore: [ABILITY.guardianIgnore, 5, 5, 7],
   bloodCallBonus: [ABILITY.bloodCallBonus, 2, 3, 4],
+  /** Wilcza Rodzina (the Silver She-Wolf; the Hellhound's Obława has no milestones and keeps the base). */
+  packHuntBonus: [ABILITY.packHuntBonus, 2, 2, 3],
   hardHeadIgnore: [ABILITY.hardHeadIgnore, 3, 4, 5],
+  /** Zatruty Pazur of the Dusk Manticore: how many activations the poison bites (the Ratman keeps the base). */
+  poisonClawTicks: [ABILITY.poisonTicks, 3, 3, 4],
   /** Ognisty Oddech: extra Atak against both targets. */
   breathBonus: [0, 1, 2, 2],
   /** Kacza Furia: Życie the duck takes back when its blow kills. */
@@ -486,15 +490,24 @@ export const boardRangedBonus = (defId: string): number => (UNITS[defId]?.attack
 
 /**
  * Digital ruleset: the numbers of a unit's battle stats that differ from the board game's (the rest stay as in UNITS).
- * Each Przymierze hero has one trait: the Gold Dragon hits hardest (7 A, brittle), the Ancient Bear has the most life (12 Ż, slow),
- * the Unicorn King is the fastest (10 S). The Black Dragon gets 6 A so that the Horde keeps up. Tuned with `make sim-arena` (SIM_DIGITAL=1):
- * every hero wins 48–52% of arena games, Przymierze 50.0% overall (150 games per line-up pair).
+ * Heroes (backlog 63g, 27.11.2026): evened out within each faction on the adventure map with `scripts/sim/bohaterowie-mapa.ts` (every hero within about
+ * ±4 points of its faction's average; before: −11 to +12) and kept to their roles: the tank of a faction has its most Życie and hits softer (Bear, Ogre,
+ * Aurochs, Thane), the fast one stays the fastest (Unicorn King 10 S), the Golden Dragon strikes from the air with its Sunburst rather than with its plain Atak.
+ * Every hero of Przymierze and Horda still takes at least two plain blows of any other (tests/reports1110). The faction bonuses (factionBonus.ts) come on top.
  */
 export const DIGITAL_STATS: Record<string, Partial<Pick<UnitDef, 'hp' | 'attack' | 'speed'>>> = {
-  goldDragon: { hp: 7, attack: 7, speed: 4 },
+  goldDragon: { hp: 7, attack: 5, speed: 4 },
   ancientBear: { hp: 12, attack: 4, speed: 3 },
   unicornKing: { hp: 8, attack: 5, speed: 10 },
+  moonWolf: { hp: 10, attack: 5 },
   blackDragon: { attack: 6 },
+  werewolfLord: { hp: 9 },
+  ironFistOgre: { attack: 3 },
+  greatAurochs: { hp: 10 },
+  windAntelope: { attack: 5 },
+  thunderRam: { attack: 5 },
+  ironThane: { attack: 3 },
+  runeMatron: { hp: 6 },
   /** The Pegasus (a two-hex target) lost to the Elf Druid and the Nymph (40% against 54–56%, with growth 34% against 65–83%): 5 Ż and 3 A level it (`make sim-supports`). */
   pegasus: { hp: 5, attack: 3 },
 };

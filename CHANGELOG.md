@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bohaterowie wyrównani w obrębie każdej frakcji (wersja cyfrowa; planszówka bez zmian), zgodnie z rolami: Złoty Smok Ż 7 i A 5 (uderza z powietrza Słonecznym Blaskiem), Srebrna Wilczyca Ż 10 i A 5, Władca Wilkołaków Ż 9, Ogr Żelazna Pięść A 3, Wielki Tur Ż 10, Pędziwiatr A 5, Baran Gromowładny A 5, Tan Żelaznobrody A 3, Matka Run Ż 6 (do tego premie frakcji). Wilczyca i Mantykora Zmierzchu wzmacniają teraz zdolność na poziomach 3, 6 i 9 jak reszta bohaterów Przymierza i Hordy: Wilcza Rodzina daje +2, +2, +3 A, a trucizna Mantykory działa przez 3, 3, 4 aktywacje. Wcześniej najlepszy bohater frakcji wygrywał o ok. 20 punktów częściej niż najsłabszy; teraz różnice mieszczą się w kilku punktach.
 - Koniec walki: ostatni atak nie jest już spowity kolorowym filtrem, a okna wyskakują pojedynczo — najpierw wynik walki, po jego zamknięciu znalezisko, strona fabuły, artefakt, wybory bohatera, a na końcu ekran końca gry (razem z muzyką zwycięstwa).
 
 - Opcje w grze mają teraz przełącznik „Płynne przejścia”, tak jak Opcje menu.

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createGame } from '../src/engine/game';
 import { makeBattleUnit, scaleOf } from '../src/engine/battle';
-import { battleStats, STAT_SCALE } from '../src/engine/data';
+import { ABILITY, battleStats, STAT_SCALE } from '../src/engine/data';
 import { ARTIFACTS } from '../src/engine/sites';
 import { playOut, pvpSeats, setup } from './helpers/engine';
 
@@ -23,10 +23,18 @@ describe('stat scale (digital Expedition: Życie and Atak times 3)', () => {
   });
 
   // Every number is multiplied the same way, so a whole game must play out exactly as with the small numbers: same winner, same length, same fights.
-  // The one exception by design is defence (shields: points of the large scale, a blow takes at least 1), so these games are played without shields.
+  // The one exception by design is defence (shields, and the Stone Golem's rune skin: a blow takes at least 1, not 1 times the scale), so these games are
+  // played without shields and without the rune skin.
   const shields = ARTIFACTS.filter((a) => a.slot === 'shield');
-  beforeAll(() => void shields.forEach((a) => ARTIFACTS.splice(ARTIFACTS.indexOf(a), 1)));
-  afterAll(() => void ARTIFACTS.push(...shields));
+  const runeSkin = ABILITY.runeSkinIgnore;
+  beforeAll(() => {
+    shields.forEach((a) => ARTIFACTS.splice(ARTIFACTS.indexOf(a), 1));
+    (ABILITY as { runeSkinIgnore: number }).runeSkinIgnore = 0;
+  });
+  afterAll(() => {
+    ARTIFACTS.push(...shields);
+    (ABILITY as { runeSkinIgnore: number }).runeSkinIgnore = runeSkin;
+  });
   it.each(['crystals', 'control', 'survival', 'boss', 'artifact'] as const)('changes nothing about how games end (goal %s: ×3 equals ×1 over many bot games)', (objective) => {
     for (let seed = 1; seed <= 12; seed++) {
       const pvp = seed % 3 === 0 && objective !== 'survival';
