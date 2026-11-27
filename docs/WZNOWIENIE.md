@@ -1,3 +1,17 @@
+# AKTUALNIE (27.11.2026): uwagi autora (opisy menu, arena dla 5 frakcji, scenariusze na stronie mapy, płynne przejścia)
+Pełny plan zatwierdzony przez autora: `~/.claude/plans/kilka-uwag-my-l-modular-kernighan-of-cbb07f46-03c8-4a24-be8a-e3a811b1a5bc.md`. Decyzje: kreator poziom → mapa → cel (scenariusz sam ustala cel); arena 5 grywalnych frakcji, każda para różnych, 3 na 3 i 6 na 6; animacje subtelne ok. 250 ms (motyw frakcji ok. 400 ms), wyłączane przez `prefers-reduced-motion` i przełącznik w Opcjach.
+
+- [x] Opisy Potyczki i Kampanii (`2e4a9bc`).
+- [x] Pulsująca obwódka aktywnej jednostki, znika przy akcji (`282ae9e`; prośba dosłana w trakcie).
+- [ ] **Arena — w toku, niescommitowane** (`data.ts`, `game.ts`, `ArenaPrep.tsx`, `SetupScreen.tsx`, `setupShared.tsx`, słowniki `ui.ts` i `herds.ts`, nowe `scripts/sim/arena-frakcje.ts` i `tuneArena.ts`).
+  - Zrobione: silnik przyjmuje nowe frakcje na cyfrowej arenie (malowana arena wg rasy, bez lustra), wybór frakcji na ekranie miejsc (wybór frakcji przeciwnika zamienia strony), nazwy ras w przygotowaniu areny, opis Areny, tabela premii `ARENA_RULES.bonus` (dziś pusta).
+  - Balans: bez premii Przypływy wygrywają 18% (3 na 3) i 8% (6 na 6). `tuneArena.ts 3` znalazł dobrą tabelę (frakcje 46–53%): `.tmp/sim/arena-bonus-3.json`. 6 na 6 niedostrojone (`.tmp/sim/arena-bonus-6.json`, jeszcze 38–64%): uruchom ponownie `npx tsx scripts/sim/tuneArena.ts 6` (startuje z pliku, ok. 3 min; też po usunięciu `.tmp`, tylko od zera).
+  - Zostało: osobne tabele dla 3 i 6 (np. `BattleUnit.arena: true | 6`, bo `battleStats` nie zna wielkości; karty jednostek mają pokazywać te same liczby), tabela wyników w `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`; teksty „Przymierze widzi 3, Horda 4” i „Przymierze kontra Horda” w `RulesDialog.tsx`, `Intro.tsx`, instrukcji PL (l. 213, 362) i EN; filtr jasności przeszkód areny w `ArenaBoard.tsx` (tylko horde); online: `OnlineScreen.tsx` (`offered` w arenie) i backend `src/rooms/table.ts` (walidacja areny, `!classic`), commit backendu **bez wdrożenia** do wydania silnika; parametry `race`/`foerace` w haku `?mode=arena` w `App.tsx`; testy `tests/arena.test.ts` (każda para), zrzuty, `i18n_extract --missing`, CHANGELOG PL + `src/i18n/en/changelog.ts`.
+- [ ] Gotowy scenariusz na stronie mapy w kreatorze (plan, punkt 3).
+- [ ] Płynne przejścia (plan, punkt 4).
+
+Zmiany w `CLAUDE.md`, `scripts/sim/matrix.ts`, instrukcji planszowej i `.idea/` były przed tą sesją: nie commitować przy okazji.
+
 # AKTUALNIE (26.11.2026 noc): wydanie 3.1.0 opublikowane (gra, GitHub Release, silnik), serwer 0.4.0 wdrożony. Zrobione: 94 (z blokadą Kryształów XXL/3XL i Przetrwania S), 95 + 95a, 98, 100, 101. Otwarte w BACKLOG: 96, 97, 99, 102, 103.
 # AKTUALNIE (26.11.2026 noc): punkty 91, 93, 89, 92 i 90 (mgła wojny) zrobione i scommitowane (backend: lokalny commit 48265c6, bez wdrożenia); strojenie wstrzymane do punktu 94
 **Stan (26.11 wieczór):** pełne strojenie przerwane na prośbę autora (niescalone, `tuningAuto.ts` bez zmian; stare wyniki `.tmp/sim/backup-2611/`, w `.tmp/sim/auto-*.json` zostały tylko pierwsze cząstkowe). Kampania odłożona do przeróbki. Następny temat: projekt punktu 94 w `docs/BACKLOG.md` (trudność przy botach, drużyny wg roli) — pytania rozstrzygnięte, można zaczynać (Opus).
