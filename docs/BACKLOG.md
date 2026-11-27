@@ -59,6 +59,16 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 **102. Ręczny test wersji mobilnej (S; autor z Claude'em).** Przejść całą grę na telefonie (menu, kreator, mapa, bitwa, osada, online) i spisać usterki jako osobne punkty.
 
+**103. Blokowanie opcji kreatora, które wypadają daleko poza pasmem (M–L; tylko wersja cyfrowa).** Rozmowa z autorem 27.11.2026.
+  - **Najpierw świeży pomiar, na większej liczbie gier.** `tuningRolesData.ts` ma 160 gier na stół (±8 pkt przy 95%): za mało. Cel: ok. 400 gier na komórkę (±5 pkt). Zakres: wszystkie cele (Kryształy i Przetrwanie z dźwigniami ról przy botach Normalnych; Kontrola, Boss, Artefakt, Podbój, Relikt: zastępca Normalny przeciw botowi Normalnemu, `scripts/sim/botLevels.ts`) × 6 wielkości × kształty × 1–2 graczy na stronę × warstwy. Przebiegi dzielić na kawałki poniżej 3 minut (albo w tle), wyniki zapisać do pliku w repo (np. `docs/BALANS_BLOKADY.md` + dane), żeby test mógł je czytać.
+  - **Decyzja autora: próg blokady = ponad 15 pkt proc. poza pasmem** (od krawędzi pasma: przy rolach 45–55 blokujemy poniżej 30% i powyżej 70%; przy Normalnym w celach symetrycznych 45–65 → poniżej 30% i powyżej 80%). Liczyć z przedziałem ufności: blokować, gdy cała kombinacja (większość wariantów warstw) leży za progiem. Odstępstwa mniejsze zostają, tylko w raporcie.
+  - **Obecne blokady (`BLOCKED_SIZES`) sprawdzić na nowo** po pomiarze: wstępnie (dane 160 gier) Kryształy XXL/3XL są złe tylko przy 1 graczu na stronę (2 graczy: 37–62%), a Przetrwanie Średnia + Trójkąt z rozwojem ma 73–76% przy wyczerpanych dźwigniach (kandydat do blokady).
+  - Blokady tylko według tego, co gracz wybiera w kreatorze: cel × wielkość, ewentualnie × kształt; nigdy według warstwy ani poziomu bota. Kod: zamiast `BLOCKED_SIZES` lista reguł `{ objective, size?, shape?, playersPerSide?, powód }` + `optionAllowed(setup)` (kreator, stół online, serwer); test sprawdzający, że każda blokada wciąż jest uzasadniona zapisanymi wynikami.
+  - **Liczba graczy na stronę:** autor dopuszcza blokadę, ale tylko z przyjaznym UX. Do zaproponowania autorowi (makiety) przed wdrożeniem, np.: wielkość dostępna, a dopisek przy karcie „tylko 2+ graczy na stronę” i wyszarzone miejsce 1-osobowe; albo podpowiedź przy stole „dodaj drugiego gracza (bota) do Przymierza”.
+  - **Ustawienia własne: bez blokad, tylko ostrzeżenie** („nierówne: sprzyja Przymierzu/Hordzie”, z liczbą z pomiaru). Gotowe poziomy i stół online: blokada twarda.
+  - Instrukcja PL i EN (jeśli opisuje dostępne mapy), CHANGELOG, `i18n` dla nowych dopisków.
+  - Gotowe, gdy: pomiar zapisany, reguły wynikają z pomiaru i progu 15 pkt, kreator/online/serwer je stosują, ustawienia własne ostrzegają, sprawdzone w przeglądarce.
+
 **103. PWA nie działa na telefonie autora: ustalić dlaczego (S–M).** Sprawdzić manifest, service worker, HTTPS i zakres na GitHub Pages (ścieżka repo), ikony, `start_url`; zebrać od autora: telefon, przeglądarka, co dokładnie nie działa (brak „Dodaj do ekranu”, biały ekran, brak trybu offline).
 
 ### Starsze punkty
