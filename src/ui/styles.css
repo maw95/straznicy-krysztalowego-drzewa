@@ -737,7 +737,6 @@ button:not(:disabled), label, select:not(:disabled), input[type='checkbox']:not(
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% 35%, transparent 45%, rgba(0, 0, 0, 0.55)), linear-gradient(180deg, transparent 45%, rgba(4, 8, 10, 0.92) 82%);
 }
-.intro-fireflies { position: absolute; inset: 0; pointer-events: none; }
 .intro-skip { position: absolute; right: 18px; top: 14px; padding: 4px 16px; font-size: 16px; z-index: 2; }
 .intro-panel {
   position: absolute; left: 0; right: 0; bottom: 0; padding: 0 clamp(16px, 5vw, 64px) clamp(16px, 4vh, 36px);

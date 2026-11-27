@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.
+
 ## 3.2.1 — 2026-11-27
 
 - Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.

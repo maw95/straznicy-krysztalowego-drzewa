@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.':
+    'The intro no longer has flying fireflies, just like the menu, the options and the online screen.',
   'Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.':
     'Wizard: map sizes are no longer greyed out before the goal is chosen (Crystals to the Tree does not fit Huge and Giant, Survival does not fit Small); the goal step greys out the goals the size cannot take, with a note. Where the goal is known beforehand, the note under a blocked size no longer pushes the buttons up.',
   'Przejścia między ekranami menu tylko przenikają się, bez przesuwania: tło nie „skacze” razem z treścią.':

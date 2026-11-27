@@ -240,15 +240,6 @@ export function Intro({ onClose }: { onClose: () => void }) {
           </div>
         );
       })}
-      <div className="intro-fireflies" aria-hidden="true">
-        {Array.from({ length: 16 }, (_, i) => (
-          <span
-            key={i}
-            className="firefly"
-            style={{ left: `${(i * 53) % 100}%`, top: `${15 + ((i * 37) % 70)}%`, ['--fx' as string]: `${((i * 17) % 80) - 40}px`, ['--fy' as string]: `${((i * 23) % 60) - 40}px`, ['--fd' as string]: `${8 + (i % 4) * 1.7}s`, ['--fdl' as string]: `${-(i * 1.1)}s` } as React.CSSProperties}
-          />
-        ))}
-      </div>
       <button className="btn plate parch intro-skip" onClick={close}>
         Pomiń
       </button>
