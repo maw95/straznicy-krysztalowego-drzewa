@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koniec walki: ostatni atak nie jest już spowity kolorowym filtrem, a okna wyskakują pojedynczo — najpierw wynik walki, po jego zamknięciu znalezisko, strona fabuły, artefakt, wybory bohatera, a na końcu ekran końca gry (razem z muzyką zwycięstwa).
+
 - Opcje w grze mają teraz przełącznik „Płynne przejścia”, tak jak Opcje menu.
 
 - Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.

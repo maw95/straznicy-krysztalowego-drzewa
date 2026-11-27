@@ -222,9 +222,9 @@ export function CardDialog({ card, onClose }: { card: string | null; onClose: ()
   );
 }
 
-/** Falling petals for a Dawn victory, a dark fog for a Horde one. */
-export function VictoryEffects({ game }: { game: GameState }) {
-  if (game.phase !== 'over') return null;
+/** Falling petals for a Dawn victory, a dark fog for a Horde one (only once the end screen is due, not over the last blow). */
+export function VictoryEffects({ game, show = true }: { game: GameState; show?: boolean }) {
+  if (game.phase !== 'over' || !show) return null;
   if (game.winner === 'horde') return <div className="defeat-fog" style={{ zIndex: 49 }} />;
   if (game.winner !== 'dawn') return null;
   return (

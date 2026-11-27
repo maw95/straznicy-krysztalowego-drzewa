@@ -120,6 +120,12 @@ export function App() {
   const [summary, setSummary] = useState<number | null>(null);
   // The finished battle stays on screen for a moment so the last death animation can be seen.
   const held = useEndHold(game);
+  // A freshly found treasure, story pages and artifacts (filled further down) wait in line with the battle summary.
+  const [found, setFound] = useState<ItemKind | null>(null);
+  const [storyNews, setStoryNews] = useState<Array<Extract<LogEvent, { type: 'story' }>>>([]);
+  const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
+  // One window at a time: the battle result, then a found treasure, a story page, an artifact; only then the hero's offers and the end of the game.
+  const reportPending = (summary !== null && game?.lastBattle?.id === summary) || Boolean(found) || storyNews.length > 0 || artifactNews.length > 0;
   /**
    * The start screen: the online menu (or, logged out, the choice to log in or play without an account),
    * unless the player chose to play without an account; then the local setup screen, as before.
@@ -165,7 +171,7 @@ export function App() {
   /** The faction whose settlement window is open (reported by the map): its music plays in the town. */
   const [townRace, setTownRace] = useState<FactionId | null>(null);
   // The victory music waits for the end screen: not while the last battle is still shown.
-  const wantedTheme = held && game?.phase === 'over' ? 'none' : musicTheme(game, townRace);
+  const wantedTheme = game?.phase === 'over' && (held || reportPending) ? 'none' : musicTheme(game, townRace);
   // Crossing from one land to another must not make the music flicker: between the map and the land themes it waits a moment for the hero to settle.
   const [theme, setTheme] = useState<Theme>(wantedTheme);
   useEffect(() => {
@@ -591,7 +597,6 @@ export function App() {
   }, []);
 
   // A freshly found treasure of the viewing faction turns over in front of the player.
-  const [found, setFound] = useState<ItemKind | null>(null);
   const knownItems = useRef<{ seed: number; ids: Set<string> } | null>(null);
   useEffect(() => {
     if (!game) return;
@@ -631,8 +636,6 @@ export function App() {
   // gets a card (what it is, where it came from), because it used to go unnoticed.
   const newsSeen = useRef<{ seed: number; n: number } | null>(null);
   const [xpNotes, setXpNotes] = useState<Array<{ key: number; text: string }>>([]);
-  const [storyNews, setStoryNews] = useState<Array<Extract<LogEvent, { type: 'story' }>>>([]);
-  const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
   const [lootFloats, setLootFloats] = useState<LootFloat[]>([]);
   const [mapFxs, setMapFxs] = useState<Array<{ key: number; kind: string; hex: string }>>([]);
   useEffect(() => {
@@ -690,14 +693,14 @@ export function App() {
   }, [game?.phase, game?.winner]);
   const endSound = useRef<string | null>(null);
   useEffect(() => {
-    if (!game || game.phase !== 'over' || held) return;
+    if (!game || game.phase !== 'over' || held || reportPending) return;
     const key = `${game.setup.seed}:${game.actionCount}`;
     if (endSound.current === key) return;
     endSound.current = key;
     // The end screen has its music (musicTheme); with the music switched off a short fanfare marks the end instead, whoever won.
     if (music.muted || !music.volume) sfx.play('victory');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game, held]);
+  }, [game, held, reportPending]);
   // The round limit is near: a sound as the first person's turn of that round begins (after the hand-over screen, never for a bot).
   const warnedRound = useRef<string | null>(null);
   useEffect(() => {
@@ -1003,6 +1006,7 @@ export function App() {
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
   const campaignRun = scenarioOf(game.setup);
+  const summaryOpen = summary !== null && game.lastBattle?.id === summary;
   const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'spells' || b.stage === 'select' || b.stage === 'draft')));
 
   // 3D figures only exist in the board edition: the views below ask `figureFor` while they render.
@@ -1039,7 +1043,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={battleShown} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={mapShown!} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
+        <AdventureView state={mapShown!} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length && !reportPending} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
@@ -1065,14 +1069,14 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} note={raceOf(game, actor.faction) === 'sands' ? `Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie mirażów i zakopanej Królowej: ${FACTION_NAMES[raceOf(game, actor.faction)]}.` : `Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie ukrytych Sideł: ${FACTION_NAMES[raceOf(game, actor.faction)]}.`} onConfirm={() => setTrapsUncovered(actor.faction)} />
       )}
 
-      <TreasureDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />
-      <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} earned={game.log.flatMap((e) => (e.event?.type === 'xp' && e.event.heroId === activeHero(game)?.id ? [`+${e.event.amount} PD (${e.event.reason})`] : [])).slice(-4)} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
+      <TreasureDialog hero={humanTurn && !held && !reportPending && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />
+      <SkillDialog hero={humanTurn && !held && !reportPending && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} earned={game.log.flatMap((e) => (e.event?.type === 'xp' && e.event.heroId === activeHero(game)?.id ? [`+${e.event.amount} PD (${e.event.reason})`] : [])).slice(-4)} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       {hintNow && (
         <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>
           💡 <StatText text={hintNow.text} />
         </div>
       )}
-      <VictoryEffects game={game} />
+      <VictoryEffects game={game} show={!held && !reportPending} />
       <RotatePrompt />
       <FoundTreasure kind={found} open={Boolean(found) && !summary && !held} onClose={() => setFound(null)} />
 
@@ -1100,7 +1104,7 @@ export function App() {
         )}
       </Modal>
 
-      <Modal open={game.phase === 'over' && !held}>
+      <Modal open={game.phase === 'over' && !held && !reportPending}>
         {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : game.setup.expedition ? <ExpeditionOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
       </Modal>
 
@@ -1127,7 +1131,7 @@ export function App() {
         />
       )}
 
-      <Modal open={summary !== null && game.lastBattle?.id === summary && !held} onClose={() => setSummary(null)}>
+      <Modal open={summaryOpen && !held} onClose={() => setSummary(null)}>
         {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} faction={(s) => teamFaction(game, s)} onClose={() => setSummary(null)} />}
       </Modal>
 
