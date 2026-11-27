@@ -2,7 +2,8 @@
 //   menu      — Sylvan Waltz (menu version) once, then Sylvan Waltz (map version) looping
 //   adventure — Sylvan Waltz (map) and Maddie's Mirror in turn
 //   battle    — Fantasy Choir 1 and 2 in turn; guardian — Fantasy Choir 3 and Determined Pursuit
-//   ritual    — Defeat (loop version); victories play once.
+//   ritual    — Defeat (loop version);
+//   victory   — A Legend Will Rise, once, on the end screen whoever won.
 // Distinct tracks hand over with a crossfade a few seconds before the end; a lone track loops
 // natively (its file is cut for that). Going from the menu to the map keeps the Sylvan Waltz
 // playing instead of restarting it. Battles and guardian fights continue the rotation, so the
@@ -14,7 +15,7 @@ import type { FactionId } from '../engine/data';
 import { asset } from './common';
 
 /** `faction:<id>`: the theme of a faction's land; it plays instead of the map music in the faction's settlement and while the hero stands on its land. */
-export type Theme = 'menu' | 'adventure' | 'battle' | 'guardian' | 'ritual' | 'dawnVictory' | 'hordeVictory' | 'none' | `faction:${FactionId}`;
+export type Theme = 'menu' | 'adventure' | 'battle' | 'guardian' | 'ritual' | 'victory' | 'none' | `faction:${FactionId}`;
 
 interface Playlist {
   /** Played once before the loop. */
@@ -32,8 +33,7 @@ const PLAYLISTS: Record<Exclude<Theme, 'none' | `faction:${FactionId}`>, Playlis
   battle: { loop: [M('battle-fantasy-choir-1'), M('battle-fantasy-choir-2')] },
   guardian: { loop: [M('guardian-fantasy-choir-3'), M('guardian-determined-pursuit')] },
   ritual: { loop: [M('ritual-defeat-loop')] },
-  dawnVictory: { loop: [M('dawn-victory-a-legend-will-rise')], once: true },
-  hordeVictory: { loop: [M('horde-victory-the-fallen')], once: true },
+  victory: { loop: [M('dawn-victory-a-legend-will-rise')], once: true },
 };
 
 /**
@@ -58,6 +58,8 @@ export function firstTrack(theme: Exclude<Theme, 'none'>): string {
 
 /** Crossfade between two different tracks (README: 2–4 s). */
 const CROSSFADE_MS = 3000;
+/** Files mastered louder than the rest of the music are played quieter. */
+const GAIN: Record<string, number> = { 'music/dawn-victory-a-legend-will-rise.mp3': 0.56 };
 /** Fade when the situation changes (map → battle and so on). */
 const SWITCH_MS = 1200;
 const STORE_KEY = 'skd-music';
@@ -114,8 +116,8 @@ class MusicPlayer {
     this.listeners.forEach((fn) => fn());
   }
 
-  private target() {
-    return this.settings.muted ? 0 : this.settings.volume;
+  private target(file: string) {
+    return this.settings.muted ? 0 : this.settings.volume * (GAIN[file] ?? 1);
   }
 
   setVolume(v: number) {
@@ -133,7 +135,7 @@ class MusicPlayer {
   private applyVolume() {
     if (!this.current) return;
     this.current.fadeId = ++this.fades;
-    this.current.audio.volume = this.target();
+    this.current.audio.volume = this.target(this.current.file);
   }
 
   /** Called once from a user gesture. */
@@ -194,7 +196,7 @@ class MusicPlayer {
         this.unlocked = false;
       }
     });
-    this.fade(voice, this.target(), fadeMs);
+    this.fade(voice, this.target(file), fadeMs);
   }
 
   /** Starts the crossfade into the next track a few seconds before this one ends. */

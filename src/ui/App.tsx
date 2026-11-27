@@ -162,7 +162,8 @@ export function App() {
   }, []);
   /** The faction whose settlement window is open (reported by the map): its music plays in the town. */
   const [townRace, setTownRace] = useState<FactionId | null>(null);
-  const wantedTheme = musicTheme(game, townRace);
+  // The victory music waits for the end screen: not while the last battle is still shown.
+  const wantedTheme = held && game?.phase === 'over' ? 'none' : musicTheme(game, townRace);
   // Crossing from one land to another must not make the music flicker: between the map and the land themes it waits a moment for the hero to settle.
   const [theme, setTheme] = useState<Theme>(wantedTheme);
   useEffect(() => {
@@ -679,8 +680,8 @@ export function App() {
     const key = `${game.setup.seed}:${game.actionCount}`;
     if (endSound.current === key) return;
     endSound.current = key;
-    // The victory music plays whoever won (a human seat may play the Horde against bots of the Covenant, or lose to a computer): it marks the end of the game, not a result.
-    sfx.play('victory');
+    // The end screen has its music (musicTheme); with the music switched off a short fanfare marks the end instead, whoever won.
+    if (music.muted || !music.volume) sfx.play('victory');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, held]);
   // Not while the finished battle is still on screen (the engine is already on the map, the arena shows the last blow).

@@ -1798,7 +1798,7 @@
       "pliki": [
         "public/assets/music/dawn-victory-a-legend-will-rise.mp3"
       ],
-      "typ": "muzyka (wygrana Przymierza)",
+      "typ": "muzyka (ekran końca gry)",
       "tytul": "A Legend Will Rise",
       "narzedzie": "gotowy utwór, przycięty i wyciszony lokalnie (docs/muzyka/README.txt)",
       "zrodlo": "CodeManu (A Legend Will Rise, Orchestral) – https://opengameart.org/content/a-legend-will-rise-orchestral",

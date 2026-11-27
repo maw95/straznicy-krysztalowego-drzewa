@@ -219,7 +219,7 @@ register({
   "bitwy i walki ze strażnikami": "battles and fights with guardians",
   "walki ze strażnikami": "fights with guardians",
   "rytuał Hordy przy Drzewie": "the Horde's ritual at the Tree",
-  "wygrana Przymierza Świtu": "a Dawn Covenant win",
+  "ekran końca gry": "the end of a game",
   "„Gleamroot: Strażnicy Kryształowego Drzewa”: gra planszowa i jej wersja cyfrowa.": "\"Gleamroot: Guardians of the Crystal Tree\": a board game and its digital version.",
   "Maciej Woźniak": "Maciej Woźniak",
   ": pomysł, zasady, projekt i wykonanie wersji cyfrowej.": ": the idea, the rules, the design and the making of the digital version.",

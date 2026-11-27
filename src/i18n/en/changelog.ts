@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).':
+    'End of a game: the result screen plays "A Legend Will Rise" again, whoever won (with the music switched off the short fanfare stays).',
   'Mapa świata: widok można przesunąć poza lewą i górną krawędź mapy, tak żeby wyciągnąć pola spod toru rund; bohater, który znalazłby się pod torem, jest odsłaniany sam.':
     'World map: the view can be moved past the left and top edge of the map, to bring hexes out from under the round track; a hero that would end up under the track is uncovered by itself.',
   'Mapa świata: tor rund zasłania pola także dla myszy: kliknięcie w tor nie rusza już bohatera na polu pod spodem.':

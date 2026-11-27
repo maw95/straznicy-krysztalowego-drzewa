@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).
 - Mapa świata: widok można przesunąć poza lewą i górną krawędź mapy, tak żeby wyciągnąć pola spod toru rund; bohater, który znalazłby się pod torem, jest odsłaniany sam.
 - Mapa świata: tor rund zasłania pola także dla myszy: kliknięcie w tor nie rusza już bohatera na polu pod spodem.
 - Mapa świata: pola mapy zajmują całą ramkę (bez wolnego pasa u góry, a na mapach innych niż trójkąt także z lewej), a tor rund leży nad nimi; pole pod torem można wskazać i kliknąć.

@@ -87,7 +87,7 @@ describe('music playlists', () => {
     music.play('ritual');
     expect(latest().src).toContain('ritual-defeat-loop.mp3');
     expect(latest().loop).toBe(true);
-    music.play('dawnVictory');
+    music.play('victory');
     const win = latest();
     expect(win.src).toContain('dawn-victory-a-legend-will-rise.mp3');
     win.nearEnd();

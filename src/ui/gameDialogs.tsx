@@ -31,17 +31,13 @@ import { FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 
 /**
- * The music for what is on screen: menu, map, battle, a guardian fight or the ritual (silence at the end of the game). On the map a faction with music of its
+ * The music for what is on screen: menu, map, battle, a guardian fight or the ritual (the victory music at the end of the game, whoever won). On the map a faction with music of its
  * own plays it in its settlement (`settlementRace`, while the settlement window is open) and while the active hero stands on a tile of its land.
  */
 export function musicTheme(game: GameState | null, settlementRace: FactionId | null = null): Theme {
   if (!game) return 'menu';
-  if (game.setup.mode === 'arena') {
-    if (game.phase === 'battle') return 'battle';
-    return 'none';
-  }
-  // The end of the game is the victory or defeat sound effect (App.tsx); the old victory pieces would play over it.
-  if (game.phase === 'over') return 'none';
+  if (game.phase === 'over') return 'victory';
+  if (game.setup.mode === 'arena') return game.phase === 'battle' ? 'battle' : 'none';
   if (game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')) return game.battle.kind === 'neutral' ? 'guardian' : 'battle';
   // The counter only drops at the end of the round, so the ritual music also needs the ritual to still stand (the dragon beaten in the middle of the round silenced it).
   if (game.ritual > 0 && ritualFormed(game)) return 'ritual';
