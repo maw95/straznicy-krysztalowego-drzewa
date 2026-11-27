@@ -23,7 +23,7 @@ export function savedDigital(): boolean {
   try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
 }
 
-type Page = 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom' | 'scenario';
+type Page = 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom';
 type Tier = TableConfig['tier'];
 
 interface Draft {
@@ -69,24 +69,24 @@ const READY_MAPS = readyMaps;
 /** The digital rivalry (Potyczka): the difficulty is chosen at each bot on the seats page (backlog 94), so the wizard asks none. */
 const levelsAtBots = (d: Pick<Draft, 'digital' | 'mode'>) => d.digital && d.mode === 'pvp';
 
+/** Whether this draft plays a ready scenario (only the digital Potyczka has them). */
+const readyScenario = (d: Pick<Draft, 'scenario' | 'digital' | 'mode'>) => d.scenario !== null && d.digital && d.mode === 'pvp';
+/** The ready scenarios of a complexity level (none for Spacer, Przygoda and the custom settings). */
+const scenariosOf = (tier: Tier) => SCENARIOS.filter((sc) => sc.tier === tier);
+
 /** The pages this draft goes through, in order (the mode page only when no mode was chosen before the wizard). */
 function pagesOf(d: Draft, askMode: boolean, online = false): Page[] {
   const pages: Page[] = [];
   if (askMode) pages.push('mode');
   // The arena has no levels of complexity: it is always the arena battle.
   if (d.digital && d.mode !== 'arena') pages.push('tier');
-  // A ready scenario fixes the level, the goal and the map: its list is the only page before the seats.
-  if (d.scenario !== null && d.digital && d.mode === 'pvp') {
-    pages.push('scenario');
-    if (online) pages.push('players');
-    return pages;
-  }
   // "Własne ustawienia" come right after the card; what depends on the mode waits for the players page.
   if (d.digital && d.tier === 'custom' && d.mode !== 'arena') pages.push('custom');
   const adventure = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
-  if (adventure) pages.push('objective');
-  // The map page: shape and size of a random map or a ready map (the fuller levels), only the size elsewhere (the arena has no map).
+  // The map page: a random map (shape and size) or a ready scenario (the fuller levels), only the size elsewhere (the arena has no map).
   if (d.mode !== 'arena') pages.push('map');
+  // A ready scenario brings its own goal.
+  if (adventure && !readyScenario(d)) pages.push('objective');
   // The players page has nothing to ask in a Potyczka on this computer (the seats page comes next).
   if (!levelsAtBots(d) || online) pages.push('players');
   return pages;
@@ -99,7 +99,6 @@ const TITLES: Record<Page, string> = {
   map: 'Jaka mapa?',
   players: 'Gracze i trudność',
   custom: 'Własne ustawienia',
-  scenario: 'Gotowy scenariusz',
 };
 
 /** A big choice: a picture, a name and a sentence. */
@@ -176,12 +175,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   const goFrom = (cur: Page, next: Draft) => {
     const list = pagesOf(next, askMode, online);
     const i = list.indexOf(cur);
-    setPage(list[Math.min(list.length - 1, i + 1)]);
+    // A choice on the last page (a goal, when nothing follows it) finishes the table.
+    if (i >= list.length - 1) return finish(next.custom, next);
+    setPage(list[i + 1]);
   };
   const choose = (p: Partial<Draft>, advance = true) => {
     markPicked(p);
-    // A level card leaves the scenarios.
-    const next = { ...d, ...('tier' in p && !('scenario' in p) ? { scenario: null } : {}), ...p };
+    // Another level leaves the scenario of the old one.
+    const next = { ...d, ...('tier' in p && !('scenario' in p) && d.scenario !== null && SCENARIO_BY_ID[d.scenario]?.tier !== p.tier ? { scenario: null, shape: d.shape === 'custom' ? ('triangle' as MapShape) : d.shape } : {}), ...p };
     // The custom page starts from what the level preset sets (the mode is not known yet: the mode-bound switches come on the players page).
     if (next.tier === 'custom' && !next.custom) next.custom = defaultCustom(next.level, next.mode);
     setD(next);
@@ -193,6 +194,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   /** Level 0 belongs to the first card only: every other tier plays a difficulty of the full game. */
   const notZero: Level = d.level === 'zero' ? 'kids' : d.level;
   const ready = d.shape === 'custom';
+  const scenarioOn = readyScenario(d);
+  /** The Potyczka of a level that has ready scenarios offers them beside the random map. */
+  const scenarioOffer = d.digital && d.mode === 'pvp' && d.tier !== 'adventure' && scenariosOf(d.tier).length > 0;
   /** The goal the game will be played for (Spacer and Przygoda: the crystals). */
   const goalNow: ObjectiveId = d.digital && d.tier !== 'adventure' && d.mode !== 'arena' ? d.objective : 'crystals';
   // A goal that is not offered on the chosen size moves the size to the nearest one it is offered on.
@@ -214,31 +218,31 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   };
 
   /** The finished table: what the online room and the local setup are made from. */
-  const finish = (custom = d.custom) => {
-    const sc = d.scenario !== null && d.digital && d.mode === 'pvp' ? SCENARIO_BY_ID[d.scenario] : undefined;
+  const finish = (custom = d.custom, dd: Draft = d) => {
+    const sc = readyScenario(dd) ? SCENARIO_BY_ID[dd.scenario!] : undefined;
     if (sc) {
       try { localStorage.setItem(EDITION_KEY, 'digital'); } catch { /* private mode */ }
-      return onFinish({ mode: d.mode, digital: true, tier: sc.tier, objective: sc.objective, shape: 'custom', customMapId: sc.mapId, mapSize: sc.mapSize, level: 'normal', scenario: sc.id, seats: defaultHeroes(d.mode, d.count).map((seat) => ({ ...seat, bot: false })) });
+      return onFinish({ mode: dd.mode, digital: true, tier: sc.tier, objective: sc.objective, shape: 'custom', customMapId: sc.mapId, mapSize: sc.mapSize, level: 'normal', scenario: sc.id, seats: defaultHeroes(dd.mode, dd.count).map((seat) => ({ ...seat, bot: false })) });
     }
-    const tier: Tier = !d.digital || arena ? 'adventure' : d.tier;
+    const tier: Tier = !dd.digital || dd.mode === 'arena' ? 'adventure' : dd.tier;
     const table: TableConfig = {
-      mode: d.mode,
-      digital: d.digital,
+      mode: dd.mode,
+      digital: dd.digital,
       tier,
-      objective: tier === 'adventure' ? 'crystals' : d.objective,
-      shape: tier === 'adventure' ? 'triangle' : d.shape,
-      ...(tier !== 'adventure' && d.shape === 'custom' ? { customMapId: d.customMapId } : {}),
-      ...(tier !== 'adventure' && d.mode === 'coop' && d.objective === 'boss' && d.noHorde ? { noHorde: true } : {}),
-      mapSize: d.mapSize,
+      objective: tier === 'adventure' ? 'crystals' : dd.objective,
+      shape: tier === 'adventure' ? 'triangle' : dd.shape,
+      ...(tier !== 'adventure' && dd.shape === 'custom' ? { customMapId: dd.customMapId } : {}),
+      ...(tier !== 'adventure' && dd.mode === 'coop' && dd.objective === 'boss' && dd.noHorde ? { noHorde: true } : {}),
+      mapSize: dd.mapSize,
       // A Potyczka plays the rules of its complexity level (level 0's or Normal's); the bots have their levels.
-      level: levelsAtBots(d) ? (d.level === 'zero' ? 'zero' : 'normal') : d.level,
-      ...(arena && d.arenaSize === 6 ? { arenaSize: 6 as const } : {}),
+      level: levelsAtBots(dd) ? (dd.level === 'zero' ? 'zero' : 'normal') : dd.level,
+      ...(dd.mode === 'arena' && dd.arenaSize === 6 ? { arenaSize: 6 as const } : {}),
       ...(tier === 'custom' && custom ? { growth: custom.growth, layer: custom.layer, battleMode: custom.battleMode, rules: custom.rules } : {}),
       // Online every seat waits for a player, except the arena's opponent.
-      seats: defaultHeroes(d.mode, d.count).map((seat, i) => ({ ...seat, bot: d.mode === 'arena' && i === 1 })),
+      seats: defaultHeroes(dd.mode, dd.count).map((seat, i) => ({ ...seat, bot: dd.mode === 'arena' && i === 1 })),
     };
     // The rules window shows the cards of the edition played last.
-    try { localStorage.setItem(EDITION_KEY, d.digital ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
+    try { localStorage.setItem(EDITION_KEY, dd.digital ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
     onFinish(table);
   };
   const next = () => {
@@ -257,15 +261,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={picked.tier && d.scenario === null && d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
-          <Card on={picked.tier && d.scenario === null && d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
-          {d.mode === 'pvp' && <Card on={picked.tier && d.scenario !== null} title="Gotowy scenariusz" badge="★" text="Ręcznie narysowana mapa z gotowym celem i poziomem: wybierasz z listy, jak w klasycznych grach strategicznych." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => choose({ scenario: d.scenario ?? SCENARIOS[0].id, level: notZero })} />}
-          <Card on={picked.tier && d.scenario === null && d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
+          <Card on={picked.tier && d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={picked.tier && d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
 
@@ -298,11 +301,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
           {fullMap && (
             <>
               <div className="opt-grid compact">
-                <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
-                {/* The ready maps come with their scenarios now ("Gotowy scenariusz" on the level page); only a table made before keeps its map here. */}
-                {ready && <Card on title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => undefined} />}
+                <Card on={!scenarioOn && !ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ scenario: null, ...(ready ? { shape: 'triangle' as MapShape } : {}) })} />
+                {(scenarioOffer || scenarioOn) && <Card on={scenarioOn} title="Gotowy scenariusz" text="Ręcznie narysowana mapa z gotowym celem: wybierasz z listy scenariuszy tego poziomu." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => patch({ scenario: d.scenario ?? scenariosOf(d.tier)[0].id })} />}
+                {/* A table made before the scenarios existed keeps its ready map. */}
+                {ready && !scenarioOn && <Card on title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => undefined} />}
               </div>
-              {!ready ? (
+              {scenarioOn ? (
+                <ScenarioPicker selected={d.scenario} tier={d.tier as Exclude<Tier, 'adventure' | 'custom'>} onSelect={(id) => patch({ scenario: id })} />
+              ) : !ready ? (
                 <CentredChoice label="Wybierz kształt">
                   {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
                     <Tip key={sh} text={SHAPE_TIPS[sh]} rightClick>
@@ -322,7 +328,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
               )}
             </>
           )}
-          {!(fullMap && ready) && (
+          {!(fullMap && ready) && !scenarioOn && (
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => {
                 const off = d.digital && !sizeAllowed(goalNow, m);
@@ -385,8 +391,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
         </div>
       )}
 
-      {page === 'scenario' && <ScenarioPicker selected={d.scenario} onSelect={(id) => patch({ scenario: id })} />}
-
+      
       {page === 'custom' && d.custom && (
         <div data-wizard-page="custom">
           <CustomSwitchRows
@@ -406,7 +411,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
         <button className="btn plate parch wizard-nav" onClick={back} data-wizard-back>← Wstecz</button>
         {/* The objective goes on by itself when one is picked; the coop Boss still needs its Horde choice, so it keeps the button. */}
-        {(page === 'players' || page === 'custom' || page === 'map' || page === 'scenario' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
+        {(page === 'players' || page === 'custom' || page === 'map' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
           <button className="btn prim wizard-nav" onClick={next} data-wizard-next>{last ? (online ? 'Utwórz stół' : 'Dalej →') : 'Dalej →'}</button>
         )}
       </div>

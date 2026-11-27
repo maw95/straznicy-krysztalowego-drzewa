@@ -10,7 +10,6 @@ import { SCENARIOS, scenarioName, type Scenario } from '../engine/scenarios';
 import { COMPACT_QUERY } from './common';
 import { chip, SIZE_CODES } from './setupShared';
 
-const TIER_BADGE: Record<Scenario['tier'], string> = { expedition: 'III', kingdom: 'IV', economy: 'V', realm: 'VI', empire: 'VII' };
 
 /** The scenario's map drawn small: pointy-topped hexes, odd rows shifted half a hex (as the game draws it). */
 export function ScenarioMiniMap({ mapId, width = 320 }: { mapId: string; width?: number }) {
@@ -45,10 +44,11 @@ export function ScenarioMiniMap({ mapId, width = 320 }: { mapId: string; width?:
   );
 }
 
-export function ScenarioPicker({ selected, onSelect }: { selected: string | null; onSelect: (id: string) => void }) {
+export function ScenarioPicker({ selected, tier, onSelect }: { selected: string | null; /** Only the scenarios of this complexity level are listed. */ tier: Scenario['tier']; onSelect: (id: string) => void }) {
   const [size, setSize] = useState<MapSize | 'all'>('all');
-  const sizes = [...new Set(SCENARIOS.map((s) => s.mapSize))];
-  const list = SCENARIOS.filter((s) => size === 'all' || s.mapSize === size);
+  const ofTier = SCENARIOS.filter((s) => s.tier === tier);
+  const sizes = [...new Set(ofTier.map((s) => s.mapSize))];
+  const list = ofTier.filter((s) => size === 'all' || s.mapSize === size);
   const sc = SCENARIOS.find((s) => s.id === selected) ?? null;
   // On a narrow screen the card is under the list: show it after a pick.
   const pick = (id: string) => {
@@ -66,14 +66,13 @@ export function ScenarioPicker({ selected, onSelect }: { selected: string | null
         </div>
         <table className="scenario-table">
           <thead>
-            <tr><th>Mapa</th><th>Nazwa</th><th>Poziom</th><th>Cel</th></tr>
+            <tr><th>Mapa</th><th>Nazwa</th><th>Cel</th></tr>
           </thead>
           <tbody>
             {list.map((s) => (
               <tr key={s.id} className={s.id === selected ? 'on' : ''} aria-selected={s.id === selected} data-scenario={s.id} onClick={() => pick(s.id)}>
                 <td><b className="size-code">{SIZE_CODES[s.mapSize]}</b></td>
                 <td>{scenarioName(s)}</td>
-                <td title={TIERS[s.tier].name}>{TIER_BADGE[s.tier]}</td>
                 <td>{OBJECTIVES[s.objective].name}</td>
               </tr>
             ))}

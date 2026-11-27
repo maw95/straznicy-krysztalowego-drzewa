@@ -4,7 +4,7 @@ import { register } from '../translate';
 register({
   // The list
   'Gotowy scenariusz': 'Ready scenario',
-  'Ręcznie narysowana mapa z gotowym celem i poziomem: wybierasz z listy, jak w klasycznych grach strategicznych.': 'A hand-drawn map with a set goal and level: you pick it from a list, as in the classic strategy games.',
+  'Ręcznie narysowana mapa z gotowym celem: wybierasz z listy scenariuszy tego poziomu.': 'A hand-drawn map with a set goal: you pick it from the list of scenarios of this level.',
   'Wybierz scenariusz z listy.': 'Pick a scenario from the list.',
   'Wszystkie': 'All',
   'Mapa': 'Map',

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Kreator nowej gry: „Gotowy scenariusz” przeniósł się z kroku poziomu złożoności na krok „Jaka mapa?”, obok „Losowa”: po „Losowa” wybierasz kształt i wielkość, po „Gotowy scenariusz” widzisz listę scenariuszy wybranego poziomu (scenariusz ma własny cel, więc krok celu jest pomijany). Krok celu następuje teraz po mapie.':
+    'New game wizard: "Ready scenario" moved from the complexity level step to the "Which map?" step, beside "Random": after "Random" you pick the shape and the size, after "Ready scenario" you see the list of scenarios of the chosen level (a scenario has its own goal, so the goal step is skipped). The goal step now comes after the map.',
   'Arena: obok Przymierza i Hordy walczą też Dzikie Stado, Żelazny Klan i Bractwo Przypływu, w dowolnej parze różnych frakcji, w arenie 3 na 3 i 6 na 6 (też online); na ekranie miejsc wybierasz frakcję każdej strony, a bitwa toczy się na arenie jednej z nich. Dla wyrównania szans frakcje mają na arenie własne drobne premie do Życia i Ataku.':
     'Arena: besides the Covenant and the Horde, the Wild Herds, the Iron Clan and the Tide Brotherhood fight too, in any pair of different factions, in the 3 on 3 and 6 on 6 arena (online as well); the seats screen lets you pick the faction of each side, and the battle is fought on the arena of one of them. To even the odds the factions have small arena bonuses to Life and Attack of their own.',
   'Bitwa: żółta obwódka aktywnej jednostki powoli pulsuje (zanika i wraca), a znika w chwili kliknięcia ruchu lub ataku; wraca dopiero, gdy plansza znieruchomieje.':

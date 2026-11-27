@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kreator nowej gry: „Gotowy scenariusz” przeniósł się z kroku poziomu złożoności na krok „Jaka mapa?”, obok „Losowa”: po „Losowa” wybierasz kształt i wielkość, po „Gotowy scenariusz” widzisz listę scenariuszy wybranego poziomu (scenariusz ma własny cel, więc krok celu jest pomijany). Krok celu następuje teraz po mapie.
 - Arena: obok Przymierza i Hordy walczą też Dzikie Stado, Żelazny Klan i Bractwo Przypływu, w dowolnej parze różnych frakcji, w arenie 3 na 3 i 6 na 6 (też online); na ekranie miejsc wybierasz frakcję każdej strony, a bitwa toczy się na arenie jednej z nich. Dla wyrównania szans frakcje mają na arenie własne drobne premie do Życia i Ataku.
 - Bitwa: żółta obwódka aktywnej jednostki powoli pulsuje (zanika i wraca), a znika w chwili kliknięcia ruchu lub ataku; wraca dopiero, gdy plansza znieruchomieje.
 - Menu wyboru trybu: opis Potyczki nie mówi już tylko o Przymierzu i Hordzie, a opis Kampanii zapowiada historie kolejnych frakcji.

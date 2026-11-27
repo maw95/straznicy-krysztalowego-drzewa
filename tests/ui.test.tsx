@@ -73,13 +73,14 @@ describe('setup screen simplifications', () => {
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     await click(container, 'Same Eliksiry Odrodzenia', 'Rzut kością');
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
-    await click(container, 'Dalej →', 'Kryształy do Drzewa', 'Trójkąt');
+    await click(container, 'Dalej →', 'Trójkąt');
     // Every option explains itself in a hover tooltip next to its button (the map sizes on the map page, the levels on the players page).
     for (const t of ['Mała', 'Bardzo duża']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Mała')).toContain('limit 8 rund');
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
-    // A Potyczka asks no difficulty in the wizard: the map page leads to the seats, where each bot has its level (backlog 94).
-    await click(container, 'Dalej →', 'Rozpocznij grę');
+    // A Potyczka asks no difficulty in the wizard: the goal page leads to the seats, where each bot has its level (backlog 94).
+    await click(container, 'Dalej →');
+    await click(container, 'Kryształy do Drzewa', 'Rozpocznij grę');
     const game = (window as any).__game;
     expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
     expect(Object.values(game.items).map((i: any) => i.kind)).toEqual(['resurrection']);
@@ -629,16 +630,16 @@ describe('arena through the UI', () => {
     expect(sizeTip.classList.contains('open')).toBe(true);
     await act(async () => fireEvent.pointerDown(doc.body));
     expect(sizeTip.classList.contains('open')).toBe(false);
-    await click(doc, '← Wstecz', 'Wyprawa');
+    await click(doc, '← Wstecz', 'Wyprawa', 'Dalej →');
     expect(pick(doc, 'Punkty kontrolne')).toBeTruthy();
     // Nothing is lit on the goal page before a choice (there is no "Dalej" there).
     expect(pick(doc, 'Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('false');
     // The board edition has no levels and no goal choice; the arena has neither.
-    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', '← Wstecz', 'Wersja planszowa', 'Kooperacja', 'Ten komputer');
+    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', '← Wstecz', '← Wstecz', 'Wersja planszowa', 'Kooperacja', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
     await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', 'Nowa gra', 'Arena', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', '← Wstecz', 'Potyczka', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Rozpocznij grę');
+    await click(doc, '← Wstecz', '← Wstecz', 'Potyczka', 'Ten komputer', 'Wyprawa', 'Trójkąt', 'Dalej →', 'Punkty kontrolne', 'Rozpocznij grę');
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
     expect(g.rules.heroGrowth).toBe(true);
@@ -863,6 +864,27 @@ describe('level VII: the dwellings in the tree of buildings', () => {
   });
 });
 
+describe('ready scenarios on the map page', () => {
+  it('are offered beside the random map, listed for the level only, and carry their own goal', async () => {
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const page = () => doc.querySelector('[data-wizard-page]')!.getAttribute('data-wizard-page');
+    await newGame(doc, 'Potyczka', 'Wyprawa');
+    expect(page()).toBe('map');
+    expect(pick(doc, 'Losowa')).toBeTruthy();
+    await click(doc, 'Gotowy scenariusz');
+    const ids = () => [...doc.querySelectorAll('[data-scenario]')].map((e) => e.getAttribute('data-scenario'));
+    expect(ids()).toContain('ciesnina');
+    expect(ids()).not.toContain('blizniacze-doliny');
+    await act(async () => fireEvent.click(doc.querySelector('[data-scenario="ciesnina"]')!));
+    // The scenario brings its goal: the next page is the seats.
+    await click(doc, 'Dalej →');
+    expect(doc.querySelector('select[aria-label="Kto gra"]')).not.toBeNull();
+  });
+});
+
 describe('the new-game wizard goes on by itself', () => {
   it('after a goal and after a shape', async () => {
     window.history.replaceState(null, '', '/');
@@ -871,9 +893,6 @@ describe('the new-game wizard goes on by itself', () => {
     const doc = container.ownerDocument;
     const page = () => doc.querySelector('[data-wizard-page]')!.getAttribute('data-wizard-page');
     await newGame(doc, 'Potyczka', 'Wyprawa');
-    expect(page()).toBe('objective');
-    expect(doc.querySelector('[data-wizard-next]')).toBeNull();
-    await click(doc, 'Punkty kontrolne');
     expect(page()).toBe('map');
     // The map page also asks for the size, so it keeps its button: the shape does not move it on.
     expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
@@ -882,8 +901,11 @@ describe('the new-game wizard goes on by itself', () => {
     // Back and Next are the same size.
     const nav = [...doc.querySelectorAll('.wizard-nav')];
     expect(nav).toHaveLength(2);
-    // A Potyczka has no players page: the map page leads to the seats.
     await click(doc, 'Dalej →');
+    expect(page()).toBe('objective');
+    expect(doc.querySelector('[data-wizard-next]')).toBeNull();
+    // A Potyczka has no players page: the goal page leads to the seats.
+    await click(doc, 'Punkty kontrolne');
     expect(doc.querySelector('select[aria-label="Kto gra"]')).not.toBeNull();
   });
 });
