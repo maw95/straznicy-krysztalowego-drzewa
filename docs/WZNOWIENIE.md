@@ -6,7 +6,8 @@ Pełny plan zatwierdzony przez autora: `~/.claude/plans/kilka-uwag-my-l-modular-
 - [x] Arena dla 5 frakcji (`73efb48`; backend lokalny commit `e22a488`, **bez wdrożenia** do wydania silnika). Premie areny w `ARENA_RULES.bonus` (3 i 6 osobno), strojenie `scripts/sim/tuneArena.ts`, kontrola `scripts/sim/arena-frakcje.ts`, tabela w NOTATKACH sekcja 24.
 - [x] Gotowy scenariusz na stronie mapy, krok celu po mapie (`a1ce64e`).
 - [x] Płynne przejścia (`src/ui/motion.ts`, `Reveal` w `common.tsx`, CSS na końcu `styles.css`, przełącznik „Płynne przejścia” w Opcjach menu).
-- Do rozważenia: przełącznik płynnych przejść także w oknie Opcje w grze (`gameDialogs.tsx`); zrzuty kreatora na telefonie.
+- [x] Przełącznik płynnych przejść w Opcjach w grze (27.11.: commit b73424a); zrzuty kreatora na telefonie sprawdzone (bez przewijania poziomego; w poziomie nagłówek z logo zajmuje sporo wysokości).
+- [x] Intro bez świetlików (2e7be6b).
 
 Zmiany w `CLAUDE.md`, `scripts/sim/matrix.ts`, instrukcji planszowej i `.idea/` były przed tą sesją: nie commitować przy okazji.
 
