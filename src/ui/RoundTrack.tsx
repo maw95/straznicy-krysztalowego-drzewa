@@ -1,6 +1,7 @@
 // Round track of the board game (docs/grafika/ikony/tor_rund.png, cut by scripts/assets/roundtrack.py):
 // a hexagonal board with the Crystal Tree in the middle and 24 sockets around it. The crystal marker
-// stands in the socket of the current round; sockets past this map's round limit are dimmed.
+// stands in the socket of the current round; sockets past this map's round limit are dimmed. A limit longer than the track goes round it
+// again: round 25 stands on socket 1.
 
 import { asset } from './common';
 
@@ -22,6 +23,8 @@ export function RoundTrack({ round, limit, ritual, ritualRounds, size = 150 }: {
   const h = size * ASPECT;
   const socket = size * SOCKET;
   const at = (n: number) => ({ left: SOCKETS[n - 1][0] * size, top: SOCKETS[n - 1][1] * h });
+  /** Rounds played on the earlier laps of the track. */
+  const before = Math.floor((round - 1) / SOCKETS.length) * SOCKETS.length;
   return (
     <div
       role="img"
@@ -34,7 +37,7 @@ export function RoundTrack({ round, limit, ritual, ritualRounds, size = 150 }: {
       <span data-track-hit style={{ position: 'absolute', inset: 0, clipPath: 'polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%)', pointerEvents: 'auto' }} />
       {/* Rounds past this map's limit are not played. */}
       {SOCKETS.map((_, i) =>
-        i + 1 > limit ? (
+        before + i + 1 > limit ? (
           <div key={i} style={{ position: 'absolute', ...at(i + 1), width: socket * 1.25, height: socket * 1.25, transform: 'translate(-50%, -50%)', clipPath: hexClip, background: 'rgba(5,8,8,0.62)' }} />
         ) : null,
       )}
@@ -46,14 +49,13 @@ export function RoundTrack({ round, limit, ritual, ritualRounds, size = 150 }: {
           ))}
         </div>
       )}
-      {round <= SOCKETS.length && (
-        <img
-          className="track-crystal"
-          src={asset('ui/round_crystal.png')}
-          alt=""
-          style={{ position: 'absolute', ...at(round), height: socket * 1.4, transform: 'translate(-50%, -54%)' }}
-        />
-      )}
+      <img
+        className="track-crystal"
+        data-socket={round - before}
+        src={asset('ui/round_crystal.png')}
+        alt=""
+        style={{ position: 'absolute', ...at(round - before), height: socket * 1.4, transform: 'translate(-50%, -54%)' }}
+      />
     </div>
   );
 }

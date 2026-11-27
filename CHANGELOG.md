@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Tor rund: w partiach dłuższych niż 24 rundy kryształ nie znika po 24. rundzie, tylko zaczyna drugie okrążenie od pierwszego pola.
 - Mroczna Horda ma własny motyw: na jej ziemi i w jej osadzie grają na zmianę utwory „Defeat” i „The Fallen” (dotąd grała tam muzyka mapy).
 - Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).
 - Mapa świata: widok można przesunąć poza lewą i górną krawędź mapy, tak żeby wyciągnąć pola spod toru rund; bohater, który znalazłby się pod torem, jest odsłaniany sam.

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Tor rund: w partiach dłuższych niż 24 rundy kryształ nie znika po 24. rundzie, tylko zaczyna drugie okrążenie od pierwszego pola.':
+    'Round track: in games longer than 24 rounds the crystal no longer disappears after round 24, it starts a second lap from the first socket.',
   'Mroczna Horda ma własny motyw: na jej ziemi i w jej osadzie grają na zmianę utwory „Defeat” i „The Fallen” (dotąd grała tam muzyka mapy).':
     'The Dark Horde has a theme of its own: on its land and in its settlement "Defeat" and "The Fallen" play in turn (the map music used to play there).',
   'Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).':
